@@ -1,3 +1,5 @@
+> Historical architecture: the static/optional-semantic installation product. The current full lab pipeline is documented in [HANDOFF.md](HANDOFF.md), [SKILLGATE_LAB.md](SKILLGATE_LAB.md), and the [ADR index](adr/README.md). Do not infer current execution coverage or activation policy from this older architecture.
+
 # Architecture
 
 SkillGate checks financial-agent skills before installation. It does not control transactions after activation.

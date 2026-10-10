@@ -1,3 +1,5 @@
+> Historical internal review of the earlier static/UI MVP. This is not a current independent audit of version 0.5.0. See [current release validation](evidence/skillgate-lab/report.md), [project state](PROJECT_STATE.md), and [architecture decisions](adr/README.md).
+
 # Revue de sécurité du MVP
 
 What this change does: SkillGate copie un paquet dans une quarantaine, analyse les octets collectés puis active un snapshot vérifié via un lien de projet. La revue vise ce chemin contrôlé et les lectures de l’UI locale, pas la sécurité complète du poste ni le comportement d’un modèle.

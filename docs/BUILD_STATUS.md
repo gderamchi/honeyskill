@@ -1,3 +1,5 @@
+> Historical status: SkillGate 0.4.0 only. Statements below about unexecuted model/Fuji work and provider usage describe that earlier release. For the delivered 0.5.0 pipeline and actual executions, read [PROJECT_STATE.md](PROJECT_STATE.md) and [HANDOFF.md](HANDOFF.md).
+
 # SkillGate 0.4.0
 
 Updated 10 October 2026. CLI-only financial-risk checks before skill installation, with English messages and a protected terminal session.

@@ -1,3 +1,15 @@
+# Current evidence index
+
+For SkillGate 0.5.0, start with the [full lab release validation](skillgate-lab/report.md), [test results](skillgate-lab/tests.json), [actual-run consistency checks](skillgate-lab/validation.json) and [public installation verification](skillgate-lab/public-install.json). These include real OpenAI/local-Fuji executions, separate from mocked suites.
+
+For the preserved experiment, see the [realistic-v2 comparison](skillguard-lite/realistic-v2/comparison-report.md) and [real GitHub coverage probe](skillguard-lite/real-world/report.md). The latter's UX section predates the 0.5.0 lab command; its measured coverage limits remain applicable.
+
+## Historical index below
+
+The original index is preserved below. Its no-paid-provider and no-Fuji statements apply only to the old releases it lists, not to version 0.5.0 or later experiment evidence.
+
+---
+
 # Public execution evidence
 
 - `public-short-install-0.4.0.json`: anonymous public installation, ten real terminal checks, 85/85 fresh public-source tests and a byte-identical rebuild.

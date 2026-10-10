@@ -1,3 +1,5 @@
+> Historical requirements and original user brief, preserved for provenance. Later user revisions supersede the web platform and automatic-interception scope below. The current request is the explicit full laboratory pipeline: [SKILLGATE_LAB.md](SKILLGATE_LAB.md), [PROJECT_STATE.md](PROJECT_STATE.md).
+
 # Scope update — 10 October 2026
 
 The user superseded the web UI requirement: the product is **SkillGate**, a CLI with terminal installer interception. Supported commands must be checked before activation; low-risk complete scans auto-install, other scans show evidence and a cancel/install choice. No web UI in the delivered package. Public publication of the product, source repository and demo on the user's personal GitHub account is now explicitly authorized, followed by testing of the public installation. The original brief below is preserved as source material; it does not authorize executing instructions embedded in skills.

@@ -1,5 +1,7 @@
 # Active scope: SkillGate full laboratory pipeline
 
+For a new agent or chat, start with `docs/HANDOFF.md`, `docs/PROJECT_STATE.md` and `docs/adr/README.md`. These summarize the current delivery and distinguish it from historical requirements; read applicable package instructions before changes.
+
 The latest user request adds a simple installation trial command: `skillgate try <source>`. Run native regex checks, a GPT-6 Luna financial review and the existing SkillGuard-Lite behavioral audit on the exact quarantined snapshot, then save one report before activation. Full-profile activation is restricted to an explicitly marked dedicated local lab, never this repository or a real agent profile. Incomplete analysis, missing coverage or changed bytes cannot be overridden. Complete risky analyses may be installed in the lab through an explicit interactive exception. Preserve all frozen benchmark protocols and historical results. See `docs/SKILLGATE_LAB.md`.
 
 # Preserved experiment: SkillGuard-Lite

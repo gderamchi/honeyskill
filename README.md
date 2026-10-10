@@ -1,5 +1,7 @@
 # SkillGate — try a skill before trusting it
 
+**Resuming development?** Read [HANDOFF](docs/HANDOFF.md), [current state](docs/PROJECT_STATE.md), and [architecture decisions](docs/adr/README.md).
+
 ## One command, all checks
 
 ```sh
