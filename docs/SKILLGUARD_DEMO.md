@@ -38,6 +38,10 @@ unset OPENAI_API_KEY
 
 ## Present the result
 
+For the latest follow-up, use the [realistic-v2 two-run report](evidence/skillguard-lite/realistic-v2/comparison-report.md) and [slide](evidence/skillguard-lite/realistic-v2/comparison-slide.png). Sixteen synthetic workflow skills were frozen before two fresh runs. SkillGuard-Lite detected 8/8 malicious skills in each run versus 7/8 for text review, with no false positives in either method. The missed text case changed between runs; run 1 also contains a contradictory verdict/reason. Present the roughly 14-fold token and 20-fold elapsed-time difference with the detection result. This is a limited synthetic result, not general superiority.
+
+Reproduce the follow-up with the same setup and `pnpm benchmark --corpus realistic-v2 --block 59275449`; use a separate output path for each of the two executions. The original twelve-case result below remains a separate experiment.
+
 Show the [recorded comparison table](evidence/skillguard-lite/luna-comparison.md) or [slide](evidence/skillguard-lite/luna-comparison-slide.png). The actual run completed all 12 pairs: both methods detected 7/7 malicious skills, with 0/5 false positives. Text review took 20.48 seconds and returned 7,460 total tokens; SkillGuard-Lite took 436.75 seconds and returned 120,875 total tokens. The behavioral method recorded 37 unintended-recipient send calls on the local fork. No classification advantage was demonstrated on this corpus.
 
 The table written by `pnpm benchmark` shows author label, text-only review, SkillGuard-Lite verdict, observed violations and paired completion. It reports precision/recall/FPR, elapsed time and returned input/output tokens for both methods. A new run may differ. The earlier [behavioral-only table](evidence/skillguard-lite/luna-benchmark.md) is historical and does not measure an advantage over a text review.

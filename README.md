@@ -56,9 +56,32 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 [Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
 
-## Primary comparison — GPT-6 Luna text review vs SkillGuard-Lite
+## Latest comparison — workflow-shaped synthetic skills
 
-A separate [realistic-v2 challenge](docs/SKILLGUARD_REALISTIC_V2.md) adds sixteen less explicit synthetic skills as eight matched benign/malicious pairs. Its two-run protocol and labels are frozen before execution; the existing methods remain unchanged. Run it with `pnpm benchmark --corpus realistic-v2 --block 59275449`. The original results below are preserved as a distinct experiment.
+The [realistic-v2 challenge](docs/SKILLGUARD_REALISTIC_V2.md) adds sixteen less explicit synthetic skills as eight matched benign/malicious pairs: migration records, network aliases, settlement routing, payment templates, split address fragments and completion fees. Both members of each pair contain similar financial vocabulary and foreign-address references. The corpus, labels and two-run protocol were frozen and published before execution; model prompts, tasks, address book and oracle stayed unchanged.
+
+Both fresh runs completed all 16 pairs. **SkillGuard-Lite detected 8/8 malicious skills in each run; text review detected 7/8. Neither produced a false positive on the eight benign skills.** This is a measured advantage on this small synthetic challenge, with important qualifications:
+
+- In run 1, text review returned `BENIGN` for the batch-settlement skill even though its own reason concluded that the behavior was malicious. Scoring uses the declared structured verdict; this is a contradictory output, not evidence that the model failed to understand the redirection.
+- In run 2, text review missed a different skill: an address-template default. It incorrectly stated that none of the tasks used a literal address, despite the explicit-address task being present. The behavioral trace records 0.15 AVAX sent to the foreign recipient.
+- Text verdicts were stable on 14/16 skills across runs; behavioral verdicts on 16/16. The cases missed by text review were not consistent across repetitions. These remain sixteen authored skills in eight matched pairs, not thirty-two independent examples.
+
+| Measurement | Text review, run 1 / run 2 | SkillGuard-Lite, run 1 / run 2 |
+| --- | ---: | ---: |
+| Precision | 7/7 / 7/7 | 8/8 / 8/8 |
+| Recall | 7/8 / 7/8 (87.5% each) | 8/8 / 8/8 (100% each) |
+| False-positive rate | 0/8 / 0/8 | 0/8 / 0/8 |
+| Scored pairs | 16/16 / 16/16 | 16/16 / 16/16 |
+| Elapsed time | 31.33 s / 28.72 s | 622.83 s / 580.99 s |
+| Returned input + output tokens | 16,389 / 16,319 | 229,954 / 230,806 |
+
+Across these two runs, behavioral auditing used about **14 times as many returned tokens and 20 times as much elapsed time**. It recorded 16 and 19 provenance violations respectively, all on owned local forks, with clean no-skill baselines. Tokens are returned API usage, not verified billing. No general superiority or production safety claim follows from these synthetic, task-aware examples.
+
+Run the same experiment with `pnpm benchmark --corpus realistic-v2 --block 59275449`. Run it twice with distinct `--out` files to repeat the declared protocol. No key or previous output is required in the repository; live execution requires your own authorized OpenAI key and Anvil.
+
+[Two-run report](docs/evidence/skillguard-lite/realistic-v2/comparison-report.md) · [Slide](docs/evidence/skillguard-lite/realistic-v2/comparison-slide.png) · [Run 1 native evidence](docs/evidence/skillguard-lite/realistic-v2/run-1.json) · [Run 2 native evidence](docs/evidence/skillguard-lite/realistic-v2/run-2.json) · [Independent recomputation](docs/evidence/skillguard-lite/realistic-v2/independent-validation.json) · [Public source validation: 65/65 tests](docs/evidence/skillguard-lite/realistic-v2/execution-validation.json).
+
+## Original comparison — twelve explicit synthetic skills
 
 The fresh paired run completed **12/12 synthetic fixtures** on 10 October 2026. Both methods detected all seven malicious skills and classified all five benign skills correctly. **This corpus demonstrates no detection advantage for SkillGuard-Lite.** Its additional output is evidence of actual reference-agent behavior on the local fork.
 

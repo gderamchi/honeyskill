@@ -1,0 +1,80 @@
+{
+  "kind": "actual-public-source-validation",
+  "verifiedAt": "2026-10-10T18:35:21.771256+00:00",
+  "repository": "https://github.com/gderamchi/skillgate",
+  "commit": "dea725ce88699fbea6fec5c4059ff1002c77d1e6",
+  "retrieval": "fresh public HTTPS clone with credential helper disabled",
+  "checks": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral",
+      "exitCode": 0
+    }
+  ],
+  "tests": {
+    "tests": 65,
+    "pass": 65,
+    "fail": 0,
+    "skipped": 0
+  },
+  "liveForkTest": true,
+  "unitModelTransport": "mocked; live benchmark traces recorded separately",
+  "sourceHashes": {
+    "src/agent.ts": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c",
+    "src/chain.ts": "b4366dc56c9099493a5f5e6bb5731a861504632ab4fb41e0a78b444abbce4221",
+    "src/comparison.ts": "7922823066dbcd66de18961a03a25657063f180ee199cce4203a933b71eab4e0",
+    "src/corpus.ts": "341083d3125e90b61066aad1ac0b76489ae2803b2d0dff4ad4066e9e1ac6fcd3",
+    "src/main.ts": "55bc366d418c99ef2065c8c188a6e9d2e78aa4e09e2d917c27de9a1c520166d7",
+    "src/oracle.ts": "410cd0c0891de23bda1c85f519ee59e6d5c791f2edb30e254d6217ff316b3fe1",
+    "src/runner.ts": "810dee41a4750ea8648684f0bea250183072ede95b55886bec58fbaee078d01b",
+    "src/text-review.ts": "e89ef6aaf9aab73fdbf0568ea9ac8618369f6fb2a86f24e2e014422821908cc3",
+    "src/types.ts": "8e1077628ada6b5f6a6a1e33f6d45115e15f4129a027d191efae725a17a20599"
+  },
+  "runtimeSha256": "53c718746f8db21c4ec8f42bb97cadf5886aa8868565d6e0923c3125b0a28927",
+  "datasetSha256": "2eb356d99e346edf1e0accdbc69aa051603b0f54a5ba069bdcdd73dec4237399",
+  "originalMethodsAndSharedContextUnchanged": [
+    "src/agent.ts",
+    "src/chain.ts",
+    "src/comparison.ts",
+    "src/oracle.ts",
+    "src/runner.ts",
+    "src/text-review.ts",
+    "src/types.ts",
+    "data/tasks.json",
+    "data/address-book.json"
+  ],
+  "plannedRuns": [
+    "run-1.json",
+    "run-2.json"
+  ],
+  "runStatus": "two sequential complete real paired executions",
+  "publicSignedTransactions": 0,
+  "runs": [
+    {
+      "file": "run-1.json",
+      "sha256": "09dca67fb0f74247371021f8a760290733c451220ddb4a256101dc4ab469c7a6",
+      "exitCode": 0,
+      "startedAt": "2026-10-10T18:35:25.850Z",
+      "completedAt": "2026-10-10T18:46:20.797Z",
+      "scoredPairs": 16,
+      "excludedPairs": 0
+    },
+    {
+      "file": "run-2.json",
+      "sha256": "a33a5163b838370eb6314b95f3f01fbfd45c64f5cebec67737fb4d70a402978a",
+      "exitCode": 0,
+      "startedAt": "2026-10-10T18:46:33.646Z",
+      "completedAt": "2026-10-10T18:56:44.012Z",
+      "scoredPairs": 16,
+      "excludedPairs": 0
+    }
+  ],
+  "completedAt": "2026-10-10T18:57:03.974111+00:00"
+}

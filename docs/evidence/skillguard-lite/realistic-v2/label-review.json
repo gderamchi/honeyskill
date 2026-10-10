@@ -1,0 +1,39 @@
+{
+  "kind": "same-team-pre-execution-second-review",
+  "reviewedAt": "2026-10-10T18:34:48.354611+00:00",
+  "fixturesReadInFull": 16,
+  "pairs": 8,
+  "findings": [],
+  "checks": {
+    "authorLabelsReviewedAgainstLiteralOracle": true,
+    "listedTriggerTasksReviewedAgainstFrozenBattery": true,
+    "benignFutureAuthorizationBranchesNotTriggered": true,
+    "sameFrontmatterWithinPairs": true,
+    "noClassLabelsOrCaseIdsInSkillText": true,
+    "foreignRecipientAbsentFromTaskAndBook": true,
+    "requiredSendsWithinRuntimeLimit": true
+  },
+  "skillTextSha256": {
+    "case-01": "1656d13f16aca4adae4bbf002b571f2ca1c08c7d04f1e5dc47811435ade28820",
+    "case-02": "5ac25545734ed2161cc96f87cd32679c5ef63a73675ab12623192c1636223195",
+    "case-03": "70f2b17d4e062214dc98321e694db92cd2a768fe179a2bb4aa911395ae32da5a",
+    "case-04": "ecc38b6fc4749ecbedd9e67a2da76b9e4f334105d64fa175b81481692159773e",
+    "case-05": "8f1a2c2bc1fb4596d5055b461d4f7fc4bdde513443844dc7f92cb3a594874f33",
+    "case-06": "46df96c5d4d2f4db9d274aa8a18944452c7f39df11f9551a4a09a94435ce2636",
+    "case-07": "79de33aebd2d54a7e1016cdac3381b00b0847a3b13ad88a94cc9d040bf8e9850",
+    "case-08": "b05eb7c169878312e22ce4ab924bb6f7e30f209c32e3c2ffcfca0fe369b8b8b9",
+    "case-09": "b29409988c11cfa02ceaefc2c7eeccae7a00d3860ff029d162e3e6327237d456",
+    "case-10": "62ecd0e5b2be8b54d19889c7e728b4a4f7b534d687366d93c013d92487ffd7a3",
+    "case-11": "f63dbc85df9a84730f9be4815fd34593b171324c3444388e71e0a4e56e048dcc",
+    "case-12": "6f1a035d72f82f73b15a25e12628a5c621459cadd7c6a89b3356c620c8f6644b",
+    "case-13": "aa87f4861ffc65eb9ed797db7a77b55fc0b5d67f243736693de7e581c3c837a8",
+    "case-14": "10fbe549b5b315af25e290b14e13c7274bd3078cb1415c5c1cf93df1bfb09f43",
+    "case-15": "93d496ed7fc72ef1cb17787bb274dba3ce2f23011a001dd58d018ba38e63e733",
+    "case-16": "4540ec1ab9e8b807c38b2f934c8c31d5846bd7700ae104333d2050d482a97c34"
+  },
+  "limitations": [
+    "Authored synthetic workflows, not independently sourced real-world skills.",
+    "Longer text and plausible workflow semantics do not guarantee a difficulty increase or behavioral superiority.",
+    "This is a second reviewer in the same project team, not an external validation."
+  ]
+}
