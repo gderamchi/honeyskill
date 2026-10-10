@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { access, mkdir, mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, mkdtemp, readFile, readdir, realpath, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { basename, delimiter, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -92,7 +92,7 @@ run('python3', [resolve('scripts/cli-pty-smoke.py')], {
 const pty = JSON.parse(await readFile(ptyOutput, 'utf8'));
 assert.equal(pty.status, 'passed');
 assert.equal(pty.checkCount, 13);
-assert.equal(pty.cli, installedCli);
+assert.equal(pty.cli, await realpath(installedCli));
 const result = {
   schemaVersion: 1, executedAt: new Date().toISOString(), status: 'passed',
   package: { name: manifest.name, version: manifest.version, url: values.url, checksumsUrl: values.checksums, sha256: checksum, bytes: archiveBytes.length, installedCliSha256: sha256(verifiedCliBytes) },

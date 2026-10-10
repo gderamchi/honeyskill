@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-10T15:40:59.684Z",
+  "status": "passed",
+  "artifact": {
+    "name": "@gderamchi/skillgate",
+    "version": "0.2.1",
+    "url": "https://github.com/gderamchi/skillgate/releases/download/v0.2.1/gderamchi-skillgate-0.2.1.tgz",
+    "checksumsUrl": "https://github.com/gderamchi/skillgate/releases/download/v0.2.1/RELEASE_SHA256SUMS.txt",
+    "sha256": "8de6e8a1056bb24e0d5b66f55a6050c48c23003c1c947855e25773b5be6aad12",
+    "bytes": 656229,
+    "installedCliSha256": "fef6c763d0c9225f7da4a2ae43307c7be81bc5f8521fd89f1b8412bc009e48c3"
+  },
+  "publicRequests": [
+    {
+      "requestedUrl": "https://github.com/gderamchi/skillgate/releases/download/v0.2.1/RELEASE_SHA256SUMS.txt",
+      "status": 200,
+      "authentication": "none"
+    },
+    {
+      "requestedUrl": "https://github.com/gderamchi/skillgate/releases/download/v0.2.1/gderamchi-skillgate-0.2.1.tgz",
+      "status": 200,
+      "authentication": "none"
+    }
+  ],
+  "authenticationUsed": false,
+  "runtime": {
+    "node": "v25.6.1",
+    "npm": "11.9.0"
+  },
+  "installation": {
+    "method": "npm install --global --prefix TEMP PUBLIC_RELEASE_TGZ_URL --ignore-scripts --no-audit --no-fund",
+    "npmUserConfiguration": "empty",
+    "npmGlobalConfiguration": "empty",
+    "npmCache": "new isolated cache",
+    "installedCliMatchesPublishedArchive": true
+  },
+  "publicDemo": {
+    "repository": "https://github.com/gderamchi/skillgate-demo-skills",
+    "sourceType": "synthetic-development-fixtures",
+    "legitimate": {
+      "skill": "portfolio-summary",
+      "sourceRevision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "db5853ccae037ac6cbd5bb6e348f420fc57815b05e0441f4900bce0a27d409e6",
+      "installedAutomatically": true
+    },
+    "suspicious": {
+      "skill": "portfolio-summary-trap",
+      "sourceRevision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "8212eace5b08306429a51df67d3bf8b3ffcb7f026c4a9229b0190878bb0d260e",
+      "decision": "hold",
+      "installed": false
+    }
+  },
+  "terminalChecks": {
+    "shell": "/bin/sh",
+    "activation": "eval \"$(skillgate enable)\"",
+    "installerInvocation": "npx skills add gderamchi/skillgate-demo-skills --skill SKILL_NAME --agent codex",
+    "originalInstallerInvoked": false,
+    "originalInstallerTestDouble": "Local sentinel that fails if invoked; never executed.",
+    "ptyScenariosPassed": 13,
+    "ptyRunsAgainst": "Installed public release CLI",
+    "ptyScenarios": [
+      "Clean automatic installation without prompt",
+      "Default cancellation",
+      "Ctrl-C returns130",
+      "Explicit exception tied to exact snapshot, fingerprint and destination",
+      "Updates preserve previous version on cancellation",
+      "Updates accept explicit exception",
+      "Saved-report approval cancellation",
+      "JSON approval never prompts",
+      "Saved-report explicit approval",
+      "JSON add never prompts",
+      "npx wrapper automatic clean installation",
+      "npx wrapper default cancellation despite --yes",
+      "npx wrapper explicit exception"
+    ]
+  },
+  "scope": {
+    "analysisMode": "static",
+    "skillCodeExecuted": false,
+    "modelExecuted": false,
+    "paidProviderCalls": 0,
+    "realFunds": false,
+    "realSecretsUsed": false,
+    "syntheticFixtures": true
+  },
+  "limits": [
+    "PATH activation protects supported installer invocations in the active terminal and inherited processes; absolute binaries and other installers can bypass it.",
+    "Static detection is heuristic and is not a safety certification.",
+    "Published via public GitHub release; not published to the npm registry."
+  ]
+}

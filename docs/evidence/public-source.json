@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-10T15:40:19.733Z",
+  "status": "passed",
+  "repositoryUrl": "https://github.com/gderamchi/skillgate",
+  "commit": "cd833865ebe4f981531c77a1c62b6ad91aab3e1f",
+  "anonymousClone": true,
+  "checkoutWithSpaces": true,
+  "sourceUnchanged": true,
+  "nodeVersion": "v25.6.1",
+  "pnpmVersion": "10.33.0",
+  "dependencyInstall": {
+    "command": "pnpm install --frozen-lockfile --ignore-scripts",
+    "lifecycleScriptsRun": false
+  },
+  "commands": [
+    {
+      "name": "anonymous clone",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "checkout exact published revision",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "verify source revision",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "pnpm version",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "locked dependency installation without lifecycle scripts",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "tests",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "build from published source",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "native Codex hook smoke with loopback mock",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "verify tracked source unchanged",
+      "status": "passed",
+      "exitCode": 0
+    }
+  ],
+  "testCounts": {
+    "tests": 43,
+    "passed": 43,
+    "failed": 0,
+    "skipped": 0
+  },
+  "freshBuild": {
+    "packageName": "@gderamchi/skillgate",
+    "version": "0.2.1",
+    "cliBytes": 1306988,
+    "cliSha256": "fef6c763d0c9225f7da4a2ae43307c7be81bc5f8521fd89f1b8412bc009e48c3"
+  },
+  "nativeCodex": {
+    "version": "codex-cli 0.154.0",
+    "status": "passed",
+    "provider": "deterministic Responses SSE mock on loopback",
+    "realModelExecution": false,
+    "paidProviderCalls": 0,
+    "upstreamInstallerExecuted": false,
+    "activeSkills": [
+      "portfolio-summary"
+    ],
+    "toolExitCodes": [
+      0,
+      2
+    ],
+    "sandbox": "danger-full-access only for isolated authored mock commands; normal workspace-write still requires host permission to write .agents",
+    "hookTrust": "one-invocation bypass for vetted temporary hook; no real user profile changed"
+  }
+}

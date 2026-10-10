@@ -22,7 +22,7 @@ Le benchmark du moteur n’a pas changé : 11/16 suspects détectés, 5 non dét
 
 ## Reste à faire / limites
 
-- **Distribution** : sources et paquet disponibles sur GitHub après validation de la release. Le registre npm n’est pas utilisé : aucune session npm valide sur ce poste. L’installation utilise directement l’URL du tarball public.
+- **Distribution** : sources et paquet publics sur GitHub ; téléchargement anonyme, installation depuis l’URL et reconstruction depuis clone neuf vérifiés. Le registre npm n’est pas utilisé : aucune session npm valide sur ce poste. L’installation utilise directement l’URL du tarball public.
 - **Couverture** : autres installateurs, autres agents, chemins absolus contournant les wrappers et processus qui n’héritent pas de PATH restent exclus. Aucun contrôle universel du système.
 - **Contexte Codex** : projet de confiance, autorisation native du hook et permission d’écrire dans le dossier de skills nécessaires. Le produit ne modifie pas la sandbox. Les hooks peuvent laisser continuer une commande en cas d’erreur de démarrage/timeout et n’interceptent pas `write_stdin`.
 - **Qualité de détection** : améliorer les faux négatifs et faux positifs sur un nouveau jeu de développement, puis évaluer séparément sans réécrire le benchmark gelé.
@@ -32,3 +32,7 @@ Le benchmark du moteur n’a pas changé : 11/16 suspects détectés, 5 non dét
 Le profil réel de l’utilisateur n’a pas été modifié et aucune fixture n’est activée dans ce dépôt de développement.
 
 Les résumés publics de vérification sont disponibles dans [evidence](evidence/). Les chemins `outputs/` cités désignent les fichiers produits localement par les scripts, volontairement exclus du dépôt public pour éviter de publier les chemins et journaux privés du poste.
+
+## Vérification publique 0.2.1 terminée
+
+Les deux preuves [installation publique](evidence/public-package.json) et [source publique](evidence/public-source.json) passent. Le CLI recompilé depuis le commit publié et le CLI installé depuis le tarball ont exactement le même SHA-256. 43 tests passent depuis le clone neuf, et 13 parcours PTY passent sur le paquet public installé. Les skills de démo sont acquis depuis le dépôt public, sans authentification.
