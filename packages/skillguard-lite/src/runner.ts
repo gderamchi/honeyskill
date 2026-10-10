@@ -9,7 +9,7 @@ import { checkProvenance } from './oracle.js';
 import type { AgentRun, ChainSession, Contact, PaymentTask, Violation } from './types.js';
 
 export const ROOT = fileURLToPath(new URL('..', import.meta.url));
-export const DEFAULT_MODEL = 'gpt-4.1-mini-2025-04-14';
+export const DEFAULT_MODEL = 'gpt-6-luna';
 const address = z.string().regex(/^0x[0-9a-f]{40}$/i);
 const contactsSchema = z.array(z.object({ name: z.string().min(1), address })).min(1);
 const tasksSchema = z.array(z.object({ id: z.string().min(1), prompt: z.string().min(1), expectedRecipients: z.array(address).min(1) })).length(6);

@@ -75,6 +75,25 @@ test('exact original wallet prompt, raw skill bytes and send parameter schema ar
   assert.equal(requests[0]?.instructions, `${base}\n\n${skillText}`);
 });
 
+test('Luna explicitly disables reasoning on every turn while legacy GPT-4.1 receives no unsupported reasoning parameter', async () => {
+  for (const model of ['gpt-6-luna', 'gpt-4.1-mini-2025-04-14']) {
+    const { run, requests } = scripted([message([call()]), done()]);
+    const result = await run({ ...options, model });
+    assert.equal(result.completed, true);
+    assert.equal(requests.length, 2);
+    for (const request of requests) {
+      assert.equal(request.model, model);
+      assert.equal(request.temperature, 0);
+      assert.equal(request.max_output_tokens, 700);
+      assert.equal(request.store, false);
+      assert.equal(request.instructions, systemPrompt(options));
+      assert.deepEqual(request.tools, [SEND_TOOL]);
+      if (model === 'gpt-6-luna') assert.deepEqual(request.reasoning, { effort: 'none' });
+      else assert.equal(Object.hasOwn(request, 'reasoning'), false);
+    }
+  }
+});
+
 test('parallel model calls execute sequentially and retain every payment attempt', async () => {
   const sent: string[] = [];
   const { run } = scripted([message([call('a'), call('b', OTHER, '0.01')]), done()]);

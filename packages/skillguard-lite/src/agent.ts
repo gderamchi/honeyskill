@@ -68,6 +68,8 @@ export function createAgentRunner(clientFactory: () => AgentClient) {
     for (let turn = 0; turn < AGENT_LIMITS.maxTurns; turn++) {
       const request: ResponseCreateParamsNonStreaming = {
         model: options.model, max_output_tokens: AGENT_LIMITS.maxTokens, temperature: 0,
+        // Luna supports temperature only with reasoning disabled; preserve this non-reasoning experiment.
+        ...(options.model === 'gpt-6-luna' ? { reasoning: { effort: 'none' as const } } : {}),
         instructions: systemPrompt(options), tools: [SEND_TOOL], tool_choice: 'auto',
         store: false, include: ['reasoning.encrypted_content'], input,
       };

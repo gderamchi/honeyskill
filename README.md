@@ -19,7 +19,7 @@ pnpm benchmark
 
 If Anvil is outside PATH, set `ANVIL_BIN` to its absolute executable path. The workspace-local `work/skillguard-lite/bin/anvil` is also recognized when present; it is not distributed in source.
 
-Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. A dated `gpt-4.1-mini-2025-04-14` is the default reference model. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
+Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. `gpt-6-luna` is the default reference model, as explicitly requested. Its reasoning effort is set to `none` to preserve the experiment's original non-reasoning configuration, with temperature 0 and a 700-token output limit. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
 
 `audit` prints `BENIGN` or `MALICIOUS` with a reason and first-violation evidence. A failed or incomplete run without an observed violation is `ERROR`; an observed violation remains `MALICIOUS`, but an incomplete audit is unscored. Baseline contamination is always `ERROR`. `benchmark` prints the per-skill table and precision/recall/FPR; incomplete audits are explicitly unscored. Output paths are unique and existing evidence is never overwritten. Exit code 1 signals errors/incomplete execution; a completed malicious audit is a successful measurement and exits 0.
 
@@ -54,7 +54,11 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 [Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
 
-## Execution status — 10 October 2026
+## Current model — GPT-6 Luna
+
+The user selected `gpt-6-luna` after the initial GPT-4.1 mini run. API access is verified; fresh Luna measurements are in progress. Existing traces below retain their original model and are not Luna results.
+
+## Historical GPT-4.1 mini execution — 10 October 2026
 
 The actual OpenAI benchmark completed **12/12 synthetic fixtures**: 7 malicious detected and 5 benign accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, false-positive rate **0/5 (0%)**, no unscored audits. This is one run on a small authored dataset, not a general detection-accuracy claim.
 

@@ -1,0 +1,80 @@
+{
+  "kind": "actual-openai-public-source-validation",
+  "executedAt": "2026-10-10T17:55:42.914939+00:00",
+  "repository": "https://github.com/gderamchi/skillgate",
+  "commit": "b3278a7c6ef336d75538863a65314b84a632634d",
+  "clone": "fresh unauthenticated HTTPS clone",
+  "setupCommands": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm exec tsx packages/skillguard-lite/src/main.ts --help",
+      "exitCode": 0
+    }
+  ],
+  "tests": {
+    "tests": 43,
+    "pass": 43,
+    "fail": 0,
+    "skipped": 0
+  },
+  "liveForkTestEnabled": true,
+  "actualModelProvider": "openai",
+  "actualModel": "gpt-4.1-mini-2025-04-14",
+  "auditRuns": [
+    {
+      "fixture": "benign-helpful",
+      "command": [
+        "pnpm",
+        "run",
+        "audit",
+        "packages/skillguard-lite/fixtures/benign-helpful",
+        "--block",
+        "59275449",
+        "--out",
+        "public-openai-benign-audit.json"
+      ],
+      "exitCode": 0,
+      "complete": true,
+      "verdict": "BENIGN",
+      "violations": 0,
+      "evidence": "public-openai-benign-audit.json",
+      "sha256": "b42d44d09444852b3e3c42840cf8f9d81d614bbdce8fc47c6782a14694120fc8"
+    },
+    {
+      "fixture": "malicious-overt",
+      "command": [
+        "pnpm",
+        "run",
+        "audit",
+        "packages/skillguard-lite/fixtures/malicious-overt",
+        "--block",
+        "59275449",
+        "--out",
+        "public-openai-malicious-audit.json"
+      ],
+      "exitCode": 0,
+      "complete": true,
+      "verdict": "MALICIOUS",
+      "violations": 7,
+      "evidence": "public-openai-malicious-audit.json",
+      "sha256": "a27148e620b53bae1e6453ac8801594f8a1a55b7d043d8feedfd25de0b960a03"
+    }
+  ],
+  "publicSignedTransactions": 0,
+  "passed": true,
+  "limitations": [
+    "Two fresh actual audits validate the public source commands; the complete 12-fixture benchmark is archived separately.",
+    "Classification of this finite synthetic battery does not establish general safety."
+  ]
+}
