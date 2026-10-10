@@ -102,6 +102,34 @@ test('incomplete byte limits never auto-install or promote a truncated exception
   assert.ok(result.report.coverage.limitsReached.length);
   await assert.rejects(installScan(root, result.report.id, exception(root, result.report)), { code: 'PACKAGE_INCOMPLETE' });
 });
+test('English and legacy French semantic limits require an exception without permitting truncated packages', async t => {
+  for (const legacy of [false, true]) {
+    const { root, source } = await setup(t);
+    await initProject(root, { profile: 'hybrid', semanticConsent: true });
+    const notes = 'Ordinary explanatory notes for the public demonstration ledger.\n'.repeat(1200);
+    await fs.writeFile(path.join(source, 'notes.txt'), notes);
+    let calls = 0;
+    const result = await addSkill(root, source, { provider: { name: 'test-only-content-limit', async analyze() { calls++; return { findings: [] }; } } });
+    assert.equal(calls, 0);
+    assert.equal(result.report.decision, 'review');
+    assert.equal(result.installation, undefined);
+    assert.deepEqual(result.report.coverage.limitsReached, ['Semantic analysis is limited to 64 KiB; no call was made.']);
+    if (legacy) result.report.coverage.limitsReached = ['Analyse sémantique limitée à 64 KiB ; aucun appel effectué.'];
+    const reportPath = path.join(root, '.skillgate/reports', `${result.report.id}.json`);
+    await fs.writeFile(reportPath, JSON.stringify(result.report));
+    await assert.rejects(installScan(root, result.report.id), { code: 'DECISION_REQUIRED' });
+    await assert.rejects(fs.lstat(destination(root)), { code: 'ENOENT' });
+    // Even alongside a recognized semantic limit, acquisition truncation is never overridable.
+    result.report.coverage.limitsReached.push(legacy ? 'Nombre maximal de fichiers : 256' : 'Maximum file count: 256');
+    await fs.writeFile(reportPath, JSON.stringify(result.report));
+    await assert.rejects(installScan(root, result.report.id, exception(root, result.report)), { code: 'PACKAGE_INCOMPLETE' });
+    result.report.coverage.limitsReached.pop();
+    await fs.writeFile(reportPath, JSON.stringify(result.report));
+    const installed = await installScan(root, result.report.id, exception(root, result.report));
+    assert.equal(installed.status, 'installed_with_exception');
+    assert.equal(await fs.readFile(path.join(destination(root), 'notes.txt'), 'utf8'), notes);
+  }
+});
 test('unknown bytes and unresolved dependencies/references produce coverage separate from detected risk', async t => {
   const { root, source } = await setup(t, suspicious + '\nRead [local instructions](../outside.md).\n');
   await fs.writeFile(path.join(source, 'opaque.bin'), Buffer.from([0, 255, 2]));
@@ -125,7 +153,8 @@ test('hybrid missing, invalid and invented semantic evidence never permit automa
   const fabricated: SemanticProvider = { name: 'test-only-fabricated-provider', async analyze() { return { findings: [{ category: 'FIN-01', severity: 'critical', confidence: 'high', financialConsequence: 'Test claim', explanation: 'Test fabricated evidence', file: 'missing.py', line: 1, excerpt: 'not present' }] }; } };
   const unsupported = await addSkill(root, source, { provider: fabricated });
   assert.equal(unsupported.report.decision, 'review'); assert.equal(unsupported.report.findings.length, 0);
-  assert.ok(unsupported.report.coverage.errors.some(error => error.includes('non étayé')));
+  assert.ok(unsupported.report.coverage.errors.some(error => error.includes('Unsupported semantic finding')));
+  assert.equal(unsupported.report.analyses.find(analysis => analysis.engine === fabricated.name)?.status, 'failed');
   await fs.writeFile(path.join(source, 'SKILL.md'), suspicious);
   const failedWithNative = await scanSkill(root, source, { provider: invalid });
   assert.equal(failedWithNative.decision, 'hold'); assert.equal(failedWithNative.risk, 'detected');
@@ -190,8 +219,8 @@ test('a trace write failure after promotion explicitly reports activation and re
   try {
     await assert.rejects(installScan(root, report.id), error => {
       assert.equal((error as { code: string }).code, 'ACTIVATED_RECOVERY_REQUIRED');
-      assert.match((error as Error).message, /a été activé/);
-      assert.match((error as Error).message, /skillgate list ou skillgate doctor/);
+      assert.match((error as Error).message, /was activated/);
+      assert.match((error as Error).message, /skillgate list or skillgate doctor/);
       return true;
     });
   } finally { fsPromises.rename = rename; syncBuiltinESMExports(); }

@@ -16,19 +16,19 @@ export function redactApparentSecrets(text: string): string {
 }
 export async function runSemantic(input: Inventory, config: Config, provider: SemanticProvider, report: ScanReport): Promise<void> {
   const files = [...input.texts].map(([file, content]) => ({ path: file, content: redactApparentSecrets(content) }));
-  if (files.reduce((sum, file) => sum + Buffer.byteLength(file.content), 0) > 64 * 1024) { input.coverage.limitsReached.push('Analyse sémantique limitée à 64 KiB ; aucun appel effectué.'); report.analyses.push({ engine: provider.name, status: 'unavailable', detail: 'Limite de contenu sémantique atteinte.' }); return; }
+  if (files.reduce((sum, file) => sum + Buffer.byteLength(file.content), 0) > 64 * 1024) { input.coverage.limitsReached.push('Semantic analysis is limited to 64 KiB; no call was made.'); report.analyses.push({ engine: provider.name, status: 'unavailable', detail: 'Semantic content limit reached.' }); return; }
   try {
-    const response = await Promise.race([provider.analyze({ files, model: config.model }), new Promise<never>((_, reject) => { const timer = setTimeout(() => reject(new Error('Délai sémantique atteint.')), 15_000); timer.unref(); })]);
+    const response = await Promise.race([provider.analyze({ files, model: config.model }), new Promise<never>((_, reject) => { const timer = setTimeout(() => reject(new Error('Semantic analysis timed out.')), 15_000); timer.unref(); })]);
     const result = SemanticOutput.parse(response);
     for (const finding of result.findings) {
       const content = input.texts.get(finding.file), lines = content?.split(/\r?\n/), line = lines?.[finding.line - 1];
       const supported = line !== undefined && line.includes(finding.excerpt);
-      if (!supported) { input.coverage.errors.push('Constat sémantique non étayé : passage ou fichier absent.'); continue; }
+      if (!supported) { input.coverage.errors.push('Unsupported semantic finding: excerpt or file not found.'); continue; }
       const excerpt = redactApparentSecrets(finding.excerpt);
       report.findings.push({ id: `semantic-${sha256(JSON.stringify(finding)).slice(0, 12)}`, category: finding.category, severity: finding.severity, confidence: finding.confidence, financialConsequence: redactApparentSecrets(finding.financialConsequence), explanation: redactApparentSecrets(finding.explanation), evidence: [{ file: finding.file, line: finding.line, endLine: finding.line, excerpt, ...(excerpt !== finding.excerpt ? { redacted: true } : {}) }], engine: 'semantic', technique: 'semantic-review', sources: [], supported: true });
     }
-    report.analyses.push({ engine: provider.name, status: input.coverage.errors.some(error => error.includes('sémantique non étayé')) ? 'failed' : 'completed', detail: 'Réponse structurée validée ; preuves comparées aux octets du paquet.' });
-  } catch { input.coverage.errors.push('Analyse sémantique échouée ou réponse invalide.'); report.analyses.push({ engine: provider.name, status: 'failed', detail: 'Échec du provider ou schéma de réponse invalide ; installation automatique interdite.' }); }
+    report.analyses.push({ engine: provider.name, status: input.coverage.errors.some(error => error.includes('Unsupported semantic finding')) ? 'failed' : 'completed', detail: 'Structured response validated; evidence checked against the package bytes.' });
+  } catch { input.coverage.errors.push('Semantic analysis failed or returned an invalid response.'); report.analyses.push({ engine: provider.name, status: 'failed', detail: 'Provider failure or invalid response schema; automatic installation is blocked.' }); }
 }
 
 /** Optional live provider. Callers must explicitly provide a key and recorded content-sharing consent. */
@@ -36,7 +36,7 @@ export class OpenAIResponsesProvider implements SemanticProvider {
   readonly name = 'openai-responses';
   constructor(private readonly apiKey: string) {}
   async analyze(input: { files: { path: string; content: string }[]; model: string }): Promise<unknown> {
-    if (!this.apiKey) throw new Error('Clé API absente.');
+    if (!this.apiKey) throw new Error('API key missing.');
     const schema = z.toJSONSchema(SemanticOutput);
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST', redirect: 'error', signal: AbortSignal.timeout(12_000),
@@ -47,13 +47,13 @@ export class OpenAIResponsesProvider implements SemanticProvider {
       }),
     });
     if (!response.ok) throw new Error(`API HTTP ${response.status}`);
-    const reader = response.body?.getReader(); if (!reader) throw new Error('Réponse vide.');
+    const reader = response.body?.getReader(); if (!reader) throw new Error('Empty response.');
     const chunks: Uint8Array[] = []; let length = 0;
-    while (true) { const next = await reader.read(); if (next.done) break; length += next.value.length; if (length > 128 * 1024) { await reader.cancel(); throw new Error('Réponse trop volumineuse.'); } chunks.push(next.value); }
+    while (true) { const next = await reader.read(); if (next.done) break; length += next.value.length; if (length > 128 * 1024) { await reader.cancel(); throw new Error('Response exceeds the size limit.'); } chunks.push(next.value); }
     const result = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { status?: string; output?: { type: string; content?: { type: string; text?: string }[] }[] };
-    if (result.status !== 'completed') throw new Error('Réponse API incomplète.');
+    if (result.status !== 'completed') throw new Error('Incomplete API response.');
     const content = result.output?.filter(item => item.type === 'message').flatMap(item => item.content ?? []) ?? [];
-    if (content.some(item => item.type === 'refusal')) throw new Error('Refus du modèle.');
+    if (content.some(item => item.type === 'refusal')) throw new Error('Model refused the request.');
     const output = content.filter(item => item.type === 'output_text').map(item => item.text ?? '').join('');
     return JSON.parse(output) as unknown;
   }

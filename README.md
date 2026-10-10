@@ -1,108 +1,139 @@
 # SkillGate
 
-Contrôle des risques financiers **avant l’installation des skills**. Pas de wallet, de contrôle transactionnel ou de plateforme web.
+Financial-risk checks **before installing agent skills**. A local CLI with terminal interception, not a wallet, transaction firewall or web platform.
 
-SkillGate acquiert le paquet en quarantaine et analyse son contenu sans exécuter son code. Une analyse complète sans alerte installe automatiquement le snapshot vérifié. Un risque ou une analyse incomplète affiche les raisons, les fichiers et les lignes concernés, puis laisse le choix dans le terminal : **Ne pas installer** (défaut) ou **Installer malgré le risque**. Une collecte tronquée ne peut pas être acceptée, même par exception.
+SkillGate downloads the skill into quarantine and inspects its files without executing acquired code. A complete scan with no detected risk automatically installs the verified snapshot. A finding or incomplete analysis explains the evidence and offers **Do not install** (default) or **Install despite the risk**. Truncated packages cannot be activated, even with an exception.
 
-## Installer et activer
+## Install and activate
 
-Installer une fois (macOS/Linux, Node.js 22.18+ et Git requis) :
+Requires macOS/Linux, Node.js 22.18+ and Git. Install once or update:
 
 ```sh
 npm i -g gderamchi/skillgate
 ```
 
-Puis, dans le projet à protéger :
+In the project you want to protect:
 
 ```sh
 skillgate on
 ```
 
-Le prompt **[SkillGate]** indique que le terminal est protégé. Installez ensuite vos skills avec vos commandes habituelles. Tapez **exit** pour revenir au terminal initial.
+The **[SkillGate]** prompt identifies the protected terminal session. Install skills using the supported commands below. Type **exit** to return to the original shell.
 
-`on` ouvre une session Bash dédiée, sans charger les fichiers de démarrage du shell ni modifier votre profil. Les commandes et agents lancés dans cette session héritent du contrôle. Les autres terminaux et applications déjà ouverts ne sont pas activés. Les paramètres du projet et les skills déjà installés restent conservés à la fermeture.
+`on` starts a dedicated Bash session without loading shell startup files or changing your shell profile. Commands and agents launched from this session inherit its environment. Other terminals and already-running applications are not activated. Project settings and installed skills persist when the session closes.
 
-L’installation courte utilise le dépôt GitHub public et son CLI déjà compilé, sans compte npm, clé API ou compilation locale. Le paquet est également disponible dans les releases GitHub ; il n’est pas inscrit au registre npm sous le nom `skillgate`. Version actuelle : **0.3.0**. Aucun serveur ou navigateur requis.
+The GitHub shorthand installs the committed, precompiled CLI: no npm account, API key, local compilation, server or browser is required. Current version: **0.3.1**, with English CLI messages and reports. The package is also distributed through GitHub releases; it is not published to the npm registry as `skillgate`.
 
-Les commandes prises en charge passent ensuite automatiquement par SkillGate, qu’elles soient lancées par une personne ou par un agent héritant de ce terminal :
+## Two short demo commands
+
+Use an isolated temporary project for these synthetic fixtures:
+
+```sh
+cd "$(mktemp -d)"
+skillgate on
+```
+
+Then run each command separately:
 
 ```sh
 npx skills add gderamchi/skill-safe
 npx skills add gderamchi/skill-trap
-# Aussi : npx -y skills@VERSION add …, pnpm dlx skills add …, skills add …
 ```
 
-Le premier skill s’installe automatiquement ; le second est retenu et expliqué. Dans un terminal interactif, taper `2` accepte explicitement le risque pour le snapshot affiché. Entrée annule. Sans terminal interactif, le paquet reste retenu (code 2) ; `skillgate approve RAPPORT` permet la décision ultérieure. Aucun `--yes` d’un installateur ne confirme un risque.
+The first skill installs automatically. The second declares read-only behavior but requests a concealed fictional transfer: SkillGate holds it and explains FIN-02 and FIN-06 with file and line evidence. Press Enter to cancel. To demonstrate an exception, run the same trap command again and choose `2`. SkillGate records the exact fingerprint and destination with status `installed_with_exception`.
 
-La cible est **Codex dans le projet activé**, sous `.agents/skills`. Les demandes globales, multi-skills et options non prises en charge sont refusées. Pour changer de projet, quittez la session avec `exit`, changez de dossier, puis relancez `skillgate on`. Les commandes sans rapport avec l’installation sont déléguées au programme original.
+Without an interactive terminal, the suspect package stays held with exit code 2. Review it later with `skillgate approve SCAN_ID`. An installer's `--yes` never accepts a SkillGate risk. The scanner does not execute either fixture or any financial transaction.
 
-## Codex : garde complémentaire
+## Supported installation paths
+
+- `npx skills add/install SOURCE`, including `npx -y skills@VERSION add SOURCE`.
+- `pnpm dlx skills add/install SOURCE`.
+- `skills add/install SOURCE`.
+- Explicit `skillgate install SOURCE`, local directories and public GitHub repositories.
+- Updates through `skillgate update NAME`: a rejected update preserves the existing installed snapshot.
+
+The MVP targets **one skill at a time, for Codex in the current project**, under `.agents/skills`. Global installs, unsupported agents, multiple skills, unsupported options and third-party update commands are rejected. Interactive discovery commands that could install a skill are also rejected. Unrelated commands are delegated to the original executable.
+
+To switch projects, exit the protected session, change directory and run `skillgate on` again.
+
+## How it works
+
+1. **Intercept.** `skillgate on` places small `npx`, `pnpm` and `skills` wrappers first on PATH. Supported installation commands are routed to SkillGate before the upstream installer executes.
+2. **Acquire.** Read local files or fetch a public GitHub revision into quarantine outside the agent's skill-discovery directory. Reject incoming links, unsafe paths and collection limits.
+3. **Inspect.** Inventory the files, build a canonical SHA-256 manifest, check references and dependencies, then apply local financial-risk heuristics. Files are untrusted data, never instructions to the scanner.
+4. **Decide.** Risk and analysis coverage are separate. A complete supported scan with no findings can auto-install. Otherwise the CLI explains the problem and waits for an explicit decision.
+5. **Activate.** Recheck the snapshot's fingerprint and promote that exact copy. The active directory points to the verified snapshot. Updates replace the pointer atomically; an exception applies only to this report, fingerprint and destination.
+
+Reports, quarantine, snapshots and installation history stay under `.skillgate/`. There is no telemetry or remote database. These files are not tamper-proof against the owner of the operating-system account.
+
+## Financial checks and measured limits
+
+The static engine uses pattern matching and contextual combinations, not an LLM by default:
+
+| Check | Pattern being flagged |
+| --- | --- |
+| FIN-01 | Requests to collect and transmit financial secrets, such as a seed phrase or private key. |
+| FIN-02 | Transfers or beneficiary replacement conflicting with read-only claims or accompanied by concealment. |
+| FIN-03 | Broad spending approvals, including unlimited allowances. |
+| FIN-04 | Concealed changes to financial settings such as network, token, RPC or slippage. |
+| FIN-05 | Remote or obscured code acquisition combined with execution in a financial context. |
+| FIN-06 | Hidden instructions to sign, approve or transfer without telling the operator. |
+
+These are heuristic checks, not complete coverage of those threats. The frozen internal synthetic evaluation contains 40 cases: **11/16 suspect cases detected, 5 missed, 4/16 false positives**; 11/16 legitimate cases auto-install; 7/8 incomplete cases are held and one acquisition error prevents activation. It was authored by the same assistant as the implementation and is not an independent blind evaluation. Passing implementation tests does not imply reliable detection of all malicious skills.
+
+The corpus distinguishes real source reports from synthetic financial hypotheses and inert fixtures. `skillgate demo` uses a fictional 100 → 75 DEMOUSD ledger; it does not demonstrate an actual model following an attack or real money being saved.
+
+An optional OpenAI Responses provider is implemented and tested with simulated responses. No real paid provider execution has been verified. Hybrid mode requires an explicit model, API key and content-sharing consent; it cannot remove native findings or silently fall back to static mode on failure. Source excerpts and historical reports retain their original language.
+
+## Boundaries
+
+PATH interception covers supported commands in the activated session and descendants inheriting its environment. It does not cover manual copies, absolute executable paths that bypass wrappers, arbitrary installers, environments that replace PATH, commands passed to an already-running shell through `write_stdin`, or processes started before activation. It does not control transactions or agent behavior after installation. A local process can deliberately bypass or alter the protection.
+
+An optional Codex `PreToolUse` hook provides additional command rewriting:
 
 ```sh
 skillgate enable --codex-hook --json
 skillgate on
 ```
 
-La première commande ajoute un hook `PreToolUse` dans `.codex/hooks.json`, en préservant les autres hooks. **Codex exige de revoir et autoriser ce hook via `/hooks` dans un projet de confiance** ; SkillGate ne modifie pas cette confiance. Le hook reconnaît les installateurs pris en charge et remplace leur commande par le CLI contrôlé avant toute acquisition/activation. Le script Python natif de Codex n’est accepté qu’avec une destination explicite correspondant à `.agents/skills` du projet ; sa cible globale implicite est refusée.
+Codex requires the hook to be reviewed and trusted through `/hooks` in a trusted project. SkillGate does not grant that trust or modify sandbox permissions. The native Python installer is supported only with an explicit destination matching this project's `.agents/skills`.
 
-Ce hook complète le terminal, il ne remplace pas l’activation du terminal pour les installations externes à Codex. Il ne lance pas l’analyse dans le processus de hook : la commande substituée effectue la collecte, les checks et l’installation.
+The integration was exercised using the real Codex CLI and a local simulated model. That proves the hook path under those test conditions, not every agent or sandbox. A real `workspace-write` test could analyze the skill but denied writing `.agents` with `EPERM`; installation still requires host write permission. Codex hook startup errors or timeouts can allow a command through before SkillGate runs. The hook is not a security sandbox.
 
-Les permissions de Codex s’appliquent toujours : le test réel en sandbox `workspace-write` a analysé le paquet puis refusé la création de `.agents` (`EPERM`). L’installation requiert donc aussi une autorisation d’écriture du host. Le test d’intégration réussi utilise le vrai CLI Codex avec un faux modèle local, dans un projet temporaire dont l’écriture est autorisée ; il ne démontre pas une installation sans permission dans toutes les sandboxes. SkillGate n’élève pas ces permissions.
-
-## Périmètre réel
-
-L’intégration par PATH couvre `npx skills add/install`, `pnpm dlx skills add/install` et `skills add/install` dans le terminal activé et ses descendants. Elle n’intercepte pas les copies manuelles, binaires appelés par chemin absolu, autres installateurs, environnements qui réinitialisent PATH, commandes passées à un shell déjà ouvert via `write_stdin`, ni processus lancés avant activation. Le hook natif couvre certaines commandes Codex supplémentaires.
-
-Les hooks Codex peuvent laisser passer une commande si le hook ne démarre pas ou expire ; ils ne constituent pas une isolation de sécurité. Les syntaxes reconnues mais non prises en charge sont explicitement refusées par notre adaptateur. La protection ne résiste pas à un processus local qui décide de la contourner ou de modifier ses fichiers. **Aucune interception universelle de tous les processus n’est revendiquée.** Voir la [documentation officielle des hooks](https://learn.chatgpt.com/docs/hooks).
-
-## Autres commandes
+## Other commands
 
 ```sh
-skillgate scan /chemin/skill --json
-skillgate install /chemin/skill
-skillgate update nom-du-skill
+skillgate scan /path/to/skill --json
+skillgate install /path/to/skill
+skillgate update skill-name
 skillgate inspect scan-ID
 skillgate approve scan-ID
 skillgate list
 skillgate doctor
-skillgate env                 # exports pour réactiver un projet configuré
-skillgate report scan-ID --format html --output rapport.html
+skillgate report scan-ID --format html --output report.html
 skillgate demo --json
 skillgate benchmark --json
 skillgate export --json
 skillgate prune --json
 ```
 
-`--project DOSSIER` fixe la racine ; `--json` réserve stdout au JSON et désactive les questions. `scan` n’installe rien. Une mise à jour retenue laisse la version précédente active ; les mises à jour doivent passer par `skillgate update`. L’exception reste enregistrée avec l’empreinte, la destination et le statut `installed_with_exception`.
+`--project DIRECTORY` selects the project root; `--json` reserves stdout for JSON and disables interactive questions. `scan` never installs. `prune` removes explicitly expired inactive data while retaining active snapshots. `enable` and `env` remain available for existing automated integrations.
 
-Codes : 0 succès, 1 erreur, 2 retenu/annulé/décision requise, 3 configuration absente, 130 interruption. Une erreur n’autorise jamais une activation par SkillGate.
+Exit codes: 0 success, 1 error, 2 held/cancelled/decision required, 3 missing configuration, 130 interruption. Errors never authorize an installation through SkillGate.
 
-## Analyse et limites mesurées
+## Develop and verify
 
-Mode statique local par défaut, sans clé : heuristiques financières FIN-01 à FIN-06 (secrets, bénéficiaires, autorisations, paramètres, code distant/masqué, consignes cachées). Un mot financier isolé ne suffit pas. La couverture des fichiers et le risque restent distincts. Les empreintes et contrôles avant activation empêchent de substituer la source à la version analysée.
-
-Sur le benchmark interne synthétique gelé de 40 cas : **11/16 suspects détectés, 5 non détectés, 4/16 faux positifs** ; 11/16 légitimes installables automatiquement ; 7/8 incomplets retenus et 1 erreur de collecte sans activation. Ces chiffres ne sont pas une certification ou une mesure indépendante. Les résultats détaillés restent dans `outputs/benchmark.json`.
-
-Un provider OpenAI Responses facultatif est implémenté et testé avec des réponses simulées, mais aucun appel payé réel n’a été exécuté. Il nécessite profil hybride, consentement explicite, modèle et clé. Il ne peut pas effacer un constat natif. Aucun fallback hybride vers statique silencieux. Sans clé, la démonstration utilise uniquement les checks locaux.
-
-Le corpus sépare 11 sources réelles consultées (dont 4 rapports de recherche), 3 mécanismes documentés et 3 hypothèses financières synthétiques. Les fixtures et leurs actions sont inertes. `skillgate demo` rejoue un registre fictif 100 → 75 DEMOUSD ; aucune transaction, économie réelle ou réaction d’un modèle n’en est déduite.
-
-## Développer et vérifier
-
-Pour reconstruire les sources : pnpm 10.33.0, Python 3 (ZIP et tests PTY) et un shell POSIX macOS/Linux. Le smoke natif optionnel exige le CLI Codex installé ; il utilise un faux modèle local, sans clé.
+Source builds additionally require pnpm 10.33.0 and Python 3 for ZIP and PTY checks:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm validate
-# Compilation seule : pnpm build:cli
+# Build only:
+pnpm build:cli
 ```
 
-La validation exécute typecheck, tests, build CLI, scénarios de choix dans un vrai PTY, démonstration isolée, packaging et installation du paquet hors dépôt. Les preuves actuelles sont dans `outputs/cli-validation.json`. Le paquet compilé n’a aucune dépendance runtime externe et exclut le serveur, React, Vite et les assets web. Les anciens fichiers `apps/web`, tests HTTP et preuves 0.1.0 sont conservés pour traçabilité, sans faire partie du produit 0.3.0.
+Validation covers type checking, tests, a compiled CLI build, real terminal interactions, an isolated simulation, packaging and installation outside the repository. Sanitized public evidence is in [docs/evidence](docs/evidence/); raw workstation logs are excluded.
 
-Les rapports, snapshots et journaux locaux sont privés au compte, mais ne sont pas inviolables. Les extraits masquent certains motifs de secrets ; les snapshots peuvent contenir le texte original. `prune` retire explicitement les données inactives selon la rétention configurée et préserve les versions encore actives. Ne pas effacer des snapshots référencés.
+The CLI bundle has no external runtime dependencies and excludes the archived web UI, server, React and Vite. Historical `apps/web` and `server.ts` sources remain for provenance. The initial specification is preserved in `docs/SPECIFICATION.md`; the later user scope removes the web UI from the shipped product.
 
-Le dépôt public contient le code source, le corpus, les fixtures inertes et les scripts de vérification. Les rapports publics expurgés se trouvent dans `docs/evidence/` et les empreintes dans la release ; les journaux bruts restent locaux.
-
-Le cahier des charges initial est conservé dans `docs/SPECIFICATION.md`, avec le changement de périmètre demandé ensuite : CLI et interception terminal, sans UI web.
-
-Le script de compilation est nommé `build:cli` : un script nommé `build` ferait reconstruire la dépendance Git par npm à l’installation. Le dossier `dist/` est donc commité dans le dépôt public, et les outils de développement restent en devDependencies. `enable` et `env` restent disponibles pour les intégrations automatisées existantes ; `on` est le parcours interactif recommandé.
+The build script must remain named `build:cli`: a root npm script named `build`, `prepare` or another preparation lifecycle hook would cause npm to rebuild a Git dependency during installation. The public repository therefore commits `dist/`; development tools stay in devDependencies.

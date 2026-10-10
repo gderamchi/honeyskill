@@ -35,14 +35,14 @@ export async function initProject(projectRoot: string, options: Partial<Pick<Con
 }
 export async function loadConfig(projectRoot: string): Promise<Config> {
   const file = path.join(stateDir(projectRoot), 'config.json');
-  if (!await exists(file)) throw new SkillGateError('NOT_INITIALIZED', 'Configuration absente. Lancez skillgate init --agent codex.');
+  if (!await exists(file)) throw new SkillGateError('NOT_INITIALIZED', 'Configuration missing. Run skillgate init --agent codex.');
   await ensureState(projectRoot);
   return ConfigSchema.parse(await readJson(file));
 }
 async function semanticAnalysis(input: Inventory, config: Config, provider: SemanticProvider | undefined, report: ScanReport): Promise<void> {
   if (!config.semanticConsent || !provider) {
-    report.analyses.push({ engine: 'semantic', status: 'unavailable', detail: config.semanticConsent ? 'Provider absent : aucun appel externe effectué.' : 'Consentement à l’envoi externe absent.' });
-    input.coverage.errors.push('Analyse hybride obligatoire indisponible.'); return;
+    report.analyses.push({ engine: 'semantic', status: 'unavailable', detail: config.semanticConsent ? 'Provider missing: no external call was made.' : 'Consent to share content externally is missing.' });
+    input.coverage.errors.push('Required hybrid analysis is unavailable.'); return;
   }
   // Implemented in semantic.ts; dynamic loading keeps the static path independent from network code.
   const { runSemantic } = await import('./semantic.js');
@@ -53,19 +53,19 @@ export async function scanSkill(projectRoot: string, source: string, options: Sc
   const id = `scan-${randomUUID()}`, directory = path.join(stateDir(projectRoot), 'quarantine', id, 'package');
   const acquired = await acquire(source, directory, options.skill), collected = acquired.inventory;
   const main = collected.texts.get('SKILL.md');
-  if (!main) throw new SkillGateError('INVALID_SKILL', 'SKILL.md absent, trop volumineux ou non lisible.');
+  if (!main) throw new SkillGateError('INVALID_SKILL', 'SKILL.md is missing, too large, or unreadable.');
   const metadata = skillMetadata(main);
-  if (options.skill && metadata.name !== options.skill) throw new SkillGateError('SKILL_MISMATCH', 'Le nom du SKILL.md ne correspond pas au skill demandé.');
+  if (options.skill && metadata.name !== options.skill) throw new SkillGateError('SKILL_MISMATCH', 'The name in SKILL.md does not match the requested skill.');
   checkReferences(collected);
   const native = analyzeNative(collected);
   const report: ScanReport = {
     schemaVersion: 1, id, name: metadata.name, source: acquired.source, fingerprint: collected.fingerprint,
     startedAt, completedAt: startedAt, profile: config.profile,
     engineVersion: ENGINE_VERSION, rulesVersion: RULES_VERSION, corpusVersion: CORPUS_VERSION, policyVersion: POLICY_VERSION,
-    analyses: [{ engine: 'native', status: 'completed', detail: 'Analyse statique des octets collectés ; aucun script exécuté.' }],
+    analyses: [{ engine: 'native', status: 'completed', detail: 'Static analysis of the collected bytes; no scripts were executed.' }],
     coverage: collected.coverage, findings: native.findings, risk: native.findings.length ? 'detected' : 'none', decision: 'review',
     capabilities: native.capabilities, durationMs: 0, manifest: collected.manifest,
-    limitations: ['Contrôle des installations et mises à jour effectuées par SkillGate uniquement.', 'Aucune preuve de sûreté complète ; aucun contrôle transactionnel pendant l’exécution.', 'L’environnement financier réel et ses permissions ne sont pas consultés.', 'Le propriétaire du système peut modifier les snapshots et journaux locaux.', config.profile === 'static' ? 'Analyse statique : règles heuristiques, sans raisonnement de modèle externe.' : 'Analyse hybride : contenu réduit et secrets apparents masqués, sans garantie de redaction parfaite.'],
+    limitations: ['Only installations and updates routed through SkillGate are checked.', 'No guarantee of complete safety; no transaction checks during execution.', 'The actual financial environment and its permissions are not inspected.', 'The system owner can modify local snapshots and logs.', config.profile === 'static' ? 'Static analysis: heuristic rules, without external model reasoning.' : 'Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction.'],
   };
   if (config.profile === 'hybrid') await semanticAnalysis(collected, config, options.provider, report);
   finalizeCoverage(report.coverage);
@@ -77,7 +77,7 @@ export async function scanSkill(projectRoot: string, source: string, options: Sc
 export async function readReport(projectRoot: string, id: string): Promise<ScanReport> {
   await loadConfig(projectRoot);
   const file = reportPath(projectRoot, id);
-  if (!await exists(file)) throw new SkillGateError('REPORT_NOT_FOUND', 'Rapport introuvable.');
+  if (!await exists(file)) throw new SkillGateError('REPORT_NOT_FOUND', 'Report not found.');
   return ScanReportSchema.parse(await readJson(file));
 }
 export async function listReports(projectRoot: string): Promise<ScanReport[]> {
@@ -105,12 +105,12 @@ async function recoverTarget(root: string, name: string): Promise<void> {
     const record = InstallRecordSchema.parse(transaction.record);
     if (record.name !== name) continue;
     const expected = path.join(path.resolve(root), '.agents/skills', safeName(name));
-    if (record.target !== expected || record.snapshot !== path.join(stateDir(root), 'snapshots', safeId(record.scanId))) throw new SkillGateError('INVALID_TRANSACTION', 'Transaction locale incohérente.');
+    if (record.target !== expected || record.snapshot !== path.join(stateDir(root), 'snapshots', safeId(record.scanId))) throw new SkillGateError('INVALID_TRANSACTION', 'Inconsistent local transaction.');
     await ensureDirectory(path.dirname(expected));
     const stat = await fs.lstat(expected).catch(error => { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined; throw error; });
     if (stat?.isSymbolicLink() && await fs.readlink(expected) === record.snapshot) {
       const checked = await inventory(record.snapshot);
-      if (checked.fingerprint !== record.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'Snapshot d’une installation interrompue modifié ; restauration manuelle nécessaire.');
+      if (checked.fingerprint !== record.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'The snapshot of an interrupted installation has changed; manual recovery is required.');
       await atomicJson(recordPath(root, name), record);
       await atomicJson(path.join(transactions, file), { ...transaction, state: 'completed', recoveredAt: new Date().toISOString() });
     } else {
@@ -132,37 +132,38 @@ export async function installScan(projectRoot: string, scanId: string, exception
   const root = path.resolve(projectRoot), destination = path.join(root, config.target, safeName(report.name));
   return withTargetLock(root, report.name, async () => {
     await recoverTarget(root, report.name);
-    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config.profile) throw new SkillGateError('STALE_REPORT', 'Profil ou moteur modifié. Réanalysez le paquet avant installation.');
-    if (report.decision !== decide(report.findings, report.coverage)) throw new SkillGateError('INVALID_REPORT', 'Décision incohérente avec la politique.');
-    if (report.coverage.limitsReached.some(limit => !limit.startsWith('Analyse sémantique'))) throw new SkillGateError('PACKAGE_INCOMPLETE', 'Collecte du paquet tronquée. Une exception ne peut pas activer un paquet dont des fichiers manquent.');
+    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config.profile) throw new SkillGateError('STALE_REPORT', 'Profile or engine changed. Scan the package again before installation.');
+    if (report.decision !== decide(report.findings, report.coverage)) throw new SkillGateError('INVALID_REPORT', 'Decision does not match the policy.');
+    // Preserve exception eligibility for complete packages in legacy French reports.
+    if (report.coverage.limitsReached.some(limit => !limit.startsWith('Semantic analysis') && !limit.startsWith('Analyse sémantique'))) throw new SkillGateError('PACKAGE_INCOMPLETE', 'Package collection was truncated. An exception cannot activate a package with missing files.');
     if (exception) {
       exception = ExceptionSchema.parse(exception);
-      if (exception.fingerprint !== report.fingerprint || path.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError('INVALID_EXCEPTION', 'Exception refusée : rapport, empreinte, destination ou confirmation ne correspondent pas.');
-    } else if (report.decision !== 'allow') throw new SkillGateError('DECISION_REQUIRED', 'Installation retenue. Examinez les preuves ou confirmez une exception pour cette empreinte précise.');
+      if (exception.fingerprint !== report.fingerprint || path.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError('INVALID_EXCEPTION', 'Exception refused: report, fingerprint, destination, or confirmation does not match.');
+    } else if (report.decision !== 'allow') throw new SkillGateError('DECISION_REQUIRED', 'Installation held. Review the evidence or confirm an exception for this exact fingerprint.');
     const quarantined = path.join(stateDir(root), 'quarantine', report.id, 'package');
     const current = await inventory(quarantined);
-    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'Les fichiers ont changé depuis l’analyse. Installation refusée ; relancez le scan.');
+    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'Files have changed since analysis. Installation refused; run the scan again.');
     const previous = await readInstall(root, report.name);
     await ensureDirectory(path.dirname(destination));
     if (await exists(destination)) {
-      if (!previous || !(await fs.lstat(destination)).isSymbolicLink() || await fs.readlink(destination) !== previous.snapshot) throw new SkillGateError('UNMANAGED_TARGET', 'La cible existe et n’est pas un snapshot géré intact. Aucun fichier n’a été écrasé.');
-    } else if (previous) throw new SkillGateError('TARGET_CHANGED', 'Le skill actif a été supprimé hors de SkillGate. Vérification manuelle nécessaire.');
+      if (!previous || !(await fs.lstat(destination)).isSymbolicLink() || await fs.readlink(destination) !== previous.snapshot) throw new SkillGateError('UNMANAGED_TARGET', 'The target exists and is not an intact managed snapshot. No files were overwritten.');
+    } else if (previous) throw new SkillGateError('TARGET_CHANGED', 'The active skill was removed outside SkillGate. Manual review is required.');
     if (previous?.fingerprint === report.fingerprint && previous.scanId === report.id) return previous;
     const snapshot = path.join(stateDir(root), 'snapshots', report.id);
     if (!await exists(snapshot)) {
       const staged = `${snapshot}-${randomUUID()}.staging`;
       await ensureDirectory(staged);
       const copied = await inventory(quarantined, staged);
-      if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) { await fs.rm(staged, { recursive: true, force: true }); throw new SkillGateError('SNAPSHOT_CHANGED', 'Mutation détectée pendant la préparation.'); }
+      if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) { await fs.rm(staged, { recursive: true, force: true }); throw new SkillGateError('SNAPSHOT_CHANGED', 'A change was detected during preparation.'); }
       await fs.rename(staged, snapshot);
     }
     const prepared = await inventory(snapshot);
-    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'Snapshot préparé modifié.');
+    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'The prepared snapshot has changed.');
     const at = new Date().toISOString(), record: InstallRecord = {
       schemaVersion: 1, name: report.name, target: destination, snapshot, scanId: report.id, fingerprint: report.fingerprint, source: report.source,
       status: exception ? 'installed_with_exception' : 'installed', installedAt: at,
       ...(exception ? { operatorDecision: exception } : {}),
-      events: [...(previous?.events ?? []), { at, action: exception ? 'exception_accepted' : previous ? 'update_installed' : 'installed', scanId: report.id, detail: exception ? `Exception déclarée par ${exception.operator}. Prévention levée pour cette empreinte.` : 'Snapshot analysé promu atomiquement.' }],
+      events: [...(previous?.events ?? []), { at, action: exception ? 'exception_accepted' : previous ? 'update_installed' : 'installed', scanId: report.id, detail: exception ? `Exception recorded by ${exception.operator}. Protection overridden for this fingerprint.` : 'Analyzed snapshot activated atomically.' }],
     };
     InstallRecordSchema.parse(record);
     const transaction = path.join(stateDir(root), 'transactions', `${report.id}.json`);
@@ -174,7 +175,7 @@ export async function installScan(projectRoot: string, scanId: string, exception
       await atomicJson(recordPath(root, report.name), record);
       await atomicJson(transaction, { state: 'completed', record, previous: previous ?? null });
     } catch {
-      throw new SkillGateError('ACTIVATED_RECOVERY_REQUIRED', `Le snapshot vérifié a été activé, mais sa trace locale n’a pas pu être finalisée. Rétablissez les permissions et fichiers d’état, puis lancez skillgate list ou skillgate doctor pour reprendre.${previous ? ' L’ancienne version reste conservée dans les snapshots.' : ''}`);
+      throw new SkillGateError('ACTIVATED_RECOVERY_REQUIRED', `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run skillgate list or skillgate doctor to recover.${previous ? ' The previous version remains stored in snapshots.' : ''}`);
     }
     return record;
   });
@@ -186,7 +187,7 @@ export async function addSkill(projectRoot: string, source: string, options: Sca
 export async function updateSkill(projectRoot: string, name: string, options: ScanOptions = {}): Promise<AddResult> {
   await loadConfig(projectRoot);
   const installed = await readInstall(projectRoot, safeName(name));
-  if (!installed) throw new SkillGateError('NOT_INSTALLED', 'Ce skill n’est pas géré dans ce projet.');
+  if (!installed) throw new SkillGateError('NOT_INSTALLED', 'This skill is not managed in this project.');
   return addSkill(projectRoot, installed.source.locator, { ...options, skill: name });
 }
 /** Removes expired uninstalled reports and their quarantines. Active snapshots and evidence stay. */

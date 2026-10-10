@@ -105,13 +105,13 @@ def cleanup_session():
 
 try:
     opened = read_until(prompt)
-    assert 'SkillGate actif' in opened
+    assert 'SkillGate is active for' in opened
     checks.append('on opens an interactive protected Bash without eval')
     status = command('skillgate doctor --json')
     assert '"active": true' in status, status
     checks.append('doctor confirms the terminal is active')
     nested = command('skillgate on')
-    assert 'déjà actif' in nested, nested
+    assert 'already active' in nested, nested
     checks.append('on does not nest a second shell while already active')
     history_output = command('printf "history=%s\\n" "$HISTFILE"')
     assert 'history=/dev/null' in history_output, history_output
@@ -121,20 +121,20 @@ try:
     assert process.poll() is None, interrupted
     checks.append('Ctrl-C at the prompt keeps the protected session alive')
     good = command(f'npx skills add {shlex.quote(str(clean))}')
-    assert 'Installé automatiquement' in good and 'Votre choix' not in good, good
+    assert 'Installed automatically' in good and 'Your choice' not in good, good
     assert (root/'.agents/skills/session-clean/SKILL.md').exists()
     checks.append('normal npx clean install succeeds without a prompt')
-    pending = command(f'npx --yes skills add {shlex.quote(str(trap))} --yes', b'Votre choix [1/2] : ')
-    assert '[1] Ne pas installer (défaut)' in pending and 'SKILL.md:5' in pending, pending
+    pending = command(f'npx --yes skills add {shlex.quote(str(trap))} --yes', b'Your choice [1/2]: ')
+    assert '[1] Do not install (default)' in pending and 'SKILL.md:5' in pending, pending
     os.write(master, b'\n')
     cancelled = read_until(prompt)
-    assert 'Installation annulée' in cancelled, cancelled
+    assert 'Installation cancelled' in cancelled, cancelled
     assert not (root/'.agents/skills/session-trap').exists()
     checks.append('trapped skill stays inactive when default cancellation is selected')
-    command(f'npx skills add {shlex.quote(str(trap))}', b'Votre choix [1/2] : ')
+    command(f'npx skills add {shlex.quote(str(trap))}', b'Your choice [1/2]: ')
     os.write(master, b'2\n')
     accepted = read_until(prompt)
-    assert 'Installé avec exception' in accepted, accepted
+    assert 'Installed with exception' in accepted, accepted
     record = json.loads((root/'.skillgate/installs/session-trap.json').read_text())
     assert record['status'] == 'installed_with_exception'
     assert record['operatorDecision']['fingerprint'] == record['fingerprint']
@@ -154,7 +154,7 @@ content = b''
 cursor = 0
 try:
     reopened = read_until(prompt)
-    assert 'SkillGate actif' in reopened, reopened
+    assert 'SkillGate is active for' in reopened, reopened
     assert '"active": true' in command('skillgate doctor --json')
     assert exit_session() == 0
     checks.append('on reopens via the same project path alias after exit')

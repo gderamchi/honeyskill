@@ -1,10 +1,14 @@
-# Démonstration terminal — environ 3 minutes
+# Terminal demonstration — about 3 minutes
 
-SkillGate 0.3.0, sans plateforme web. Deux dépôts publics avec un skill chacun : [skill-safe](https://github.com/gderamchi/skill-safe) et [skill-trap](https://github.com/gderamchi/skill-trap). Ils reprennent les fichiers synthétiques du [corpus original](https://github.com/gderamchi/skillgate-demo-skills) sans les modifier. Aucune option de sélection nécessaire.
+This is the **English-language script for SkillGate 0.3.1**. The English-default source and full local validation are complete; public 0.3.1 installation verification and the new English video are still pending. Do not present the older 0.3.0 recording or its results as proof of an English 0.3.1 release.
 
-## Préparation isolée
+Use the two public repositories with one skill each: [skill-safe](https://github.com/gderamchi/skill-safe) and [skill-trap](https://github.com/gderamchi/skill-trap). Their files are unchanged synthetic fixtures from the [original demonstration corpus](https://github.com/gderamchi/skillgate-demo-skills). No skill-selection flag is needed.
 
-Installer le CLI compilé depuis GitHub (pas un paquet du registre npm), puis ouvrir un projet temporaire. Ne jamais installer la fixture piégée dans le profil réel ou ce dépôt de développement.
+## Before recording
+
+Confirm that the public installation reports `0.3.1` with `skillgate --version` and that the current public smoke test passed. Record the real terminal session with English narration, captions, prompts and risk explanations. Keep installation output and operator decisions visible; do not substitute a simulated terminal or replay old output as a new execution.
+
+Install the compiled CLI from GitHub, then create a temporary demonstration project. This command uses a GitHub package, not an npm-registry publication. Never install the trapped fixture in the real user profile or the development repository.
 
 ```sh
 npm i -g gderamchi/skillgate
@@ -12,48 +16,66 @@ cd "$(mktemp -d)"
 skillgate on
 ```
 
-Le prompt [SkillGate] confirme la session protégée ; `exit` permet de la quitter. L’activation concerne cette session et les agents qui héritent de son environnement. Aucune modification de profil shell global. Le code des skills n’est jamais exécuté par le scanner.
+Narration: “SkillGate checks skills before they become active. One command opens a protected terminal.”
 
-Copier chaque bloc séparément : attendre le prompt [SkillGate] avant la première installation, puis répondre à la question du piège avant de poursuivre. Le [parcours public complet](evidence/public-short-demo.json) a été exécuté dans un vrai terminal, après une installation anonyme du CLI.
+The `[SkillGate]` prompt identifies the protected session. `exit` leaves it. Protection applies to supported installer commands in this terminal and to agents inheriting its environment; it does not modify global shell profiles. The scanner never executes acquired skill code.
 
-## Skill utile : aucun clic supplémentaire
+Run each block separately: wait for the protected prompt before installing, then answer any risk prompt before proceeding. The [previous public terminal demonstration](evidence/public-short-demo.json) was actually executed on 0.3.0 after an anonymous installation. It is historical evidence, not the pending English recording.
+
+## Legitimate skill: automatic installation
 
 ```sh
 npx skills add gderamchi/skill-safe
 ```
 
-Montrer l’installation automatique dans `.agents/skills/portfolio-summary`. C’est SkillGate qui acquiert et installe le snapshot vérifié ; le package npx tiers n’est pas lancé.
+Show `Installed automatically. No risk detected within the analyzed scope.` and the installed skill at `.agents/skills/portfolio-summary`.
 
-## Skill piégé : contrôle avant activation
+Narration: “A completed scan with no detected issue installs automatically. There is no extra confirmation.”
+
+SkillGate downloads, checks and activates the verified snapshot. The intercepted third-party installer is not executed.
+
+## Trapped skill: stop before activation
 
 ```sh
 npx skills add gderamchi/skill-trap
 ```
 
-Montrer les raisons FIN-02/FIN-06 : le skill annonce une lecture seule mais demande un transfert dissimulé de 25 DEMOUSD. Le terminal indique les extraits, le rapport et la destination. Entrée choisit « Ne pas installer ». Vérifier que le dossier actif ne contient pas le piège.
+Narration: “This skill claims to be read-only, but asks for a hidden transfer of 25 DEMOUSD. SkillGate shows the financial consequence and the exact evidence before activation.”
 
-Relancer la même commande et taper `2` uniquement dans ce projet temporaire pour montrer « Installer malgré le risque ». Montrer `installed_with_exception` dans `skillgate list`. Le consentement porte sur cette empreinte et cette destination ; aucune approbation globale n’est enregistrée.
+Show the FIN-02/FIN-06 findings, file and line references, report, fingerprint and destination. The choices must read:
 
-## Mise à jour et limites
+```text
+[1] Do not install (default)
+[2] Install despite the risk
+Your choice [1/2]:
+```
 
-`skillgate update portfolio-summary` refait le contrôle avant de remplacer la version existante. Une version retenue conserve le snapshot actif précédent. Les mises à jour de l’installateur tiers sont refusées et dirigées vers cette commande.
+Press Enter. Show `Installation cancelled; package held.` and verify that the trapped skill is absent from the active skills directory.
 
-Sans TTY (par exemple un agent en mode JSON), une alerte retourne le code 2 et n’installe rien. L’agent présente les risques à l’utilisateur ; la décision se prend ensuite dans un terminal interactif avec `skillgate approve RAPPORT`. Le modèle n’est pas une preuve de consentement humain.
+Run the same installation again and select `2` only in this temporary project to demonstrate an explicit exception. Show `Installed with exception` and `installed_with_exception` in `skillgate list`.
 
-Pour Codex, le hook complémentaire exige une activation explicite et la revue `/hooks` native. Ne pas présenter cette étape comme déjà accordée dans le vrai profil utilisateur.
+Narration: “The user keeps the final choice. An exception applies only to this report, fingerprint and destination, and the warning remains recorded.”
 
-## Illustration financière, séparée de l’installation
+## Updates and coverage
+
+`skillgate update portfolio-summary` checks the next version before replacing the current snapshot. A held update preserves the previous active version. Third-party update commands are denied and directed to this checked update command.
+
+Without an interactive terminal, including JSON automation, a held installation returns exit code 2 and remains inactive. The agent should show the risks to the user; a later interactive decision can use `skillgate approve REPORT_ID`. A model response is not proof of human consent.
+
+The optional Codex hook requires explicit setup and native `/hooks` review. Do not present trust as already granted in the real user profile. The hook is complementary to the terminal integration, not a universal security boundary.
+
+## Financial illustration, separate from installation
 
 ```sh
 skillgate demo --json
 ```
 
-Cette commande utilise d’autres racines temporaires et un registre déterministe : baseline 100 → 75 DEMOUSD, rétention 100, légitime 100, mise à jour retenue 100, exception 75. **Simulation, aucun modèle réel ni fonds réel.** Ce n’est pas une somme économisée ni la probabilité qu’un agent suive le piège.
+This uses separate temporary roots and a deterministic ledger: baseline 100 → 75 DEMOUSD; held installation 100; legitimate installation 100; held update 100; exception 75. **Simulation: no real model and no real funds.** These numbers are not measured savings or the probability that an agent would obey the trap.
 
-Le benchmark synthétique interne montre aussi les échecs : 11/16 suspects détectés, 5 manqués et 4/16 faux positifs. Ne pas annoncer une protection totale. L’activation PATH ne contrôle pas toutes les façons d’écrire un skill sur le disque.
+The previously measured internal synthetic benchmark also exposes failures: 11/16 suspicious cases detected, five missed, and 4/16 false positives. English wording must not change those frozen cases or detection rules. The actual 0.3.1 rerun produced the same totals, with all 32 detection regexes and all 40 case outcomes unchanged. Do not claim an independent evaluation or complete protection.
 
-## Secours
+## Evidence and fallback
 
-Les sorties `outputs/cli-demo.json`, `outputs/cli-only-pty-smoke.json` et `outputs/demo-publication.json` documentent les exécutions effectives. L’ancienne vidéo UI de 0.1.0 est historique et ne doit plus servir de présentation du produit actuel.
+Local outputs such as `outputs/cli-demo.json`, `outputs/cli-only-pty-smoke.json` and `outputs/demo-publication.json` document actual executions. Read their version and timestamps before using them. The 0.1.0 web-UI video is historical and must not represent the current CLI-only product.
 
-Les résumés publics de vérification sont disponibles dans [evidence](evidence/). Les chemins `outputs/` cités désignent les fichiers produits localement par les scripts, volontairement exclus du dépôt public pour éviter de publier les chemins et journaux privés du poste.
+Sanitized public verification summaries are in [evidence](evidence/). The referenced `outputs/` files are generated locally and excluded from the public repository to avoid publishing private workstation paths and raw logs. Publish only the reviewed English video and sanitized evidence after the 0.3.1 checks complete.

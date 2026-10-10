@@ -36,7 +36,7 @@ def terminal(args, answer=None, before_answer=None, full_command=None, cwd=None,
             if not chunk:
                 break
             content += chunk
-            if b'Votre choix [1/2] : ' in content and not sent:
+            if b'Your choice [1/2]: ' in content and not sent:
                 assert answer is not None, ('Unexpected prompt', args, content.decode(errors='replace'))
                 if before_answer:
                     before_answer()
@@ -63,15 +63,15 @@ def record(name):
 clean = source('pty-clean')
 status, transcript = terminal(['install', str(clean)])
 assert status == 0, (status, transcript)
-assert 'Installé automatiquement' in transcript and 'Votre choix' not in transcript
+assert 'Installed automatically' in transcript and 'Your choice' not in transcript
 assert record('pty-clean')['status'] == 'installed'
 
 held = source('pty-held', True)
 status, transcript = terminal(['add', str(held)], b'\n')
 assert status == 2, (status, transcript)
-assert '[1] Ne pas installer (défaut)' in transcript
-assert '[2] Installer malgré le risque' in transcript
-assert 'SKILL.md:5' in transcript and 'Risque :' in transcript
+assert '[1] Do not install (default)' in transcript
+assert '[2] Install despite the risk' in transcript
+assert 'SKILL.md:5' in transcript and 'Risk:' in transcript
 assert not (root/'.agents/skills/pty-held').exists()
 
 status, transcript = terminal(['add', str(held)], b'\x03')
@@ -82,7 +82,7 @@ accepted_source = source('pty-accepted', True)
 original = (accepted_source/'SKILL.md').read_text()
 status, transcript = terminal(['add', str(accepted_source)], b'2\n', lambda: (accepted_source/'SKILL.md').write_text('modified after scan'))
 assert status == 0, (status, transcript)
-assert 'Installé avec exception' in transcript and 'Installé automatiquement' not in transcript
+assert 'Installed with exception' in transcript and 'Installed automatically' not in transcript
 accepted = record('pty-accepted')
 assert accepted['status'] == 'installed_with_exception'
 assert (root/'.agents/skills/pty-accepted/SKILL.md').read_text() == original, 'Must install the scanned snapshot, even when the source has changed.'
@@ -109,7 +109,7 @@ status, transcript = terminal(['approve', report['id']], b'\n')
 assert status == 2, (status, transcript)
 status, transcript = terminal(['approve', report['id'], '--json'])
 assert status == 2, (status, transcript)
-assert 'Votre choix' not in transcript and 'terminal interactif' in transcript
+assert 'Your choice' not in transcript and 'interactive terminal' in transcript
 status, transcript = terminal(['approve', report['id']], b'2\n')
 assert status == 0, (status, transcript)
 assert record('pty-held')['scanId'] == report['id']
@@ -120,7 +120,7 @@ status, transcript = terminal(['add', str(json_source), '--json'])
 assert status == 2, (status, transcript)
 assert json.loads(transcript)['report']['decision'] != 'allow'
 assert not (root/'.agents/skills/pty-json').exists()
-assert 'Votre choix' not in transcript
+assert 'Your choice' not in transcript
 
 # Exercise the actual compiled CLI and PATH wrapper as a person would type npx.
 # A sentinel replaces upstream npx before enabling, so a routing regression cannot reach the network.
@@ -141,19 +141,19 @@ assert shutil.which('npx', path=shim_env['PATH']) == str(root/'.skillgate/bin/np
 wrapped_clean = source('pty-wrapper-clean')
 status, transcript = terminal([], full_command=['npx', 'skills', 'add', str(wrapped_clean)], cwd=root, environment=shim_env)
 assert status == 0, (status, transcript)
-assert 'SkillGate : analyse du skill avant activation.' in transcript
-assert 'Installé automatiquement' in transcript and 'Votre choix' not in transcript
+assert 'SkillGate: analyzing the skill before activation.' in transcript
+assert 'Installed automatically' in transcript and 'Your choice' not in transcript
 assert record('pty-wrapper-clean')['status'] == 'installed'
 
 wrapped_held = source('pty-wrapper-held', True)
 status, transcript = terminal([], b'\n', full_command=['npx', '--yes', 'skills', 'add', str(wrapped_held), '--yes'], cwd=root, environment=shim_env)
 assert status == 2, (status, transcript)
-assert '[1] Ne pas installer (défaut)' in transcript and 'SKILL.md:5' in transcript
+assert '[1] Do not install (default)' in transcript and 'SKILL.md:5' in transcript
 assert not (root/'.agents/skills/pty-wrapper-held').exists()
 
 status, transcript = terminal([], b'2\n', full_command=['npx', 'skills', 'add', str(wrapped_held)], cwd=root, environment=shim_env)
 assert status == 0, (status, transcript)
-assert 'Installé avec exception' in transcript and 'Installé automatiquement' not in transcript
+assert 'Installed with exception' in transcript and 'Installed automatically' not in transcript
 wrapper_record = record('pty-wrapper-held')
 assert wrapper_record['status'] == 'installed_with_exception'
 assert wrapper_record['operatorDecision']['fingerprint'] == wrapper_record['fingerprint']

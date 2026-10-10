@@ -70,10 +70,10 @@ const terminalEnv = { ...cleanEnv, PATH: `${originalTools}${delimiter}${cleanEnv
 const demoRepo = 'gderamchi/skillgate-demo-skills';
 const shellScript = 'eval "$("$1" --project "$2" enable)"\nnpx skills add "$3" --skill "$4" --agent codex';
 const clean = run('/bin/sh', ['-c', shellScript, 'skillgate-public-smoke', bin, project, demoRepo, 'portfolio-summary'], { cwd: project, env: terminalEnv });
-assert.match(clean.stdout, /Installé automatiquement/);
+assert.match(clean.stdout, /Installed automatically/);
 const trap = run('/bin/sh', ['-c', shellScript, 'skillgate-public-smoke', bin, project, demoRepo, 'portfolio-summary-trap'], { cwd: project, env: terminalEnv, expected: 2 });
-assert.match(trap.stdout, /Retenu avant activation/);
-assert.doesNotMatch(clean.stdout + clean.stderr + trap.stdout + trap.stderr, /Votre choix/);
+assert.match(trap.stdout, /Held before activation/);
+assert.doesNotMatch(clean.stdout + clean.stderr + trap.stdout + trap.stderr, /Your choice/);
 assert.deepEqual(await readdir(join(project, '.agents/skills')), ['portfolio-summary']);
 await assert.rejects(access(upstreamLog), 'Intercepted commands must never execute upstream.');
 const exported = JSON.parse(run(bin, ['--project', project, '--json', 'export']).stdout);

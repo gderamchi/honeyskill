@@ -46,7 +46,7 @@ test('Codex hook setup refuses malformed or symlinked existing configuration', a
   await mkdir(join(project, '.codex')); const file = join(project, '.codex', 'hooks.json');
   const invalid = '{"hooks":{"PreToolUse":"not-an-array"}}';
   await writeFile(file, invalid);
-  await assert.rejects(prepareCodexHook(project, cli, process.execPath), /PreToolUse invalide/);
+  await assert.rejects(prepareCodexHook(project, cli, process.execPath), /Invalid PreToolUse/);
   assert.equal(await readFile(file, 'utf8'), invalid);
   const linked = await mkdtemp(join(tmpdir(), 'skillgate-hooks-linked-'));
   const valid = '{"hooks":{}}';
@@ -54,6 +54,17 @@ test('Codex hook setup refuses malformed or symlinked existing configuration', a
   await symlink(join(project, '.codex'), join(linked, '.codex'));
   await assert.rejects(prepareCodexHook(linked, cli, process.execPath));
   assert.equal(await readFile(file, 'utf8'), valid);
+});
+
+test('Codex hook refresh replaces its previous display label without registering twice', async () => {
+  const project = await mkdtemp(join(tmpdir(), 'skillgate-hooks-language-'));
+  await mkdir(join(project, '.codex'));
+  const file = join(project, '.codex/hooks.json');
+  await writeFile(file, JSON.stringify({ hooks: { PreToolUse: [{ matcher: '^Bash$', hooks: [{ type: 'command', command: 'previous-skillgate-hook', statusMessage: 'SkillGate : contrôle avant installation' }] }] } }));
+  await prepareCodexHook(project, cli, process.execPath);
+  const result = JSON.parse(await readFile(file, 'utf8'));
+  assert.equal(result.hooks.PreToolUse.length, 1);
+  assert.equal(result.hooks.PreToolUse[0].hooks[0].statusMessage, 'SkillGate: pre-install check');
 });
 
 test('ordinary commands and events stay unchanged', () => {
@@ -68,7 +79,7 @@ test('supported terminal installers rewrite to the guarded installer before exec
     const output = run(command)!;
     assert.equal(output.permissionDecision, 'allow', command);
     assert.match(output.updatedInput!.command, /'install' '--skill' 'portfolio' '--' 'https:\/\/github.com\/owner\/repo'/);
-    assert.match(output.additionalContext!, /avant activation/);
+    assert.match(output.additionalContext!, /before activation/);
     assert.doesNotMatch(output.updatedInput!.command, /'npx'|'pnpm'|'skills'/);
   }
 });

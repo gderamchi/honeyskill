@@ -22,44 +22,44 @@ export function parseInstallerArgv(command: TerminalCommand, args: string[]): In
     let offset = 0;
     while (args[offset] === '-y' || args[offset] === '--yes') offset++;
     if (!packageName.test(args[offset] ?? '')) return mentionsSkills(args)
-      ? rejected('Invocation npx de skills non prise en charge. Utilisez npx skills add SOURCE [--skill NOM].') : { kind: 'delegate' };
+      ? rejected('Unsupported npx invocation of skills. Use npx skills add SOURCE [--skill NAME].') : { kind: 'delegate' };
     tail = args.slice(offset + 1);
   } else if (command === 'pnpm') {
     if (args[0] !== 'dlx' || !packageName.test(args[1] ?? '')) return mentionsSkills(args)
-      ? rejected('Invocation pnpm de skills non prise en charge. Utilisez pnpm dlx skills add SOURCE [--skill NOM].') : { kind: 'delegate' };
+      ? rejected('Unsupported pnpm invocation of skills. Use pnpm dlx skills add SOURCE [--skill NAME].') : { kind: 'delegate' };
     tail = args.slice(2);
   }
   const operation = tail[0];
   // Upstream find/search can install, and check aliases update; none may bypass the gate.
   if (!operation || ['--help', '-h', '--version', '-v', 'help', 'list', 'ls', 'remove', 'rm', 'init'].includes(operation)) return { kind: 'delegate' };
-  if (operation !== 'add' && operation !== 'install') return rejected('Commande skills non prise en charge. Pour une mise à jour contrôlée : skillgate update NOM. Pour installer : skills add SOURCE.');
+  if (operation !== 'add' && operation !== 'install') return rejected('Unsupported skills command. For a checked update: skillgate update NAME. To install: skills add SOURCE.');
   let source: string | undefined, skill: string | undefined, agent: string | undefined;
   for (let index = 1; index < tail.length; index++) {
     const value = tail[index];
     if (value === '--yes' || value === '-y') continue; // Upstream acknowledgement never accepts a SkillGate risk.
     if (value === '--skill') {
-      if (skill || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(tail[index + 1] ?? '')) return rejected('Sélectionnez exactement un skill avec --skill NOM.');
+      if (skill || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(tail[index + 1] ?? '')) return rejected('Select exactly one skill with --skill NAME.');
       skill = tail[++index];
     } else if (value === '--agent' || value === '-a') {
-      if (agent || tail[index + 1] !== 'codex') return rejected('Seule la cible projet Codex est prise en charge : --agent codex.');
+      if (agent || tail[index + 1] !== 'codex') return rejected('Only the project Codex target is supported: --agent codex.');
       agent = tail[++index];
-    } else if (value.startsWith('-')) return rejected(`Option d’installation non prise en charge : ${sanitizeTerminal(value)}. Les installations globales, multiples et --all sont refusées.`);
-    else if (source) return rejected('Une seule source et un seul skill sont autorisés par installation.');
+    } else if (value.startsWith('-')) return rejected(`Unsupported installation option: ${sanitizeTerminal(value)}. Global, multiple and --all installations are denied.`);
+    else if (source) return rejected('Only one source and one skill are allowed per installation.');
     else source = value;
   }
-  if (!source) return rejected('Source manquante. Utilisez skills add SOURCE [--skill NOM].');
-  if (/[\u0000-\u001f\u007f]/.test(source)) return rejected('Source contenant des caractères de contrôle refusée.');
+  if (!source) return rejected('Missing source. Use skills add SOURCE [--skill NAME].');
+  if (/[\u0000-\u001f\u007f]/.test(source)) return rejected('Source contains control characters and was rejected.');
   if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(source) && !source.startsWith('./') && !source.startsWith('../')) source = `https://github.com/${source}`;
   else if (source.startsWith('https://')) {
     try {
       const url = new URL(source);
-      if (url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash || !/^\/[^/]+\/[^/]+(?:\/tree\/.+)?\/?$/.test(url.pathname)) return rejected('Source distante non prise en charge : utilisez un dépôt public https://github.com/OWNER/REPO.');
-    } catch { return rejected('URL GitHub invalide.'); }
-  } else if (!(isAbsolute(source) || source === '.' || source === '..' || source.startsWith('./') || source.startsWith('../'))) return rejected('Source non prise en charge : OWNER/REPO, URL GitHub HTTPS ou chemin local explicite.');
+      if (url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash || !/^\/[^/]+\/[^/]+(?:\/tree\/.+)?\/?$/.test(url.pathname)) return rejected('Unsupported remote source: use a public https://github.com/OWNER/REPO repository.');
+    } catch { return rejected('Invalid GitHub URL.'); }
+  } else if (!(isAbsolute(source) || source === '.' || source === '..' || source.startsWith('./') || source.startsWith('../'))) return rejected('Unsupported source: use OWNER/REPO, a GitHub HTTPS URL or an explicit local path.');
   return { kind: 'install', source, ...(skill ? { skill } : {}) };
 }
 
-const absolutePath = z.string().refine(isAbsolute, 'Chemin absolu requis');
+const absolutePath = z.string().refine(isAbsolute, 'An absolute path is required');
 const TerminalConfigSchema = z.object({
   schemaVersion: z.literal(1), projectRoot: absolutePath, cliPath: absolutePath, nodePath: absolutePath,
   originals: z.object({ npx: absolutePath.nullable(), pnpm: absolutePath.nullable(), skills: absolutePath.nullable() }),
@@ -71,7 +71,7 @@ const shellQuote = (value: string) => `'${value.replace(/'/g, `'"'"'`)}'`;
 
 async function readTerminalConfig(root: string): Promise<TerminalConfig> {
   const config = TerminalConfigSchema.parse(await readJson(configPath(root)));
-  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Configuration terminal incohérente ; réactivez SkillGate dans ce projet.');
+  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Inconsistent terminal configuration; reactivate SkillGate in this project.');
   return config;
 }
 
@@ -94,7 +94,7 @@ async function originalExecutable(command: TerminalCommand): Promise<string | nu
 
 export async function prepareTerminal(root: string, cliPath: string, nodePath = process.execPath): Promise<TerminalConfig> {
   const projectRoot = resolve(root);
-  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError('TERMINAL_RUNTIME', 'Un CLI compilé et un exécutable Node absolus sont requis.');
+  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError('TERMINAL_RUNTIME', 'Absolute paths to a compiled CLI and a Node executable are required.');
   await access(cliPath, fsConstants.R_OK);
   await ensureState(projectRoot);
   await ensureDirectory(binPath(projectRoot));
@@ -105,7 +105,7 @@ export async function prepareTerminal(root: string, cliPath: string, nodePath = 
   await atomicJson(configPath(projectRoot), config);
   for (const command of terminalCommands) {
     const file = join(binPath(projectRoot), command);
-    const content = `#!/usr/bin/env node\n// Generated SkillGate terminal shim.\nconst { spawnSync } = require('node:child_process');\nconst result = spawnSync(${JSON.stringify(nodePath)}, ${JSON.stringify([cliPath, '--project', projectRoot, 'terminal-dispatch', '--command', command, '--'])}.concat(process.argv.slice(2)), { stdio: 'inherit' });\nif (result.error) { process.stderr.write('SkillGate indisponible : installation non lancée.\\n'); process.exit(126); }\nif (result.signal) process.kill(process.pid, result.signal);\nelse process.exit(result.status ?? 1);\n`;
+    const content = `#!/usr/bin/env node\n// Generated SkillGate terminal shim.\nconst { spawnSync } = require('node:child_process');\nconst result = spawnSync(${JSON.stringify(nodePath)}, ${JSON.stringify([cliPath, '--project', projectRoot, 'terminal-dispatch', '--command', command, '--'])}.concat(process.argv.slice(2)), { stdio: 'inherit' });\nif (result.error) { process.stderr.write('SkillGate unavailable: installation was not started.\\n'); process.exit(126); }\nif (result.signal) process.kill(process.pid, result.signal);\nelse process.exit(result.status ?? 1);\n`;
     const temporary = `${file}.${randomUUID()}.tmp`;
     await writeFile(temporary, content, { mode: 0o700, flag: 'wx' });
     try { await rename(temporary, file); await chmod(file, 0o700); }
@@ -142,19 +142,19 @@ function run(executable: string, args: string[]): Promise<number> {
 }
 
 export async function dispatchTerminal(root: string, command: TerminalCommand, args: string[]): Promise<number> {
-  if (!terminalCommands.includes(command)) throw new SkillGateError('TERMINAL_COMMAND', 'Commande terminal non prise en charge.');
+  if (!terminalCommands.includes(command)) throw new SkillGateError('TERMINAL_COMMAND', 'Unsupported terminal command.');
   const invocation = parseInstallerArgv(command, args);
-  if (invocation.kind === 'reject') { process.stderr.write(`SkillGate : ${invocation.reason}\nAucun installateur tiers lancé.\n`); return 2; }
+  if (invocation.kind === 'reject') { process.stderr.write(`SkillGate: ${invocation.reason}\nNo upstream installer was started.\n`); return 2; }
   const config = await readTerminalConfig(root);
   if (invocation.kind === 'delegate') {
     const original = config.originals[command];
-    if (!original) { process.stderr.write(`${command} introuvable avant activation de SkillGate.\n`); return 127; }
+    if (!original) { process.stderr.write(`${command} was not found before SkillGate activation.\n`); return 127; }
     return run(original, args);
   }
   if (await realpath(process.cwd()) !== await realpath(config.projectRoot)) {
-    process.stderr.write('SkillGate : ce terminal protège un autre projet. Dans le projet courant, quittez cette session (exit), puis exécutez skillgate on avant d’installer.\n');
+    process.stderr.write('SkillGate: this terminal protects another project. Leave this session (exit), then run skillgate on in the current project before installing.\n');
     return 2;
   }
-  process.stderr.write('SkillGate : analyse du skill avant activation.\n');
+  process.stderr.write('SkillGate: analyzing the skill before activation.\n');
   return run(config.nodePath, [config.cliPath, '--project', config.projectRoot, 'install', invocation.source, ...(invocation.skill ? ['--skill', invocation.skill] : [])]);
 }

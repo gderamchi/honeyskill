@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-10T16:28:32.635Z",
+  "kind": "translation-regression-validation",
+  "execution": {
+    "mode": "local static analysis and frozen internal synthetic benchmark",
+    "paidApiCalls": 0,
+    "semanticCalls": 0
+  },
+  "baseline": {
+    "description": "Published pre-translation core source and preserved prior benchmark",
+    "benchmarkCompletedAt": "2026-10-10T15:09:03.178Z"
+  },
+  "ruleComparison": {
+    "method": "TypeScript AST regular-expression literal comparison",
+    "regexLiteralsCompared": 32,
+    "exactPatternFlagsAndSourceTextMatch": true,
+    "versionsUnchanged": true,
+    "versions": {
+      "ENGINE_VERSION": "0.1.0",
+      "RULES_VERSION": "finance-native-3",
+      "CORPUS_VERSION": "2026-10-10",
+      "POLICY_VERSION": "finance-policy-1"
+    }
+  },
+  "languageReview": {
+    "staticCoreHumanMessages": "English",
+    "remainingFrenchStringLiteralCount": 1,
+    "remainingFrenchStringPurpose": "Backward-compatible recognition of semantic limits in older reports; not newly emitted user output",
+    "detectionVocabularyPreserved": true
+  },
+  "benchmark": {
+    "command": "pnpm benchmark",
+    "completedAt": "2026-10-10T16:27:10.135Z",
+    "cases": 40,
+    "labels": {
+      "suspect": 16,
+      "legitimate": 16,
+      "incomplete": 8
+    },
+    "decisions": {
+      "hold": 14,
+      "allow": 16,
+      "review": 9,
+      "acquisitionError": 1
+    },
+    "caseDecisionsRisksAndFindingEvidenceIdentical": true,
+    "fixtureFreezeAndFingerprintsIdentical": true,
+    "coverageStatusesAndCountsIdentical": true,
+    "nonTimingMetricsIdentical": true,
+    "metrics": {
+      "recall": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "falsePositiveRate": {
+        "numerator": 4,
+        "denominator": 16,
+        "value": 0.25
+      },
+      "precision": {
+        "numerator": 11,
+        "denominator": 15,
+        "value": 0.7333333333333333
+      },
+      "legitimateAutoInstall": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "suspectRetained": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "incompleteRetained": {
+        "numerator": 7,
+        "denominator": 8,
+        "value": 0.875
+      },
+      "completeCoverage": {
+        "numerator": 29,
+        "denominator": 40,
+        "value": 0.725
+      },
+      "engineFailures": {
+        "numerator": 1,
+        "denominator": 40,
+        "value": 0.025
+      },
+      "autoInstallDecisions": {
+        "numerator": 16,
+        "denominator": 40,
+        "value": 0.4
+      },
+      "latencyMs": {
+        "median": 10.449749999999995,
+        "p95": 16.244583000000006
+      }
+    },
+    "knownUnchangedErrors": [
+      {
+        "caseId": "case-040",
+        "category": "acquisition",
+        "message": "SKILL.md is missing, too large, or unreadable."
+      }
+    ],
+    "limitations": [
+      "Internal synthetic benchmark created by the same assistant; not an independent blind evaluation.",
+      "The existing missed detections, false positives, and acquisition failure remain unchanged.",
+      "No paid provider or live model was called."
+    ]
+  }
+}

@@ -3,7 +3,8 @@ import { realpathSync } from 'node:fs';
 import { atomicJson, exists, readJson } from '../../../packages/core/src/storage.js';
 import { parseInstallerArgv } from './terminal.js';
 
-const statusMessage = 'SkillGate : contrôle avant installation';
+const statusMessage = 'SkillGate: pre-install check';
+const previousStatusMessage = 'SkillGate : contrôle avant installation';
 const nativeInstaller = 'install-skill-from-github.py';
 type JsonObject = Record<string, unknown>;
 export type HookResult = { hookSpecificOutput: {
@@ -17,7 +18,7 @@ const commandLine = (argv: string[]): string => argv.map(quote).join(' ');
 
 /** Only a literal argv is supported: no shell expressions are evaluated. */
 function shellArgv(command: string): string[] {
-  if (/[\x00-\x1f\x7f]/.test(command)) throw new Error('Commandes multilignes ou caractères de contrôle non pris en charge.');
+  if (/[\x00-\x1f\x7f]/.test(command)) throw new Error('Multiline commands and control characters are not supported.');
   const args: string[] = []; let token = '', active = false, quoted: "'" | '"' | undefined;
   for (let i = 0; i < command.length; i++) {
     const char = command[i]!;
@@ -27,22 +28,22 @@ function shellArgv(command: string): string[] {
     }
     if (char === '\\') {
       const next = command[++i];
-      if (next === undefined) throw new Error('Échappement shell incomplet.');
+      if (next === undefined) throw new Error('Incomplete shell escape.');
       if (quoted === '"' && !['"', '\\', '$', '`'].includes(next)) token += '\\';
       token += next; active = true; continue;
     }
     if (quoted === '"') {
       if (char === '"') quoted = undefined;
-      else if (char === '$' || char === '`') throw new Error('Substitutions shell non prises en charge.');
+      else if (char === '$' || char === '`') throw new Error('Shell substitutions are not supported.');
       else token += char;
       continue;
     }
     if (char === "'" || char === '"') { quoted = char; active = true; continue; }
     if (char === ' ') { if (active) { args.push(token); token = ''; active = false; } continue; }
-    if (/[;&|()<>$`*?\[\]{}~#]/.test(char)) throw new Error('Expressions ou commandes shell composées non prises en charge.');
+    if (/[;&|()<>$`*?\[\]{}~#]/.test(char)) throw new Error('Shell expressions and compound commands are not supported.');
     token += char; active = true;
   }
-  if (quoted) throw new Error('Guillemet shell incomplet.');
+  if (quoted) throw new Error('Unclosed shell quote.');
   if (active) args.push(token);
   return args;
 }
@@ -54,40 +55,40 @@ function relevant(command: string): boolean {
 const validAbsolute = (value: unknown): value is string => typeof value === 'string' && isAbsolute(value) && !/[\x00-\x1f\x7f]/.test(value);
 function canonical(path: string): string { try { return realpathSync(path); } catch { return resolve(path); } }
 function denied(reason: string): HookResult {
-  return { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: `SkillGate : ${reason} Utilisez skillgate install <source> dans le projet protégé.` } };
+  return { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: `SkillGate: ${reason} Use skillgate install <source> in the protected project.` } };
 }
 function nativeSource(args: string[], root: string): string {
   const options = new Map<string, string>();
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i]!, value = args[i + 1];
     if (!['--repo', '--url', '--path', '--ref', '--dest'].includes(key) || options.has(key) || !value || value.startsWith('--')) {
-      throw new Error('Installateur Codex : une seule source et un seul --path sont pris en charge ; options inconnues refusées.');
+      throw new Error('Codex installer: only one source and one --path are supported; unknown options are rejected.');
     }
     options.set(key, value);
   }
-  if (options.get('--dest') !== join(resolve(root), '.agents', 'skills')) throw new Error('Installateur Codex : --dest doit désigner explicitement le dossier .agents/skills absolu de ce projet. La destination globale implicite est refusée.');
-  if (options.has('--repo') === options.has('--url')) throw new Error('Installateur Codex : fournissez exactement --repo ou --url.');
+  if (options.get('--dest') !== join(resolve(root), '.agents', 'skills')) throw new Error('Codex installer: --dest must explicitly identify the absolute .agents/skills directory of this project. The implicit global destination is rejected.');
+  if (options.has('--repo') === options.has('--url')) throw new Error('Codex installer: provide exactly one of --repo or --url.');
   let repo = options.get('--repo'), reference = options.get('--ref') ?? 'main', folder = options.get('--path');
   if (options.has('--url')) {
     const url = new URL(options.get('--url')!);
-    if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash) throw new Error('Seules les URL publiques HTTPS GitHub sont prises en charge.');
+    if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash) throw new Error('Only public HTTPS GitHub URLs are supported.');
     const parts = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
     repo = parts.slice(0, 2).join('/');
     if (parts.length > 2) {
-      if (parts[2] !== 'tree' || !parts[3]) throw new Error('Utilisez une URL GitHub /tree/révision/dossier.');
+      if (parts[2] !== 'tree' || !parts[3]) throw new Error('Use a GitHub /tree/revision/folder URL.');
       reference = parts[3]; folder ??= parts.slice(4).join('/');
     }
   }
-  if (!repo || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo) || repo.split('/').some(x => ['.', '..'].includes(x))) throw new Error('Dépôt GitHub invalide.');
-  if (!/^[A-Za-z0-9_.-]+$/.test(reference) || ['.', '..'].includes(reference)) throw new Error('Révision simple ou SHA requis.');
-  if (!folder || folder.startsWith('/') || folder.includes('\\') || folder.split('/').some(x => !x || x === '.' || x === '..')) throw new Error('Un unique dossier relatif de skill est requis.');
+  if (!repo || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo) || repo.split('/').some(x => ['.', '..'].includes(x))) throw new Error('Invalid GitHub repository.');
+  if (!/^[A-Za-z0-9_.-]+$/.test(reference) || ['.', '..'].includes(reference)) throw new Error('A simple revision or SHA is required.');
+  if (!folder || folder.startsWith('/') || folder.includes('\\') || folder.split('/').some(x => !x || x === '.' || x === '..')) throw new Error('A single relative skill directory is required.');
   return `https://github.com/${repo}/tree/${encodeURIComponent(reference)}/${folder.split('/').map(encodeURIComponent).join('/')}`;
 }
 
 export function processHook(input: unknown, root: string, cliPath: string, nodePath: string): HookResult | undefined {
   try {
     if (!object(input) || input.hook_event_name !== 'PreToolUse' || input.tool_name !== 'Bash') return undefined;
-    if (!object(input.tool_input) || typeof input.tool_input.command !== 'string') return denied('Entrée du hook Bash invalide.');
+    if (!object(input.tool_input) || typeof input.tool_input.command !== 'string') return denied('Invalid Bash hook input.');
     const command = input.tool_input.command;
     let argv: string[];
     try { argv = shellArgv(command); } catch (error) {
@@ -99,43 +100,43 @@ export function processHook(input: unknown, root: string, cliPath: string, nodeP
     const executable = basename(argv[0]!);
     if (argv.some(x => basename(x) === nativeInstaller)) {
       const index = executable === nativeInstaller ? 0 : /^python(?:3(?:\.\d+)?)?$/.test(executable) && basename(argv[1] ?? '') === nativeInstaller ? 1 : -1;
-      if (index < 0) return denied('Invocation de l’installateur Codex non prise en charge.');
+      if (index < 0) return denied('Unsupported Codex installer invocation.');
       source = nativeSource(argv.slice(index + 1), root);
     } else if (['npx', 'pnpm', 'skills'].includes(executable)) {
       const parsed = parseInstallerArgv(executable as 'npx' | 'pnpm' | 'skills', argv.slice(1));
       if (parsed.kind === 'delegate') return undefined;
       if (parsed.kind === 'reject') return denied(parsed.reason);
       source = parsed.source; skill = parsed.skill;
-    } else return relevant(command) && !['echo', 'printf'].includes(executable) ? denied('Invocation indirecte de l’installateur non prise en charge.') : undefined;
-    if (![root, cliPath, nodePath].every(validAbsolute)) return denied('Configuration du hook invalide : chemins absolus sans caractères de contrôle requis.');
+    } else return relevant(command) && !['echo', 'printf'].includes(executable) ? denied('Indirect installer invocation is not supported.') : undefined;
+    if (![root, cliPath, nodePath].every(validAbsolute)) return denied('Invalid hook configuration: absolute paths without control characters are required.');
     for (const cwd of [input.cwd, input.tool_input.workdir, input.tool_input.cwd]) {
       if (cwd === undefined) continue;
-      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root)) return denied('Cette commande provient d’un autre dossier que le projet protégé.');
+      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root)) return denied('This command originates outside the protected project directory.');
     }
-    if (!validAbsolute(input.cwd)) return denied('Dossier de session absent ou invalide.');
+    if (!validAbsolute(input.cwd)) return denied('Session directory is missing or invalid.');
     const args = [nodePath, cliPath, '--project', resolve(root), 'install'];
     if (skill) args.push('--skill', skill);
     args.push('--', source);
     return { hookSpecificOutput: {
       hookEventName: 'PreToolUse', permissionDecision: 'allow', updatedInput: { command: commandLine(args) },
-      additionalContext: 'SkillGate remplace cet installateur : analyse locale avant activation dans .agents/skills du projet. Un paquet retenu reste inactif ; présentez les risques à l’utilisateur et attendez son choix explicite avant une exception.',
+      additionalContext: 'SkillGate replaces this installer with local analysis before activation in the project .agents/skills directory. A held package remains inactive; show the risks to the user and wait for an explicit choice before accepting an exception.',
     } };
   } catch (error) {
-    return denied(error instanceof Error ? error.message : 'Impossible de valider cette installation.');
+    return denied(error instanceof Error ? error.message : 'Cannot validate this installation.');
   }
 }
 
 export async function prepareCodexHook(root: string, cliPath: string, nodePath: string) {
-  if (![root, cliPath, nodePath].every(validAbsolute)) throw new Error('Chemins absolus sans caractères de contrôle requis pour configurer le hook Codex.');
+  if (![root, cliPath, nodePath].every(validAbsolute)) throw new Error('Absolute paths without control characters are required to configure the Codex hook.');
   const path = join(root, '.codex', 'hooks.json');
   const existing = await exists(path) ? await readJson(path) : {};
-  if (!object(existing) || (existing.hooks !== undefined && !object(existing.hooks))) throw new Error('hooks.json invalide ; configuration existante préservée.');
+  if (!object(existing) || (existing.hooks !== undefined && !object(existing.hooks))) throw new Error('Invalid hooks.json; existing configuration was preserved.');
   const hooks = existing.hooks as JsonObject | undefined ?? {};
   const previous = hooks.PreToolUse ?? [];
-  if (!Array.isArray(previous)) throw new Error('PreToolUse invalide ; configuration existante préservée.');
+  if (!Array.isArray(previous)) throw new Error('Invalid PreToolUse; existing configuration was preserved.');
   const groups = previous.flatMap((group: unknown) => {
     if (!object(group) || !Array.isArray(group.hooks)) return [group];
-    const handlers = group.hooks.filter(handler => !object(handler) || handler.statusMessage !== statusMessage);
+    const handlers = group.hooks.filter(handler => !object(handler) || (handler.statusMessage !== statusMessage && handler.statusMessage !== previousStatusMessage));
     return handlers.length === group.hooks.length ? [group] : handlers.length ? [{ ...group, hooks: handlers }] : [];
   });
   const command = commandLine([nodePath, cliPath, '--project', resolve(root), 'hook']);

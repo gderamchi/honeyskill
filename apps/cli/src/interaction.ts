@@ -6,7 +6,7 @@ export function question(prompt: string): Promise<string> {
   return new Promise((resolve, reject) => {
     let answered = false;
     rl.once('close', () => {
-      if (!answered) reject(Object.assign(new Error('Installation annulée.'), { exitCode: 130 }));
+      if (!answered) reject(Object.assign(new Error('Installation cancelled.'), { exitCode: 130 }));
     });
     rl.once('SIGINT', () => rl.close());
     rl.question(prompt, answer => {
@@ -19,23 +19,23 @@ export function question(prompt: string): Promise<string> {
 
 export function reportText(report: ScanReport, installation?: InstallRecord): string {
   const headline = installation?.status === 'installed_with_exception'
-    ? 'Installé avec exception. Les risques signalés restent présents.'
-    : installation ? 'Installé automatiquement. Aucun risque détecté dans le périmètre analysé.'
-    : report.decision === 'allow' ? 'Aucun risque détecté dans le périmètre analysé.'
-    : report.findings[0]?.financialConsequence ?? 'Analyse incomplète : installation suspendue.';
+    ? 'Installed with exception. The reported risks remain.'
+    : installation ? 'Installed automatically. No risk detected within the analyzed scope.'
+    : report.decision === 'allow' ? 'No risk detected within the analyzed scope.'
+    : report.findings[0]?.financialConsequence ?? 'Analysis incomplete: installation suspended.';
   const evidence = report.findings.map(finding =>
-    `${finding.category} · ${finding.severity} — ${finding.explanation}\nRisque : ${finding.financialConsequence}\n${finding.evidence.map(item => `  ${item.file}:${item.line} ${item.excerpt}`).join('\n')}`
+    `${finding.category} · ${finding.severity} — ${finding.explanation}\nRisk: ${finding.financialConsequence}\n${finding.evidence.map(item => `  ${item.file}:${item.line} ${item.excerpt}`).join('\n')}`
   ).join('\n');
   return [
     headline,
-    `${report.name} · ${report.profile === 'static' ? 'Analyse statique' : 'Analyse hybride'} · ${report.coverage.status}`,
+    `${report.name} · ${report.profile === 'static' ? 'Static analysis' : 'Hybrid analysis'} · ${report.coverage.status}`,
     evidence,
     ...report.coverage.errors,
     ...report.coverage.limitsReached,
-    `Rapport : ${report.id}`,
-    `Empreinte : ${report.fingerprint}`,
+    `Report: ${report.id}`,
+    `Fingerprint: ${report.fingerprint}`,
     !installation && report.decision !== 'allow'
-      ? `Retenu avant activation. Examiner : skillgate inspect ${report.id}\nDécider plus tard : skillgate approve ${report.id}`
+      ? `Held before activation. Inspect: skillgate inspect ${report.id}\nDecide later: skillgate approve ${report.id}`
       : '',
   ].filter(Boolean).join('\n');
 }

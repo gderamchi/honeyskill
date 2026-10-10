@@ -12,11 +12,11 @@ export async function startProtectedSession(
   options: { json?: boolean; nodePath?: string } = {},
 ): Promise<number> {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
-    throw Object.assign(new SkillGateError('TTY_REQUIRED', 'skillgate on nécessite un terminal interactif, sans --json.'), { exitCode: 2 });
+    throw Object.assign(new SkillGateError('TTY_REQUIRED', 'skillgate on requires an interactive terminal, without --json.'), { exitCode: 2 });
   }
   const projectRoot = await realpath(resolve(root));
   if ((await terminalStatus(projectRoot)).active) {
-    process.stdout.write('SkillGate est déjà actif dans ce terminal. Tapez exit pour quitter la session protégée.\n');
+    process.stdout.write('SkillGate is already active in this terminal. Type exit to leave the protected session.\n');
     return 0;
   }
   await initProject(projectRoot);
@@ -32,7 +32,7 @@ export async function startProtectedSession(
   };
   // --norc/--noprofile disable files; clear inherited Bash hooks/functions as well.
   for (const key of Object.keys(env)) if (['BASH_ENV', 'ENV', 'PROMPT_COMMAND', 'BASHOPTS', 'SHELLOPTS'].includes(key) || key.startsWith('BASH_FUNC_')) delete env[key as keyof typeof env];
-  process.stderr.write(sanitizeTerminal(`SkillGate actif pour ${projectRoot}. Installez vos skills normalement. Tapez exit pour revenir à votre terminal.\n`));
+  process.stderr.write(sanitizeTerminal(`SkillGate is active for ${projectRoot}. Install skills as usual. Type exit to return to your terminal.\n`));
   return new Promise((resolveExit, reject) => {
     let child: ReturnType<typeof spawn> | undefined;
     const interrupt = () => { child?.kill('SIGINT'); };
@@ -47,7 +47,7 @@ export async function startProtectedSession(
     process.on('SIGTERM', terminate);
     process.on('SIGHUP', terminate);
     child = spawn('/bin/bash', ['--noprofile', '--norc', '-i'], { cwd: projectRoot, env, stdio: 'inherit' });
-    child.once('error', error => { cleanup(); reject(new SkillGateError('SHELL_UNAVAILABLE', `Impossible d’ouvrir Bash : ${sanitizeTerminal(error.message)}`)); });
+    child.once('error', error => { cleanup(); reject(new SkillGateError('SHELL_UNAVAILABLE', `Cannot start Bash: ${sanitizeTerminal(error.message)}`)); });
     child.once('exit', (code, signal) => { cleanup(); resolveExit(code ?? (signal ? 128 + osConstants.signals[signal] : 1)); });
   });
 }

@@ -27880,11 +27880,11 @@ function sanitizeTerminal(value) {
   return value.replace(/\x1b\][^\x07]*(?:\x07|\x1b\\)/g, "").replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").replace(/[\x00-\x08\x0b-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069]/g, "");
 }
 function safeName(name) {
-  if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(name)) throw new SkillGateError("INVALID_NAME", "Nom de skill invalide : utiliser 1 \xE0 64 lettres minuscules, chiffres ou tirets.");
+  if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(name)) throw new SkillGateError("INVALID_NAME", "Invalid skill name: use 1 to 64 lowercase letters, digits, or hyphens.");
   return name;
 }
 function safeId(id) {
-  if (!/^[a-z0-9-]{1,80}$/.test(id)) throw new SkillGateError("INVALID_ID", "Identifiant de rapport invalide.");
+  if (!/^[a-z0-9-]{1,80}$/.test(id)) throw new SkillGateError("INVALID_ID", "Invalid report ID.");
   return id;
 }
 async function exists(file2) {
@@ -27908,7 +27908,7 @@ async function ensureDirectory(directory) {
     }
     const stat2 = await fs2.lstat(current);
     const systemAlias = stat2.isSymbolicLink() && ["/var", "/tmp", "/etc"].includes(current) && (await fs2.realpath(current)).startsWith("/private/");
-    if ((!stat2.isDirectory() || stat2.isSymbolicLink()) && !systemAlias) throw new SkillGateError("UNSAFE_DIRECTORY", `Dossier refus\xE9 : ${sanitizeTerminal(current)}`);
+    if ((!stat2.isDirectory() || stat2.isSymbolicLink()) && !systemAlias) throw new SkillGateError("UNSAFE_DIRECTORY", `Directory refused: ${sanitizeTerminal(current)}`);
   }
 }
 async function ensureState(root2) {
@@ -27919,7 +27919,7 @@ async function atomicJson(file2, value) {
   await ensureDirectory(path2.dirname(file2));
   if (await exists(file2)) {
     const stat2 = await fs2.lstat(file2);
-    if (!stat2.isFile() || stat2.nlink !== 1) throw new SkillGateError("UNSAFE_STATE", "Fichier d\u2019\xE9tat non r\xE9gulier ou li\xE9.");
+    if (!stat2.isFile() || stat2.nlink !== 1) throw new SkillGateError("UNSAFE_STATE", "State file is not a regular file or has multiple links.");
   }
   const temporary = `${file2}.${randomUUID()}.tmp`;
   const handle = await fs2.open(temporary, "wx", 384);
@@ -27945,7 +27945,7 @@ async function atomicJson(file2, value) {
 }
 async function readJson(file2) {
   const stat2 = await fs2.lstat(file2);
-  if (!stat2.isFile() || stat2.nlink !== 1 || stat2.size > 20 * 1024 * 1024) throw new SkillGateError("UNSAFE_STATE", "Fichier d\u2019\xE9tat invalide.");
+  if (!stat2.isFile() || stat2.nlink !== 1 || stat2.size > 20 * 1024 * 1024) throw new SkillGateError("UNSAFE_STATE", "Invalid state file.");
   const handle = await fs2.open(file2, constants.O_RDONLY | constants.O_NOFOLLOW);
   try {
     return JSON.parse(await handle.readFile("utf8"));
@@ -27968,7 +27968,7 @@ async function withTargetLock(root2, name, work, scope2 = "target") {
       if (error62.code !== "EEXIST") throw error62;
       try {
         const owner = await readJson(lock);
-        if (!Number.isInteger(owner.pid) || owner.pid < 1) throw new SkillGateError("LOCKED", "Verrou invalide : v\xE9rification manuelle n\xE9cessaire.");
+        if (!Number.isInteger(owner.pid) || owner.pid < 1) throw new SkillGateError("LOCKED", "Invalid lock: manual review required.");
         try {
           process.kill(owner.pid, 0);
         } catch (probe) {
@@ -27980,7 +27980,7 @@ async function withTargetLock(root2, name, work, scope2 = "target") {
       await new Promise((resolve6) => setTimeout(resolve6, 30));
     }
   }
-  if (!acquired) throw new SkillGateError("LOCKED", "Une autre installation utilise cette cible. R\xE9essayez.");
+  if (!acquired) throw new SkillGateError("LOCKED", "Another installation is using this target. Try again.");
   try {
     return await work();
   } finally {
@@ -28017,13 +28017,13 @@ function redactApparentSecrets(text) {
 async function runSemantic(input2, config2, provider, report) {
   const files = [...input2.texts].map(([file2, content]) => ({ path: file2, content: redactApparentSecrets(content) }));
   if (files.reduce((sum, file2) => sum + Buffer.byteLength(file2.content), 0) > 64 * 1024) {
-    input2.coverage.limitsReached.push("Analyse s\xE9mantique limit\xE9e \xE0 64 KiB ; aucun appel effectu\xE9.");
-    report.analyses.push({ engine: provider.name, status: "unavailable", detail: "Limite de contenu s\xE9mantique atteinte." });
+    input2.coverage.limitsReached.push("Semantic analysis is limited to 64 KiB; no call was made.");
+    report.analyses.push({ engine: provider.name, status: "unavailable", detail: "Semantic content limit reached." });
     return;
   }
   try {
     const response = await Promise.race([provider.analyze({ files, model: config2.model }), new Promise((_, reject) => {
-      const timer = setTimeout(() => reject(new Error("D\xE9lai s\xE9mantique atteint.")), 15e3);
+      const timer = setTimeout(() => reject(new Error("Semantic analysis timed out.")), 15e3);
       timer.unref();
     })]);
     const result = SemanticOutput.parse(response);
@@ -28031,16 +28031,16 @@ async function runSemantic(input2, config2, provider, report) {
       const content = input2.texts.get(finding.file), lines = content?.split(/\r?\n/), line = lines?.[finding.line - 1];
       const supported = line !== void 0 && line.includes(finding.excerpt);
       if (!supported) {
-        input2.coverage.errors.push("Constat s\xE9mantique non \xE9tay\xE9 : passage ou fichier absent.");
+        input2.coverage.errors.push("Unsupported semantic finding: excerpt or file not found.");
         continue;
       }
       const excerpt = redactApparentSecrets(finding.excerpt);
       report.findings.push({ id: `semantic-${sha256(JSON.stringify(finding)).slice(0, 12)}`, category: finding.category, severity: finding.severity, confidence: finding.confidence, financialConsequence: redactApparentSecrets(finding.financialConsequence), explanation: redactApparentSecrets(finding.explanation), evidence: [{ file: finding.file, line: finding.line, endLine: finding.line, excerpt, ...excerpt !== finding.excerpt ? { redacted: true } : {} }], engine: "semantic", technique: "semantic-review", sources: [], supported: true });
     }
-    report.analyses.push({ engine: provider.name, status: input2.coverage.errors.some((error62) => error62.includes("s\xE9mantique non \xE9tay\xE9")) ? "failed" : "completed", detail: "R\xE9ponse structur\xE9e valid\xE9e ; preuves compar\xE9es aux octets du paquet." });
+    report.analyses.push({ engine: provider.name, status: input2.coverage.errors.some((error62) => error62.includes("Unsupported semantic finding")) ? "failed" : "completed", detail: "Structured response validated; evidence checked against the package bytes." });
   } catch {
-    input2.coverage.errors.push("Analyse s\xE9mantique \xE9chou\xE9e ou r\xE9ponse invalide.");
-    report.analyses.push({ engine: provider.name, status: "failed", detail: "\xC9chec du provider ou sch\xE9ma de r\xE9ponse invalide ; installation automatique interdite." });
+    input2.coverage.errors.push("Semantic analysis failed or returned an invalid response.");
+    report.analyses.push({ engine: provider.name, status: "failed", detail: "Provider failure or invalid response schema; automatic installation is blocked." });
   }
 }
 var SemanticOutput, OpenAIResponsesProvider;
@@ -28067,7 +28067,7 @@ var init_semantic = __esm({
       apiKey;
       name = "openai-responses";
       async analyze(input2) {
-        if (!this.apiKey) throw new Error("Cl\xE9 API absente.");
+        if (!this.apiKey) throw new Error("API key missing.");
         const schema = external_exports.toJSONSchema(SemanticOutput);
         const response = await fetch("https://api.openai.com/v1/responses", {
           method: "POST",
@@ -28084,7 +28084,7 @@ var init_semantic = __esm({
         });
         if (!response.ok) throw new Error(`API HTTP ${response.status}`);
         const reader = response.body?.getReader();
-        if (!reader) throw new Error("R\xE9ponse vide.");
+        if (!reader) throw new Error("Empty response.");
         const chunks = [];
         let length = 0;
         while (true) {
@@ -28093,14 +28093,14 @@ var init_semantic = __esm({
           length += next.value.length;
           if (length > 128 * 1024) {
             await reader.cancel();
-            throw new Error("R\xE9ponse trop volumineuse.");
+            throw new Error("Response exceeds the size limit.");
           }
           chunks.push(next.value);
         }
         const result = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-        if (result.status !== "completed") throw new Error("R\xE9ponse API incompl\xE8te.");
+        if (result.status !== "completed") throw new Error("Incomplete API response.");
         const content = result.output?.filter((item) => item.type === "message").flatMap((item) => item.content ?? []) ?? [];
-        if (content.some((item) => item.type === "refusal")) throw new Error("Refus du mod\xE8le.");
+        if (content.some((item) => item.type === "refusal")) throw new Error("Model refused the request.");
         const output2 = content.filter((item) => item.type === "output_text").map((item) => item.text ?? "").join("");
         return JSON.parse(output2);
       }
@@ -31497,7 +31497,7 @@ import path3 from "node:path";
 var LIMITS = { files: 256, bytes: 2 * 1024 * 1024, fileBytes: 256 * 1024, depth: 12, durationMs: 2e4 };
 var textExtensions = /* @__PURE__ */ new Set([".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".py", ".sh", ".bash", ".zsh", ".ps1", ".csv", ".xml", ".html", ".css", ".sql", ".env", ".ini", ".cfg"]);
 function safeRelative(input2) {
-  if (!input2 || path3.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Chemin absolu, ambigu ou travers\xE9e refus\xE9.");
+  if (!input2 || path3.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Absolute, ambiguous, or traversal path refused.");
   return input2;
 }
 var freshCoverage = () => ({ status: "complete_for_supported_checks", inventoried: 0, read: 0, supported: 0, bytes: 0, ignored: [], unresolved: [], limitsReached: [], errors: [] });
@@ -31509,7 +31509,7 @@ async function inventory(directory, copyTo) {
   const started = performance.now();
   const walk = async (relative2, depth) => {
     if (depth > LIMITS.depth) {
-      coverage.limitsReached.push(`Profondeur maximale : ${LIMITS.depth}`);
+      coverage.limitsReached.push(`Maximum depth: ${LIMITS.depth}`);
       return;
     }
     const dir = path3.join(directory, relative2);
@@ -31517,36 +31517,36 @@ async function inventory(directory, copyTo) {
     entries.sort((a, b) => a.name.localeCompare(b.name, "en"));
     for (const entry of entries) {
       if (performance.now() - started > LIMITS.durationMs) {
-        coverage.limitsReached.push("D\xE9lai maximal d\u2019inventaire atteint.");
+        coverage.limitsReached.push("Inventory time limit reached.");
         return;
       }
       const file2 = safeRelative(relative2 ? `${relative2}/${entry.name}` : entry.name);
       const full = path3.join(directory, file2), stat2 = await fs3.lstat(full);
-      if (stat2.isSymbolicLink() || !stat2.isDirectory() && !stat2.isFile() || stat2.isFile() && stat2.nlink !== 1) throw new SkillGateError("UNSAFE_ENTRY", `Lien ou fichier sp\xE9cial refus\xE9 : ${file2}`);
+      if (stat2.isSymbolicLink() || !stat2.isDirectory() && !stat2.isFile() || stat2.isFile() && stat2.nlink !== 1) throw new SkillGateError("UNSAFE_ENTRY", `Link or special file refused: ${file2}`);
       if (stat2.isDirectory()) {
         await walk(file2, depth + 1);
         continue;
       }
       coverage.inventoried++;
       if (coverage.inventoried > LIMITS.files) {
-        coverage.limitsReached.push(`Nombre maximal de fichiers : ${LIMITS.files}`);
+        coverage.limitsReached.push(`Maximum file count: ${LIMITS.files}`);
         return;
       }
       if (stat2.size > LIMITS.fileBytes || coverage.bytes + stat2.size > LIMITS.bytes) {
-        coverage.ignored.push({ file: file2, reason: "Limite de taille d\xE9pass\xE9e." });
-        coverage.limitsReached.push(`Taille limit\xE9e \xE0 ${LIMITS.fileBytes} octets par fichier et ${LIMITS.bytes} par paquet.`);
+        coverage.ignored.push({ file: file2, reason: "Size limit exceeded." });
+        coverage.limitsReached.push(`Size is limited to ${LIMITS.fileBytes} bytes per file and ${LIMITS.bytes} per package.`);
         continue;
       }
       const handle = await fs3.open(full, constants2.O_RDONLY | constants2.O_NOFOLLOW);
       let content;
       try {
         const opened = await handle.stat();
-        if (opened.ino !== stat2.ino || opened.dev !== stat2.dev || opened.nlink !== 1 || !opened.isFile() || opened.size > LIMITS.fileBytes) throw new SkillGateError("SOURCE_CHANGED", "La source a chang\xE9 pendant la collecte.");
+        if (opened.ino !== stat2.ino || opened.dev !== stat2.dev || opened.nlink !== 1 || !opened.isFile() || opened.size > LIMITS.fileBytes) throw new SkillGateError("SOURCE_CHANGED", "The source changed during collection.");
         content = Buffer.alloc(opened.size + 1);
         const { bytesRead } = await handle.read(content, 0, content.length, 0);
         content = content.subarray(0, bytesRead);
         const after = await handle.stat();
-        if (bytesRead !== opened.size || after.mtimeMs !== opened.mtimeMs || after.size !== opened.size) throw new SkillGateError("SOURCE_CHANGED", "La source a chang\xE9 pendant la collecte.");
+        if (bytesRead !== opened.size || after.mtimeMs !== opened.mtimeMs || after.size !== opened.size) throw new SkillGateError("SOURCE_CHANGED", "The source changed during collection.");
       } finally {
         await handle.close();
       }
@@ -31567,11 +31567,11 @@ async function inventory(directory, copyTo) {
       if (decoded !== void 0 && !decoded.includes("\0") && (textExtensions.has(path3.extname(file2).toLowerCase()) || file2 === "LICENSE" || file2 === "Dockerfile")) {
         texts.set(file2, decoded);
         coverage.supported++;
-      } else coverage.ignored.push({ file: file2, reason: "Format binaire ou extension non pris en charge par l\u2019analyse statique." });
+      } else coverage.ignored.push({ file: file2, reason: "Binary format or file extension is unsupported by static analysis." });
     }
   };
   const rootStat = await fs3.lstat(directory);
-  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "La source doit \xEAtre un dossier r\xE9gulier sans lien symbolique.");
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "The source must be a regular directory without a symlink.");
   await walk("", 0);
   manifest.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
   finalizeCoverage(coverage);
@@ -31579,22 +31579,22 @@ async function inventory(directory, copyTo) {
 }
 function skillMetadata(text) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(text);
-  if (!match) throw new SkillGateError("INVALID_SKILL", "SKILL.md doit contenir les m\xE9tadonn\xE9es YAML name et description.");
+  if (!match) throw new SkillGateError("INVALID_SKILL", "SKILL.md must contain YAML name and description metadata.");
   let value;
   try {
     value = (0, import_yaml.parse)(match[1], { maxAliasCount: 20 });
   } catch {
-    throw new SkillGateError("INVALID_SKILL", "M\xE9tadonn\xE9es YAML invalides.");
+    throw new SkillGateError("INVALID_SKILL", "Invalid YAML metadata.");
   }
-  if (!value || typeof value !== "object" || !("name" in value) || !("description" in value) || typeof value.name !== "string" || typeof value.description !== "string" || value.description.length > 1024) throw new SkillGateError("INVALID_SKILL", "M\xE9tadonn\xE9es name et description requises.");
+  if (!value || typeof value !== "object" || !("name" in value) || !("description" in value) || typeof value.name !== "string" || typeof value.description !== "string" || value.description.length > 1024) throw new SkillGateError("INVALID_SKILL", "Name and description metadata are required.");
   return { name: safeName(value.name), description: value.description };
 }
 async function chooseLocal(source, requested) {
   const absolute = path3.resolve(source);
-  if (/\.(?:zip|tar|tgz|gz|7z|rar)$/i.test(source)) throw new SkillGateError("ARCHIVE_UNSUPPORTED", "Archives non prises en charge. Utilisez un dossier extrait v\xE9rifi\xE9 ou un d\xE9p\xF4t GitHub public.");
-  if (!await exists(absolute)) throw new SkillGateError("SOURCE_NOT_FOUND", "Dossier source introuvable.");
+  if (/\.(?:zip|tar|tgz|gz|7z|rar)$/i.test(source)) throw new SkillGateError("ARCHIVE_UNSUPPORTED", "Archives are unsupported. Use a verified extracted directory or a public GitHub repository.");
+  if (!await exists(absolute)) throw new SkillGateError("SOURCE_NOT_FOUND", "Source directory not found.");
   const rootStat = await fs3.lstat(absolute);
-  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "La source doit \xEAtre un dossier r\xE9gulier.");
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "The source must be a regular directory.");
   if (await exists(path3.join(absolute, "SKILL.md"))) return absolute;
   const choices = [];
   const search = async (directory, depth) => {
@@ -31613,16 +31613,16 @@ async function chooseLocal(source, requested) {
     if (matches.length === 1) return matches[0];
   }
   if (choices.length === 1 && !requested) return choices[0];
-  throw new SkillGateError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Plusieurs skills possibles. Pr\xE9cisez --skill : ${choices.map((item) => path3.basename(item)).join(", ")}` : "Aucun SKILL.md trouv\xE9 dans la source.");
+  throw new SkillGateError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Multiple skills found. Specify --skill: ${choices.map((item) => path3.basename(item)).join(", ")}` : "No SKILL.md found in the source.");
 }
 async function githubJson(endpoint, started) {
   const remaining = LIMITS.durationMs - (performance.now() - started);
-  if (remaining <= 0) throw new SkillGateError("DOWNLOAD_TIMEOUT", "D\xE9lai de collecte GitHub atteint.");
+  if (remaining <= 0) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub collection timed out.");
   const response = await fetch(`https://api.github.com${endpoint}`, { redirect: "error", signal: AbortSignal.timeout(Math.min(remaining, 8e3)), headers: { Accept: "application/vnd.github+json", "User-Agent": "skillgate-finance-local" } });
-  if (!response.ok) throw new SkillGateError("GITHUB_ERROR", `GitHub HTTP ${response.status}. V\xE9rifiez le d\xE9p\xF4t public, la r\xE9vision et la limite API.`);
-  if (!response.headers.get("content-type")?.includes("application/json")) throw new SkillGateError("GITHUB_TYPE", "R\xE9ponse GitHub inattendue.");
+  if (!response.ok) throw new SkillGateError("GITHUB_ERROR", `GitHub HTTP ${response.status}. Check the public repository, revision, and API rate limit.`);
+  if (!response.headers.get("content-type")?.includes("application/json")) throw new SkillGateError("GITHUB_TYPE", "Unexpected GitHub response.");
   const reader = response.body?.getReader();
-  if (!reader) throw new SkillGateError("GITHUB_ERROR", "R\xE9ponse GitHub vide.");
+  if (!reader) throw new SkillGateError("GITHUB_ERROR", "Empty GitHub response.");
   let length = 0;
   const chunks = [];
   while (true) {
@@ -31631,7 +31631,7 @@ async function githubJson(endpoint, started) {
     length += result.value.length;
     if (length > 4 * 1024 * 1024) {
       await reader.cancel();
-      throw new SkillGateError("DOWNLOAD_LIMIT", "R\xE9ponse GitHub trop volumineuse.");
+      throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub response exceeds the size limit.");
     }
     chunks.push(result.value);
   }
@@ -31642,38 +31642,38 @@ async function acquireGithub(input2, destination, requested) {
   try {
     url2 = new URL(input2);
   } catch {
-    throw new SkillGateError("SOURCE_FORBIDDEN", "Source URL invalide.");
+    throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid source URL.");
   }
-  if (url2.protocol !== "https:" || url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash) throw new SkillGateError("SOURCE_FORBIDDEN", "Seuls les d\xE9p\xF4ts publics https://github.com/owner/repo sont pris en charge.");
+  if (url2.protocol !== "https:" || url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash) throw new SkillGateError("SOURCE_FORBIDDEN", "Only public https://github.com/owner/repo repositories are supported.");
   const segments = url2.pathname.split("/").filter(Boolean).map(decodeURIComponent);
   const owner = segments[0], repo = segments[1]?.replace(/\.git$/, "");
-  if (!owner || !repo || [".", ".."].includes(owner) || [".", ".."].includes(repo) || !/^[a-zA-Z0-9_.-]+$/.test(owner) || !/^[a-zA-Z0-9_.-]+$/.test(repo) || segments.length > 2 && segments[2] !== "tree") throw new SkillGateError("SOURCE_FORBIDDEN", "Utilisez /owner/repo ou /owner/repo/tree/revision/sous-dossier.");
+  if (!owner || !repo || [".", ".."].includes(owner) || [".", ".."].includes(repo) || !/^[a-zA-Z0-9_.-]+$/.test(owner) || !/^[a-zA-Z0-9_.-]+$/.test(repo) || segments.length > 2 && segments[2] !== "tree") throw new SkillGateError("SOURCE_FORBIDDEN", "Use /owner/repo or /owner/repo/tree/revision/subdirectory.");
   const reference = segments[3] || "HEAD";
   let folder = segments.slice(4).join("/");
   if (folder) safeRelative(folder);
   const started = performance.now(), api = `/repos/${owner}/${repo}`;
   const commit = await githubJson(`${api}/commits/${encodeURIComponent(reference)}`, started);
-  if (!commit.sha || !/^[a-f0-9]{40}$/.test(commit.sha)) throw new SkillGateError("GITHUB_REVISION", "R\xE9vision GitHub non r\xE9solue.");
+  if (!commit.sha || !/^[a-f0-9]{40}$/.test(commit.sha)) throw new SkillGateError("GITHUB_REVISION", "GitHub revision could not be resolved.");
   const tree = await githubJson(`${api}/git/trees/${commit.sha}?recursive=1`, started);
-  if (tree.truncated || !Array.isArray(tree.tree)) throw new SkillGateError("DOWNLOAD_LIMIT", "Arbre GitHub incomplet ou trop volumineux.");
+  if (tree.truncated || !Array.isArray(tree.tree)) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub tree is incomplete or too large.");
   const skillPaths = tree.tree.filter((item) => item.path === "SKILL.md" || item.path.endsWith("/SKILL.md")).map((item) => path3.posix.dirname(item.path)).filter((item) => !folder || item === folder || item.startsWith(`${folder}/`));
   if (!skillPaths.includes(folder || ".")) {
     const matches = requested ? skillPaths.filter((item) => path3.posix.basename(item) === requested) : skillPaths;
-    if (matches.length !== 1) throw new SkillGateError("AMBIGUOUS_SKILL", "S\xE9lectionnez un sous-dossier GitHub contenant SKILL.md ou utilisez --skill.");
+    if (matches.length !== 1) throw new SkillGateError("AMBIGUOUS_SKILL", "Select a GitHub subdirectory containing SKILL.md or use --skill.");
     folder = matches[0] === "." ? "" : matches[0];
   }
   const files = tree.tree.filter((item) => item.type !== "tree" && (!folder || item.path.startsWith(`${folder}/`)));
   let bytes = 0;
-  if (files.length > LIMITS.files) throw new SkillGateError("DOWNLOAD_LIMIT", "Trop de fichiers dans le paquet GitHub.");
+  if (files.length > LIMITS.files) throw new SkillGateError("DOWNLOAD_LIMIT", "Too many files in the GitHub package.");
   for (const file2 of files) {
     const relative2 = safeRelative(folder ? file2.path.slice(folder.length + 1) : file2.path);
-    if (file2.type !== "blob" || !["100644", "100755"].includes(file2.mode)) throw new SkillGateError("UNSAFE_ENTRY", "Liens et sous-modules GitHub refus\xE9s.");
-    if (relative2.split("/").length > LIMITS.depth || !Number.isInteger(file2.size) || file2.size > LIMITS.fileBytes || (bytes += file2.size) > LIMITS.bytes) throw new SkillGateError("DOWNLOAD_LIMIT", "Limite du paquet GitHub d\xE9pass\xE9e.");
-    if (!/^[a-f0-9]{40}$/.test(file2.sha)) throw new SkillGateError("GITHUB_ERROR", "Empreinte de blob invalide.");
+    if (file2.type !== "blob" || !["100644", "100755"].includes(file2.mode)) throw new SkillGateError("UNSAFE_ENTRY", "GitHub links and submodules are refused.");
+    if (relative2.split("/").length > LIMITS.depth || !Number.isInteger(file2.size) || file2.size > LIMITS.fileBytes || (bytes += file2.size) > LIMITS.bytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
+    if (!/^[a-f0-9]{40}$/.test(file2.sha)) throw new SkillGateError("GITHUB_ERROR", "Invalid blob hash.");
     const blob = await githubJson(`${api}/git/blobs/${file2.sha}`, started);
-    if (blob.encoding !== "base64" || typeof blob.content !== "string") throw new SkillGateError("GITHUB_ERROR", "Contenu du blob indisponible.");
+    if (blob.encoding !== "base64" || typeof blob.content !== "string") throw new SkillGateError("GITHUB_ERROR", "Blob content unavailable.");
     const content = Buffer.from(blob.content, "base64");
-    if (content.length !== file2.size) throw new SkillGateError("GITHUB_ERROR", "Taille du blob incoh\xE9rente.");
+    if (content.length !== file2.size) throw new SkillGateError("GITHUB_ERROR", "Blob size mismatch.");
     const target = path3.join(destination, relative2);
     await ensureDirectory(path3.dirname(target));
     await fs3.writeFile(target, content, { flag: "wx", mode: file2.mode === "100755" ? 448 : 384 });
@@ -31734,22 +31734,22 @@ function analyzeNative(input2) {
   };
   const secret = first(/(?:process\.env|os\.(?:getenv|environ)|readFile|read_text|input\(|prompt|ask|collect|read|load|export|obtain|saisir|demande|lire).{0,100}(?:PRIVATE_KEY|private.?key|seed.phrase|mnemonic|wallet.?secret|payment.?token|STRIPE_SECRET|exchange.?api.?key)|(?:PRIVATE_KEY|seed.phrase|mnemonic).{0,60}(?:process\.env|os\.(?:getenv|environ)|readFile)/i);
   const transmission = first(/(?:fetch|requests?\.post|axios\.post|curl|POST|upload|transmit|send|submit|envoy).{0,160}(?:https?:|secret|private.?key|seed|mnemonic|payload|body|data)|(?:body|data).{0,80}(?:private.?key|seed|mnemonic|secret)/i);
-  if (secret && transmission && secret !== transmission || secret && transmission && /(?:https?:|upload|transmit|post)/i.test(secret.text)) add("FIN-01", "critical", "Une cl\xE9 ou un secret financier pourrait \xEAtre transmis \xE0 un tiers, permettant un acc\xE8s aux fonds si le secret est r\xE9el.", "Collecte d\u2019un secret financier et transmission observ\xE9es dans le paquet. La destination n\u2019a pas \xE9t\xE9 contact\xE9e ; son propri\xE9taire n\u2019est pas \xE9tabli.", [secret, transmission], "DOC-01", ["SRC-01", "SRC-02"]);
+  if (secret && transmission && secret !== transmission || secret && transmission && /(?:https?:|upload|transmit|post)/i.test(secret.text)) add("FIN-01", "critical", "A financial key or secret could be sent to a third party, allowing access to funds if the secret is real.", "The package contains financial secret collection and transmission. The destination was not contacted; its owner has not been established.", [secret, transmission], "DOC-01", ["SRC-01", "SRC-02"]);
   const replacement = first(/(?:replace|override|overwrite|substitute|redirect|set|forcer|remplac).{0,70}(?:recipient|beneficiary|destination|payout|bénéficiaire)|(?:recipient|beneficiary|destination|payout).{0,45}=.{0,15}(?:["'](?:0x[a-f0-9]{8}|demo[-_]|external))/i);
-  if (transfer && (readonly2 || hidden || replacement)) add("FIN-02", "high", "Des actifs pourraient \xEAtre envoy\xE9s \xE0 un b\xE9n\xE9ficiaire hors du mandat annonc\xE9, si l\u2019agent dispose de la capacit\xE9 de transfert.", "Le paquet combine une op\xE9ration financi\xE8re avec une fonction annonc\xE9e en lecture seule, une dissimulation ou un remplacement explicite de b\xE9n\xE9ficiaire. Le mandat n\u2019est pas valid\xE9 par la seule d\xE9claration du skill.", [transfer, replacement, readonly2 ? first(/read[ -]?only|only (?:read|inspect|display|summar)|lecture seule/i) : void 0, hidden], "DOC-03", ["SRC-03"]);
+  if (transfer && (readonly2 || hidden || replacement)) add("FIN-02", "high", "Assets could be sent to a recipient outside the stated scope if the agent has transfer access.", "The package combines a financial operation with a claimed read-only function, concealment, or an explicit recipient replacement. The stated scope cannot be verified from the skill description alone.", [transfer, replacement, readonly2 ? first(/read[ -]?only|only (?:read|inspect|display|summar)|lecture seule/i) : void 0, hidden], "DOC-03", ["SRC-03"]);
   const approval = first(/(?:approve|allowance|setApprovalForAll|autorisation).{0,100}(?:unlimited|infinite|MaxUint256|2\s*\*\*\s*256|true|illimit)|(?:unlimited|infinite|MaxUint256|illimit).{0,80}(?:approve|allowance|spend)/i);
-  if (approval && (readonly2 || hidden || !/explicit(?:ly)? (?:user|operator).{0,30}(?:approv|request|cho)|user.{0,30}(?:chooses|selects|requests).{0,50}unlimited|documented unlimited.{0,60}(?:requires|confirmation)/i.test(all))) add("FIN-03", readonly2 || hidden ? "high" : "medium", "Une autorisation large pourrait permettre de d\xE9penser davantage que le montant pr\xE9vu, si elle est effectivement sign\xE9e.", "Une autorisation de d\xE9pense tr\xE8s large est pr\xE9sente. Elle constitue un risque \xE0 examiner, sans prouver \xE0 elle seule une intention malveillante.", [approval, hidden, readonly2 ? first(/read[ -]?only|lecture seule/i) : void 0], "SYN-03", [], readonly2 || hidden ? "high" : "medium");
+  if (approval && (readonly2 || hidden || !/explicit(?:ly)? (?:user|operator).{0,30}(?:approv|request|cho)|user.{0,30}(?:chooses|selects|requests).{0,50}unlimited|documented unlimited.{0,60}(?:requires|confirmation)/i.test(all))) add("FIN-03", readonly2 || hidden ? "high" : "medium", "A broad spending approval could allow more than the intended amount to be spent if it is signed.", "The package contains a very broad spending approval. This is a risk to review, but does not by itself prove malicious intent.", [approval, hidden, readonly2 ? first(/read[ -]?only|lecture seule/i) : void 0], "SYN-03", [], readonly2 || hidden ? "high" : "medium");
   const networkChange = first(/(?:replace|override|switch|change|rewrite|set|remplac|modifi).{0,70}(?:chain.?id|network|token.?address|rpc.?url|slippage|réseau)|(?:chain.?id|token.?address|slippage|rpc.?url)\s*[:=].{0,100}/i);
-  if (finance && networkChange && (hidden || /ignore.{0,50}(?:network|token|chain|user)|(?:regardless|instead).{0,50}(?:user|approved)|approved.{0,50}(?:replace|override)/i.test(all))) add("FIN-04", "high", "Des param\xE8tres financiers pourraient \xEAtre modifi\xE9s contre le contexte approuv\xE9, changeant l\u2019actif ou le r\xE9seau utilis\xE9.", "Changement de param\xE8tres corr\xE9l\xE9 \xE0 une instruction de dissimulation ou de d\xE9passement du mandat. Aucun contexte financier externe n\u2019a \xE9t\xE9 consult\xE9 ; la divergence effective reste \xE0 confirmer.", [networkChange, hidden], "SYN-04", [], "medium");
+  if (finance && networkChange && (hidden || /ignore.{0,50}(?:network|token|chain|user)|(?:regardless|instead).{0,50}(?:user|approved)|approved.{0,50}(?:replace|override)/i.test(all))) add("FIN-04", "high", "Financial parameters could be changed against the approved context, altering the asset or network used.", "A parameter change is associated with an instruction to conceal behavior or exceed the stated scope. No external financial context was consulted; an actual mismatch remains unconfirmed.", [networkChange, hidden], "SYN-04", [], "medium");
   const remote = first(/(?:curl|wget).{0,160}(?:\|\s*(?:sh|bash|zsh|python)|-o)|(?:eval|exec|subprocess|child_process|import\().{0,100}(?:https?:|base64|decode)|(?:fetch|requests?\.get).{0,140}https?:|(?:download|load|fetch|execute|run).{0,80}(?:remote|https?:).{0,80}(?:script|code|instructions|payload)|(?:run|execute).{0,60}(?:base64|encoded|hidden).{0,40}(?:payload|code|command)/i);
   const execution = first(/\beval\s*\(|\bexec\s*\(|execSync|subprocess\.|\|\s*(?:sh|bash|zsh|python)|chmod\s+\+x|(?:execute|run|load).{0,70}(?:downloaded|remote|payload|script|encoded)/i);
   if (finance && remote && execution) {
-    add("FIN-05", "high", "Du code non analys\xE9 pourrait s\u2019ex\xE9cuter avec les acc\xE8s financiers de l\u2019agent.", "Le paquet associe r\xE9cup\xE9ration ou masquage de code et ex\xE9cution dans un contexte financier. Aucun contenu distant n\u2019a \xE9t\xE9 ex\xE9cut\xE9 ou r\xE9cup\xE9r\xE9 par cette r\xE8gle.", [remote, execution], "DOC-02", ["SRC-01", "SRC-02"]);
-    input2.coverage.unresolved.push(`${remote.file} : code distant ou masqu\xE9 non analys\xE9.`);
+    add("FIN-05", "high", "Unanalyzed code could run with the financial access available to the agent.", "The package combines code retrieval or obfuscation with execution in a financial context. This rule did not retrieve or execute any remote content.", [remote, execution], "DOC-02", ["SRC-01", "SRC-02"]);
+    input2.coverage.unresolved.push(`${remote.file} : remote or obfuscated code was not analyzed.`);
   }
   const sign = first(/\bsign\b|\bapprove\b|sendTransaction|transferFrom|setApprovalForAll|signe[rz]|approuve[rz]/i);
-  if (finance && hidden && (transfer || sign || approval)) add("FIN-06", "high", "L\u2019agent pourrait approuver ou ex\xE9cuter une action financi\xE8re dissimul\xE9e \xE0 l\u2019op\xE9rateur.", "Une consigne active de dissimulation ou de contournement est corr\xE9l\xE9e \xE0 une action financi\xE8re. Il s\u2019agit d\u2019une hypoth\xE8se de d\xE9tournement test\xE9e par nos r\xE8gles, pas de la reproduction d\u2019un incident nomm\xE9.", [hidden, transfer, sign, approval], "SYN-06", []);
-  const capabilities = [finance ? "Contexte financier" : "", readonly2 ? "Lecture seule annonc\xE9e" : "", transfer ? "Transfert pr\xE9sent" : "", approval ? "Autorisation de d\xE9pense large" : "", secret ? "Acc\xE8s \xE0 un secret financier" : "", execution ? "Ex\xE9cution de code pr\xE9sente" : ""].filter(Boolean);
+  if (finance && hidden && (transfer || sign || approval)) add("FIN-06", "high", "The agent could approve or execute a financial action hidden from the operator.", "An active instruction to conceal behavior or bypass approval is associated with a financial action. This is an attack hypothesis tested by our rules, not a reproduction of a named incident.", [hidden, transfer, sign, approval], "SYN-06", []);
+  const capabilities = [finance ? "Financial context" : "", readonly2 ? "Read-only behavior claimed" : "", transfer ? "Transfer present" : "", approval ? "Broad spending approval" : "", secret ? "Financial secret access" : "", execution ? "Code execution present" : ""].filter(Boolean);
   return { findings, capabilities };
 }
 function checkReferences(input2) {
@@ -31760,25 +31760,25 @@ function checkReferences(input2) {
         const reference = match[1];
         if (/^(?:https?:|mailto:|#)/i.test(reference)) continue;
         const target = path4.posix.normalize(path4.posix.join(path4.posix.dirname(file2), reference.split("#")[0]));
-        if (reference.startsWith("/") || target.startsWith("../") || !available.has(target)) input2.coverage.unresolved.push(`${file2} : r\xE9f\xE9rence locale non r\xE9solue ${reference}`);
+        if (reference.startsWith("/") || target.startsWith("../") || !available.has(target)) input2.coverage.unresolved.push(`${file2} : unresolved local reference ${reference}`);
       }
       for (const line of text.split(/\r?\n/)) {
-        if (/(?:read|follow|load|download|execute|consult|fetch|lire|suivre|charger).{0,100}(?:instructions|script|rules|guide)|(?:instructions|script|rules).{0,80}(?:at|from|https?:)/i.test(line) && /https?:\/\//i.test(line)) input2.coverage.unresolved.push(`${file2} : instructions ou ressource distante non analys\xE9e.`);
-        if (/(?:read|load|execute|run|lire|charger).{0,60}(?:\.\.\/|\/(?:tmp|home|Users)\/)/i.test(line)) input2.coverage.unresolved.push(`${file2} : r\xE9f\xE9rence hors du paquet.`);
+        if (/(?:read|follow|load|download|execute|consult|fetch|lire|suivre|charger).{0,100}(?:instructions|script|rules|guide)|(?:instructions|script|rules).{0,80}(?:at|from|https?:)/i.test(line) && /https?:\/\//i.test(line)) input2.coverage.unresolved.push(`${file2} : remote instructions or resource were not analyzed.`);
+        if (/(?:read|load|execute|run|lire|charger).{0,60}(?:\.\.\/|\/(?:tmp|home|Users)\/)/i.test(line)) input2.coverage.unresolved.push(`${file2} : reference outside the package.`);
       }
     }
     if (path4.basename(file2) === "package.json") {
       try {
         const pkg = JSON.parse(text);
-        if (["dependencies", "devDependencies", "optionalDependencies"].some((key) => pkg[key] && Object.keys(pkg[key]).length)) input2.coverage.unresolved.push(`${file2} : d\xE9pendances npm non r\xE9solues, jamais install\xE9es.`);
+        if (["dependencies", "devDependencies", "optionalDependencies"].some((key) => pkg[key] && Object.keys(pkg[key]).length)) input2.coverage.unresolved.push(`${file2} : unresolved npm dependencies; none were installed.`);
       } catch {
-        input2.coverage.errors.push(`${file2} : JSON invalide.`);
+        input2.coverage.errors.push(`${file2} : invalid JSON.`);
       }
     }
-    if (["requirements.txt", "Pipfile", "Cargo.toml"].includes(path4.basename(file2)) && text.trim()) input2.coverage.unresolved.push(`${file2} : d\xE9pendances externes non r\xE9solues.`);
+    if (["requirements.txt", "Pipfile", "Cargo.toml"].includes(path4.basename(file2)) && text.trim()) input2.coverage.unresolved.push(`${file2} : unresolved external dependencies.`);
     for (const match of text.matchAll(/(?:from\s+["']|require\(["']|import\s+["'])(\.[^"']+)["']/g)) {
       const resolved = path4.posix.normalize(path4.posix.join(path4.posix.dirname(file2), match[1]));
-      if (![resolved, `${resolved}.js`, `${resolved}.ts`, `${resolved}.json`, `${resolved}/index.js`].some((candidate) => available.has(candidate))) input2.coverage.unresolved.push(`${file2} : import local non r\xE9solu ${match[1]}`);
+      if (![resolved, `${resolved}.js`, `${resolved}.ts`, `${resolved}.json`, `${resolved}/index.js`].some((candidate) => available.has(candidate))) input2.coverage.unresolved.push(`${file2} : unresolved local import ${match[1]}`);
     }
   }
   input2.coverage.unresolved = [...new Set(input2.coverage.unresolved)];
@@ -31808,14 +31808,14 @@ async function initProject(projectRoot, options = {}) {
 }
 async function loadConfig(projectRoot) {
   const file2 = path5.join(stateDir(projectRoot), "config.json");
-  if (!await exists(file2)) throw new SkillGateError("NOT_INITIALIZED", "Configuration absente. Lancez skillgate init --agent codex.");
+  if (!await exists(file2)) throw new SkillGateError("NOT_INITIALIZED", "Configuration missing. Run skillgate init --agent codex.");
   await ensureState(projectRoot);
   return ConfigSchema.parse(await readJson(file2));
 }
 async function semanticAnalysis(input2, config2, provider, report) {
   if (!config2.semanticConsent || !provider) {
-    report.analyses.push({ engine: "semantic", status: "unavailable", detail: config2.semanticConsent ? "Provider absent : aucun appel externe effectu\xE9." : "Consentement \xE0 l\u2019envoi externe absent." });
-    input2.coverage.errors.push("Analyse hybride obligatoire indisponible.");
+    report.analyses.push({ engine: "semantic", status: "unavailable", detail: config2.semanticConsent ? "Provider missing: no external call was made." : "Consent to share content externally is missing." });
+    input2.coverage.errors.push("Required hybrid analysis is unavailable.");
     return;
   }
   const { runSemantic: runSemantic2 } = await Promise.resolve().then(() => (init_semantic(), semantic_exports));
@@ -31826,9 +31826,9 @@ async function scanSkill(projectRoot, source, options = {}) {
   const id = `scan-${randomUUID2()}`, directory = path5.join(stateDir(projectRoot), "quarantine", id, "package");
   const acquired = await acquire(source, directory, options.skill), collected = acquired.inventory;
   const main = collected.texts.get("SKILL.md");
-  if (!main) throw new SkillGateError("INVALID_SKILL", "SKILL.md absent, trop volumineux ou non lisible.");
+  if (!main) throw new SkillGateError("INVALID_SKILL", "SKILL.md is missing, too large, or unreadable.");
   const metadata = skillMetadata(main);
-  if (options.skill && metadata.name !== options.skill) throw new SkillGateError("SKILL_MISMATCH", "Le nom du SKILL.md ne correspond pas au skill demand\xE9.");
+  if (options.skill && metadata.name !== options.skill) throw new SkillGateError("SKILL_MISMATCH", "The name in SKILL.md does not match the requested skill.");
   checkReferences(collected);
   const native = analyzeNative(collected);
   const report = {
@@ -31844,7 +31844,7 @@ async function scanSkill(projectRoot, source, options = {}) {
     rulesVersion: RULES_VERSION,
     corpusVersion: CORPUS_VERSION,
     policyVersion: POLICY_VERSION,
-    analyses: [{ engine: "native", status: "completed", detail: "Analyse statique des octets collect\xE9s ; aucun script ex\xE9cut\xE9." }],
+    analyses: [{ engine: "native", status: "completed", detail: "Static analysis of the collected bytes; no scripts were executed." }],
     coverage: collected.coverage,
     findings: native.findings,
     risk: native.findings.length ? "detected" : "none",
@@ -31852,7 +31852,7 @@ async function scanSkill(projectRoot, source, options = {}) {
     capabilities: native.capabilities,
     durationMs: 0,
     manifest: collected.manifest,
-    limitations: ["Contr\xF4le des installations et mises \xE0 jour effectu\xE9es par SkillGate uniquement.", "Aucune preuve de s\xFBret\xE9 compl\xE8te ; aucun contr\xF4le transactionnel pendant l\u2019ex\xE9cution.", "L\u2019environnement financier r\xE9el et ses permissions ne sont pas consult\xE9s.", "Le propri\xE9taire du syst\xE8me peut modifier les snapshots et journaux locaux.", config2.profile === "static" ? "Analyse statique : r\xE8gles heuristiques, sans raisonnement de mod\xE8le externe." : "Analyse hybride : contenu r\xE9duit et secrets apparents masqu\xE9s, sans garantie de redaction parfaite."]
+    limitations: ["Only installations and updates routed through SkillGate are checked.", "No guarantee of complete safety; no transaction checks during execution.", "The actual financial environment and its permissions are not inspected.", "The system owner can modify local snapshots and logs.", config2.profile === "static" ? "Static analysis: heuristic rules, without external model reasoning." : "Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction."]
   };
   if (config2.profile === "hybrid") await semanticAnalysis(collected, config2, options.provider, report);
   finalizeCoverage(report.coverage);
@@ -31867,7 +31867,7 @@ async function scanSkill(projectRoot, source, options = {}) {
 async function readReport(projectRoot, id) {
   await loadConfig(projectRoot);
   const file2 = reportPath(projectRoot, id);
-  if (!await exists(file2)) throw new SkillGateError("REPORT_NOT_FOUND", "Rapport introuvable.");
+  if (!await exists(file2)) throw new SkillGateError("REPORT_NOT_FOUND", "Report not found.");
   return ScanReportSchema.parse(await readJson(file2));
 }
 async function listReports(projectRoot) {
@@ -31895,7 +31895,7 @@ async function recoverTarget(root2, name) {
     const record2 = InstallRecordSchema.parse(transaction.record);
     if (record2.name !== name) continue;
     const expected = path5.join(path5.resolve(root2), ".agents/skills", safeName(name));
-    if (record2.target !== expected || record2.snapshot !== path5.join(stateDir(root2), "snapshots", safeId(record2.scanId))) throw new SkillGateError("INVALID_TRANSACTION", "Transaction locale incoh\xE9rente.");
+    if (record2.target !== expected || record2.snapshot !== path5.join(stateDir(root2), "snapshots", safeId(record2.scanId))) throw new SkillGateError("INVALID_TRANSACTION", "Inconsistent local transaction.");
     await ensureDirectory(path5.dirname(expected));
     const stat2 = await fs4.lstat(expected).catch((error62) => {
       if (error62.code === "ENOENT") return void 0;
@@ -31903,7 +31903,7 @@ async function recoverTarget(root2, name) {
     });
     if (stat2?.isSymbolicLink() && await fs4.readlink(expected) === record2.snapshot) {
       const checked = await inventory(record2.snapshot);
-      if (checked.fingerprint !== record2.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Snapshot d\u2019une installation interrompue modifi\xE9 ; restauration manuelle n\xE9cessaire.");
+      if (checked.fingerprint !== record2.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError("SNAPSHOT_CHANGED", "The snapshot of an interrupted installation has changed; manual recovery is required.");
       await atomicJson(recordPath(root2, name), record2);
       await atomicJson(path5.join(transactions, file2), { ...transaction, state: "completed", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
     } else {
@@ -31926,21 +31926,21 @@ async function installScan(projectRoot, scanId, exception) {
   const root2 = path5.resolve(projectRoot), destination = path5.join(root2, config2.target, safeName(report.name));
   return withTargetLock(root2, report.name, async () => {
     await recoverTarget(root2, report.name);
-    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config2.profile) throw new SkillGateError("STALE_REPORT", "Profil ou moteur modifi\xE9. R\xE9analysez le paquet avant installation.");
-    if (report.decision !== decide(report.findings, report.coverage)) throw new SkillGateError("INVALID_REPORT", "D\xE9cision incoh\xE9rente avec la politique.");
-    if (report.coverage.limitsReached.some((limit) => !limit.startsWith("Analyse s\xE9mantique"))) throw new SkillGateError("PACKAGE_INCOMPLETE", "Collecte du paquet tronqu\xE9e. Une exception ne peut pas activer un paquet dont des fichiers manquent.");
+    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config2.profile) throw new SkillGateError("STALE_REPORT", "Profile or engine changed. Scan the package again before installation.");
+    if (report.decision !== decide(report.findings, report.coverage)) throw new SkillGateError("INVALID_REPORT", "Decision does not match the policy.");
+    if (report.coverage.limitsReached.some((limit) => !limit.startsWith("Semantic analysis") && !limit.startsWith("Analyse s\xE9mantique"))) throw new SkillGateError("PACKAGE_INCOMPLETE", "Package collection was truncated. An exception cannot activate a package with missing files.");
     if (exception) {
       exception = ExceptionSchema.parse(exception);
-      if (exception.fingerprint !== report.fingerprint || path5.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError("INVALID_EXCEPTION", "Exception refus\xE9e : rapport, empreinte, destination ou confirmation ne correspondent pas.");
-    } else if (report.decision !== "allow") throw new SkillGateError("DECISION_REQUIRED", "Installation retenue. Examinez les preuves ou confirmez une exception pour cette empreinte pr\xE9cise.");
+      if (exception.fingerprint !== report.fingerprint || path5.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError("INVALID_EXCEPTION", "Exception refused: report, fingerprint, destination, or confirmation does not match.");
+    } else if (report.decision !== "allow") throw new SkillGateError("DECISION_REQUIRED", "Installation held. Review the evidence or confirm an exception for this exact fingerprint.");
     const quarantined = path5.join(stateDir(root2), "quarantine", report.id, "package");
     const current = await inventory(quarantined);
-    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Les fichiers ont chang\xE9 depuis l\u2019analyse. Installation refus\xE9e ; relancez le scan.");
+    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Files have changed since analysis. Installation refused; run the scan again.");
     const previous = await readInstall(root2, report.name);
     await ensureDirectory(path5.dirname(destination));
     if (await exists(destination)) {
-      if (!previous || !(await fs4.lstat(destination)).isSymbolicLink() || await fs4.readlink(destination) !== previous.snapshot) throw new SkillGateError("UNMANAGED_TARGET", "La cible existe et n\u2019est pas un snapshot g\xE9r\xE9 intact. Aucun fichier n\u2019a \xE9t\xE9 \xE9cras\xE9.");
-    } else if (previous) throw new SkillGateError("TARGET_CHANGED", "Le skill actif a \xE9t\xE9 supprim\xE9 hors de SkillGate. V\xE9rification manuelle n\xE9cessaire.");
+      if (!previous || !(await fs4.lstat(destination)).isSymbolicLink() || await fs4.readlink(destination) !== previous.snapshot) throw new SkillGateError("UNMANAGED_TARGET", "The target exists and is not an intact managed snapshot. No files were overwritten.");
+    } else if (previous) throw new SkillGateError("TARGET_CHANGED", "The active skill was removed outside SkillGate. Manual review is required.");
     if (previous?.fingerprint === report.fingerprint && previous.scanId === report.id) return previous;
     const snapshot = path5.join(stateDir(root2), "snapshots", report.id);
     if (!await exists(snapshot)) {
@@ -31949,12 +31949,12 @@ async function installScan(projectRoot, scanId, exception) {
       const copied = await inventory(quarantined, staged);
       if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) {
         await fs4.rm(staged, { recursive: true, force: true });
-        throw new SkillGateError("SNAPSHOT_CHANGED", "Mutation d\xE9tect\xE9e pendant la pr\xE9paration.");
+        throw new SkillGateError("SNAPSHOT_CHANGED", "A change was detected during preparation.");
       }
       await fs4.rename(staged, snapshot);
     }
     const prepared = await inventory(snapshot);
-    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Snapshot pr\xE9par\xE9 modifi\xE9.");
+    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "The prepared snapshot has changed.");
     const at = (/* @__PURE__ */ new Date()).toISOString(), record2 = {
       schemaVersion: 1,
       name: report.name,
@@ -31966,7 +31966,7 @@ async function installScan(projectRoot, scanId, exception) {
       status: exception ? "installed_with_exception" : "installed",
       installedAt: at,
       ...exception ? { operatorDecision: exception } : {},
-      events: [...previous?.events ?? [], { at, action: exception ? "exception_accepted" : previous ? "update_installed" : "installed", scanId: report.id, detail: exception ? `Exception d\xE9clar\xE9e par ${exception.operator}. Pr\xE9vention lev\xE9e pour cette empreinte.` : "Snapshot analys\xE9 promu atomiquement." }]
+      events: [...previous?.events ?? [], { at, action: exception ? "exception_accepted" : previous ? "update_installed" : "installed", scanId: report.id, detail: exception ? `Exception recorded by ${exception.operator}. Protection overridden for this fingerprint.` : "Analyzed snapshot activated atomically." }]
     };
     InstallRecordSchema.parse(record2);
     const transaction = path5.join(stateDir(root2), "transactions", `${report.id}.json`);
@@ -31983,7 +31983,7 @@ async function installScan(projectRoot, scanId, exception) {
       await atomicJson(recordPath(root2, report.name), record2);
       await atomicJson(transaction, { state: "completed", record: record2, previous: previous ?? null });
     } catch {
-      throw new SkillGateError("ACTIVATED_RECOVERY_REQUIRED", `Le snapshot v\xE9rifi\xE9 a \xE9t\xE9 activ\xE9, mais sa trace locale n\u2019a pas pu \xEAtre finalis\xE9e. R\xE9tablissez les permissions et fichiers d\u2019\xE9tat, puis lancez skillgate list ou skillgate doctor pour reprendre.${previous ? " L\u2019ancienne version reste conserv\xE9e dans les snapshots." : ""}`);
+      throw new SkillGateError("ACTIVATED_RECOVERY_REQUIRED", `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run skillgate list or skillgate doctor to recover.${previous ? " The previous version remains stored in snapshots." : ""}`);
     }
     return record2;
   });
@@ -31995,7 +31995,7 @@ async function addSkill(projectRoot, source, options = {}) {
 async function updateSkill(projectRoot, name, options = {}) {
   await loadConfig(projectRoot);
   const installed = await readInstall(projectRoot, safeName(name));
-  if (!installed) throw new SkillGateError("NOT_INSTALLED", "Ce skill n\u2019est pas g\xE9r\xE9 dans ce projet.");
+  if (!installed) throw new SkillGateError("NOT_INSTALLED", "This skill is not managed in this project.");
   return addSkill(projectRoot, installed.source.locator, { ...options, skill: name });
 }
 async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
@@ -32019,7 +32019,7 @@ async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
 // package.json
 var package_default = {
   name: "@gderamchi/skillgate",
-  version: "0.3.0",
+  version: "0.3.1",
   private: true,
   type: "module",
   packageManager: "pnpm@10.33.0",
@@ -32070,7 +32070,7 @@ function question(prompt) {
   return new Promise((resolve6, reject) => {
     let answered = false;
     rl.once("close", () => {
-      if (!answered) reject(Object.assign(new Error("Installation annul\xE9e."), { exitCode: 130 }));
+      if (!answered) reject(Object.assign(new Error("Installation cancelled."), { exitCode: 130 }));
     });
     rl.once("SIGINT", () => rl.close());
     rl.question(prompt, (answer) => {
@@ -32081,29 +32081,29 @@ function question(prompt) {
   });
 }
 function reportText(report, installation) {
-  const headline = installation?.status === "installed_with_exception" ? "Install\xE9 avec exception. Les risques signal\xE9s restent pr\xE9sents." : installation ? "Install\xE9 automatiquement. Aucun risque d\xE9tect\xE9 dans le p\xE9rim\xE8tre analys\xE9." : report.decision === "allow" ? "Aucun risque d\xE9tect\xE9 dans le p\xE9rim\xE8tre analys\xE9." : report.findings[0]?.financialConsequence ?? "Analyse incompl\xE8te : installation suspendue.";
+  const headline = installation?.status === "installed_with_exception" ? "Installed with exception. The reported risks remain." : installation ? "Installed automatically. No risk detected within the analyzed scope." : report.decision === "allow" ? "No risk detected within the analyzed scope." : report.findings[0]?.financialConsequence ?? "Analysis incomplete: installation suspended.";
   const evidence2 = report.findings.map(
     (finding) => `${finding.category} \xB7 ${finding.severity} \u2014 ${finding.explanation}
-Risque : ${finding.financialConsequence}
+Risk: ${finding.financialConsequence}
 ${finding.evidence.map((item) => `  ${item.file}:${item.line} ${item.excerpt}`).join("\n")}`
   ).join("\n");
   return [
     headline,
-    `${report.name} \xB7 ${report.profile === "static" ? "Analyse statique" : "Analyse hybride"} \xB7 ${report.coverage.status}`,
+    `${report.name} \xB7 ${report.profile === "static" ? "Static analysis" : "Hybrid analysis"} \xB7 ${report.coverage.status}`,
     evidence2,
     ...report.coverage.errors,
     ...report.coverage.limitsReached,
-    `Rapport : ${report.id}`,
-    `Empreinte : ${report.fingerprint}`,
-    !installation && report.decision !== "allow" ? `Retenu avant activation. Examiner : skillgate inspect ${report.id}
-D\xE9cider plus tard : skillgate approve ${report.id}` : ""
+    `Report: ${report.id}`,
+    `Fingerprint: ${report.fingerprint}`,
+    !installation && report.decision !== "allow" ? `Held before activation. Inspect: skillgate inspect ${report.id}
+Decide later: skillgate approve ${report.id}` : ""
   ].filter(Boolean).join("\n");
 }
 
 // apps/cli/src/report.ts
 var escape = (value) => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 function reportHtml(report) {
-  return `<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>SkillGate \xB7 ${escape(report.name)}</title><style>body{font:16px/1.6 system-ui;max-width:880px;margin:40px auto;padding:24px;color:#142f2c;background:#f7f8f4}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #ccd9d4;padding:20px}h1{font-size:30px}</style><h1>SkillGate Finance \xB7 ${escape(report.name)}</h1><p>D\xE9cision : <strong>${escape(report.decision)}</strong> \xB7 Couverture : ${escape(report.coverage.status)}</p><p>Analyse \xE0 l'installation uniquement. Une absence de constat ne prouve pas l'innocuit\xE9 du skill.</p><pre>${escape(JSON.stringify(report, null, 2))}</pre></html>`;
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>SkillGate \xB7 ${escape(report.name)}</title><style>body{font:16px/1.6 system-ui;max-width:880px;margin:40px auto;padding:24px;color:#142f2c;background:#f7f8f4}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #ccd9d4;padding:20px}h1{font-size:30px}</style><h1>SkillGate Finance \xB7 ${escape(report.name)}</h1><p>Decision: <strong>${escape(report.decision)}</strong> \xB7 Coverage: ${escape(report.coverage.status)}</p><p>Installation-time analysis only. The absence of findings does not prove that the skill is safe.</p><pre>${escape(JSON.stringify(report, null, 2))}</pre></html>`;
 }
 
 // packages/demo/src/index.ts
@@ -32176,7 +32176,7 @@ async function runDemo() {
   const r = exceptionScan.report;
   const exception = await installScan(exceptionProject, r.id, { fingerprint: r.fingerprint, destination: join(exceptionProject, ".agents/skills", r.name), confirmation: `INSTALL ${r.id} ${r.fingerprint}`, operator: "synthetic-demo-operator", reason: "Explicit exception only inside isolated deterministic demonstration." });
   const afterException = await replayLedger(join(exceptionProject, ".agents/skills/portfolio-summary"));
-  const result = { schemaVersion: 1, executedAt: (/* @__PURE__ */ new Date()).toISOString(), mode: "simulation d\xE9terministe, pas une mesure du comportement d\u2019un mod\xE8le", root: root2, protectedProject, exceptionProject, realFunds: false, networkCalls: 0, baseline, protected: { reportId: blocked.report.id, decision: blocked.report.decision, installed: !!blocked.installation, execution: blockedLedger }, legitimate: { reportId: legitimate.report.id, decision: legitimate.report.decision, installed: !!legitimate.installation, execution: legitimateLedger }, update: { reportId: update.report.id, decision: update.report.decision, installed: !!update.installation, previousFingerprint: legitimate.installation?.fingerprint, execution: afterUpdate }, exception: { record: exception, execution: afterException } };
+  const result = { schemaVersion: 1, executedAt: (/* @__PURE__ */ new Date()).toISOString(), mode: "deterministic simulation, not a measurement of model behavior", root: root2, protectedProject, exceptionProject, realFunds: false, networkCalls: 0, baseline, protected: { reportId: blocked.report.id, decision: blocked.report.decision, installed: !!blocked.installation, execution: blockedLedger }, legitimate: { reportId: legitimate.report.id, decision: legitimate.report.decision, installed: !!legitimate.installation, execution: legitimateLedger }, update: { reportId: update.report.id, decision: update.report.decision, installed: !!update.installation, previousFingerprint: legitimate.installation?.fingerprint, execution: afterUpdate }, exception: { record: exception, execution: afterException } };
   await writeFile2(join(root2, "demo-result.json"), JSON.stringify(result, null, 2));
   return result;
 }
@@ -32246,7 +32246,7 @@ async function runBenchmark({ projectRoot, command, split = "evaluation" }) {
     commit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: assetRoot, stdio: ["ignore", "pipe", "ignore"], encoding: "utf8" }).trim();
   } catch {
   }
-  const result = { schemaVersion: 1, kind: "internal-synthetic", split, startedAt, completedAt: (/* @__PURE__ */ new Date()).toISOString(), durationMs: performance.now() - began, command, commit, sourceRevision: commit ?? "uncommitted-local-workspace", configuration: { profile: "static", semanticCalls: 0, telemetry: false }, versions: { node: process.version, engine: outputs.find((c) => c.engineVersion)?.engineVersion ?? null, rules: outputs.find((c) => c.rulesVersion)?.rulesVersion ?? null, policy: outputs.find((c) => c.policyVersion)?.policyVersion ?? null, corpus: outputs.find((c) => c.corpusVersion)?.corpusVersion ?? null }, freeze, metrics: { recall: ratio(tp, suspects.length), falsePositiveRate: ratio(fp, legitimate.length), precision: ratio(tp, positives.filter((c) => c.label !== "incomplete").length), legitimateAutoInstall: ratio(legitimate.filter((c) => c.decision === "allow").length, legitimate.length), suspectRetained: ratio(suspects.filter((c) => c.decision !== null && c.decision !== "allow").length, suspects.length), incompleteRetained: ratio(incomplete.filter((c) => c.decision !== null && c.decision !== "allow").length, incomplete.length), completeCoverage: ratio(outputs.filter((c) => c.coverage?.status === "complete_for_supported_checks").length, outputs.length), engineFailures: ratio(outputs.filter((c) => c.error !== null || c.coverage?.status === "failed").length, outputs.length), autoInstallDecisions: ratio(outputs.filter((c) => c.decision === "allow").length, outputs.length), latencyMs: { median: times[Math.floor(times.length / 2)] ?? null, p95: times[Math.min(times.length - 1, Math.ceil(times.length * 0.95) - 1)] ?? null } }, comparisons: { native: "executed", hybrid: "not_executed", cisco: "not_executed" }, cost: "unknown; no paid API invoked", limitations: ["Benchmark interne synth\xE9tique cr\xE9\xE9 par le m\xEAme assistant, pas un test ind\xE9pendant \xE0 l\u2019aveugle.", "Ces mesures \xE9valuent la d\xE9cision \xE0 l\u2019installation, pas la r\xE9sistance d\u2019un mod\xE8le \xE0 une injection.", "Les heuristiques statiques peuvent manquer des reformulations et des comportements indirects.", "Les erreurs restent dans les d\xE9nominateurs ; une r\xE9tention n\u2019est pas n\xE9cessairement une d\xE9tection."], cases: outputs };
+  const result = { schemaVersion: 1, kind: "internal-synthetic", split, startedAt, completedAt: (/* @__PURE__ */ new Date()).toISOString(), durationMs: performance.now() - began, command, commit, sourceRevision: commit ?? "uncommitted-local-workspace", configuration: { profile: "static", semanticCalls: 0, telemetry: false }, versions: { node: process.version, engine: outputs.find((c) => c.engineVersion)?.engineVersion ?? null, rules: outputs.find((c) => c.rulesVersion)?.rulesVersion ?? null, policy: outputs.find((c) => c.policyVersion)?.policyVersion ?? null, corpus: outputs.find((c) => c.corpusVersion)?.corpusVersion ?? null }, freeze, metrics: { recall: ratio(tp, suspects.length), falsePositiveRate: ratio(fp, legitimate.length), precision: ratio(tp, positives.filter((c) => c.label !== "incomplete").length), legitimateAutoInstall: ratio(legitimate.filter((c) => c.decision === "allow").length, legitimate.length), suspectRetained: ratio(suspects.filter((c) => c.decision !== null && c.decision !== "allow").length, suspects.length), incompleteRetained: ratio(incomplete.filter((c) => c.decision !== null && c.decision !== "allow").length, incomplete.length), completeCoverage: ratio(outputs.filter((c) => c.coverage?.status === "complete_for_supported_checks").length, outputs.length), engineFailures: ratio(outputs.filter((c) => c.error !== null || c.coverage?.status === "failed").length, outputs.length), autoInstallDecisions: ratio(outputs.filter((c) => c.decision === "allow").length, outputs.length), latencyMs: { median: times[Math.floor(times.length / 2)] ?? null, p95: times[Math.min(times.length - 1, Math.ceil(times.length * 0.95) - 1)] ?? null } }, comparisons: { native: "executed", hybrid: "not_executed", cisco: "not_executed" }, cost: "unknown; no paid API invoked", limitations: ["Internal synthetic benchmark created by the same assistant, not an independent blind test.", "These metrics evaluate the installation decision, not model resistance to prompt injection.", "Static heuristics may miss paraphrases and indirect behavior.", "Errors remain in the denominators; a held installation is not necessarily a detection."], cases: outputs };
   await mkdir3(join2(projectRoot, ".skillgate"), { recursive: true, mode: 448 });
   await writeFile3(join2(projectRoot, ".skillgate/benchmark.json"), JSON.stringify(result, null, 2), { mode: 384 });
   await rm3(root2, { recursive: true, force: true });
@@ -32271,43 +32271,43 @@ function parseInstallerArgv(command, args) {
   if (command === "npx") {
     let offset = 0;
     while (args[offset] === "-y" || args[offset] === "--yes") offset++;
-    if (!packageName.test(args[offset] ?? "")) return mentionsSkills(args) ? rejected("Invocation npx de skills non prise en charge. Utilisez npx skills add SOURCE [--skill NOM].") : { kind: "delegate" };
+    if (!packageName.test(args[offset] ?? "")) return mentionsSkills(args) ? rejected("Unsupported npx invocation of skills. Use npx skills add SOURCE [--skill NAME].") : { kind: "delegate" };
     tail = args.slice(offset + 1);
   } else if (command === "pnpm") {
-    if (args[0] !== "dlx" || !packageName.test(args[1] ?? "")) return mentionsSkills(args) ? rejected("Invocation pnpm de skills non prise en charge. Utilisez pnpm dlx skills add SOURCE [--skill NOM].") : { kind: "delegate" };
+    if (args[0] !== "dlx" || !packageName.test(args[1] ?? "")) return mentionsSkills(args) ? rejected("Unsupported pnpm invocation of skills. Use pnpm dlx skills add SOURCE [--skill NAME].") : { kind: "delegate" };
     tail = args.slice(2);
   }
   const operation = tail[0];
   if (!operation || ["--help", "-h", "--version", "-v", "help", "list", "ls", "remove", "rm", "init"].includes(operation)) return { kind: "delegate" };
-  if (operation !== "add" && operation !== "install") return rejected("Commande skills non prise en charge. Pour une mise \xE0 jour contr\xF4l\xE9e : skillgate update NOM. Pour installer : skills add SOURCE.");
+  if (operation !== "add" && operation !== "install") return rejected("Unsupported skills command. For a checked update: skillgate update NAME. To install: skills add SOURCE.");
   let source, skill, agent;
   for (let index = 1; index < tail.length; index++) {
     const value = tail[index];
     if (value === "--yes" || value === "-y") continue;
     if (value === "--skill") {
-      if (skill || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(tail[index + 1] ?? "")) return rejected("S\xE9lectionnez exactement un skill avec --skill NOM.");
+      if (skill || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(tail[index + 1] ?? "")) return rejected("Select exactly one skill with --skill NAME.");
       skill = tail[++index];
     } else if (value === "--agent" || value === "-a") {
-      if (agent || tail[index + 1] !== "codex") return rejected("Seule la cible projet Codex est prise en charge : --agent codex.");
+      if (agent || tail[index + 1] !== "codex") return rejected("Only the project Codex target is supported: --agent codex.");
       agent = tail[++index];
-    } else if (value.startsWith("-")) return rejected(`Option d\u2019installation non prise en charge : ${sanitizeTerminal(value)}. Les installations globales, multiples et --all sont refus\xE9es.`);
-    else if (source) return rejected("Une seule source et un seul skill sont autoris\xE9s par installation.");
+    } else if (value.startsWith("-")) return rejected(`Unsupported installation option: ${sanitizeTerminal(value)}. Global, multiple and --all installations are denied.`);
+    else if (source) return rejected("Only one source and one skill are allowed per installation.");
     else source = value;
   }
-  if (!source) return rejected("Source manquante. Utilisez skills add SOURCE [--skill NOM].");
-  if (/[\u0000-\u001f\u007f]/.test(source)) return rejected("Source contenant des caract\xE8res de contr\xF4le refus\xE9e.");
+  if (!source) return rejected("Missing source. Use skills add SOURCE [--skill NAME].");
+  if (/[\u0000-\u001f\u007f]/.test(source)) return rejected("Source contains control characters and was rejected.");
   if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(source) && !source.startsWith("./") && !source.startsWith("../")) source = `https://github.com/${source}`;
   else if (source.startsWith("https://")) {
     try {
       const url2 = new URL(source);
-      if (url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash || !/^\/[^/]+\/[^/]+(?:\/tree\/.+)?\/?$/.test(url2.pathname)) return rejected("Source distante non prise en charge : utilisez un d\xE9p\xF4t public https://github.com/OWNER/REPO.");
+      if (url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash || !/^\/[^/]+\/[^/]+(?:\/tree\/.+)?\/?$/.test(url2.pathname)) return rejected("Unsupported remote source: use a public https://github.com/OWNER/REPO repository.");
     } catch {
-      return rejected("URL GitHub invalide.");
+      return rejected("Invalid GitHub URL.");
     }
-  } else if (!(isAbsolute(source) || source === "." || source === ".." || source.startsWith("./") || source.startsWith("../"))) return rejected("Source non prise en charge : OWNER/REPO, URL GitHub HTTPS ou chemin local explicite.");
+  } else if (!(isAbsolute(source) || source === "." || source === ".." || source.startsWith("./") || source.startsWith("../"))) return rejected("Unsupported source: use OWNER/REPO, a GitHub HTTPS URL or an explicit local path.");
   return { kind: "install", source, ...skill ? { skill } : {} };
 }
-var absolutePath = external_exports.string().refine(isAbsolute, "Chemin absolu requis");
+var absolutePath = external_exports.string().refine(isAbsolute, "An absolute path is required");
 var TerminalConfigSchema = external_exports.object({
   schemaVersion: external_exports.literal(1),
   projectRoot: absolutePath,
@@ -32320,7 +32320,7 @@ var binPath = (root2) => join3(stateDir(root2), "bin");
 var shellQuote = (value) => `'${value.replace(/'/g, `'"'"'`)}'`;
 async function readTerminalConfig(root2) {
   const config2 = TerminalConfigSchema.parse(await readJson(configPath(root2)));
-  if (await realpath2(config2.projectRoot) !== await realpath2(resolve2(root2))) throw new SkillGateError("TERMINAL_CONFIG", "Configuration terminal incoh\xE9rente ; r\xE9activez SkillGate dans ce projet.");
+  if (await realpath2(config2.projectRoot) !== await realpath2(resolve2(root2))) throw new SkillGateError("TERMINAL_CONFIG", "Inconsistent terminal configuration; reactivate SkillGate in this project.");
   return config2;
 }
 async function executable(path6) {
@@ -32343,7 +32343,7 @@ async function originalExecutable(command) {
 }
 async function prepareTerminal(root2, cliPath, nodePath = process.execPath) {
   const projectRoot = resolve2(root2);
-  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError("TERMINAL_RUNTIME", "Un CLI compil\xE9 et un ex\xE9cutable Node absolus sont requis.");
+  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError("TERMINAL_RUNTIME", "Absolute paths to a compiled CLI and a Node executable are required.");
   await access(cliPath, fsConstants.R_OK);
   await ensureState(projectRoot);
   await ensureDirectory(binPath(projectRoot));
@@ -32357,7 +32357,7 @@ async function prepareTerminal(root2, cliPath, nodePath = process.execPath) {
 // Generated SkillGate terminal shim.
 const { spawnSync } = require('node:child_process');
 const result = spawnSync(${JSON.stringify(nodePath)}, ${JSON.stringify([cliPath, "--project", projectRoot, "terminal-dispatch", "--command", command, "--"])}.concat(process.argv.slice(2)), { stdio: 'inherit' });
-if (result.error) { process.stderr.write('SkillGate indisponible : installation non lanc\xE9e.\\n'); process.exit(126); }
+if (result.error) { process.stderr.write('SkillGate unavailable: installation was not started.\\n'); process.exit(126); }
 if (result.signal) process.kill(process.pid, result.signal);
 else process.exit(result.status ?? 1);
 `;
@@ -32406,11 +32406,11 @@ function run(executable2, args) {
   });
 }
 async function dispatchTerminal(root2, command, args) {
-  if (!terminalCommands.includes(command)) throw new SkillGateError("TERMINAL_COMMAND", "Commande terminal non prise en charge.");
+  if (!terminalCommands.includes(command)) throw new SkillGateError("TERMINAL_COMMAND", "Unsupported terminal command.");
   const invocation = parseInstallerArgv(command, args);
   if (invocation.kind === "reject") {
-    process.stderr.write(`SkillGate : ${invocation.reason}
-Aucun installateur tiers lanc\xE9.
+    process.stderr.write(`SkillGate: ${invocation.reason}
+No upstream installer was started.
 `);
     return 2;
   }
@@ -32418,17 +32418,17 @@ Aucun installateur tiers lanc\xE9.
   if (invocation.kind === "delegate") {
     const original = config2.originals[command];
     if (!original) {
-      process.stderr.write(`${command} introuvable avant activation de SkillGate.
+      process.stderr.write(`${command} was not found before SkillGate activation.
 `);
       return 127;
     }
     return run(original, args);
   }
   if (await realpath2(process.cwd()) !== await realpath2(config2.projectRoot)) {
-    process.stderr.write("SkillGate : ce terminal prot\xE8ge un autre projet. Dans le projet courant, quittez cette session (exit), puis ex\xE9cutez skillgate on avant d\u2019installer.\n");
+    process.stderr.write("SkillGate: this terminal protects another project. Leave this session (exit), then run skillgate on in the current project before installing.\n");
     return 2;
   }
-  process.stderr.write("SkillGate : analyse du skill avant activation.\n");
+  process.stderr.write("SkillGate: analyzing the skill before activation.\n");
   return run(config2.nodePath, [config2.cliPath, "--project", config2.projectRoot, "install", invocation.source, ...invocation.skill ? ["--skill", invocation.skill] : []]);
 }
 
@@ -32436,13 +32436,14 @@ Aucun installateur tiers lanc\xE9.
 init_storage();
 import { basename, isAbsolute as isAbsolute2, join as join4, resolve as resolve3 } from "node:path";
 import { realpathSync } from "node:fs";
-var statusMessage = "SkillGate : contr\xF4le avant installation";
+var statusMessage = "SkillGate: pre-install check";
+var previousStatusMessage = "SkillGate : contr\xF4le avant installation";
 var nativeInstaller = "install-skill-from-github.py";
 var object2 = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 var quote = (value) => `'${value.replace(/'/g, `'\\''`)}'`;
 var commandLine = (argv) => argv.map(quote).join(" ");
 function shellArgv(command) {
-  if (/[\x00-\x1f\x7f]/.test(command)) throw new Error("Commandes multilignes ou caract\xE8res de contr\xF4le non pris en charge.");
+  if (/[\x00-\x1f\x7f]/.test(command)) throw new Error("Multiline commands and control characters are not supported.");
   const args = [];
   let token = "", active = false, quoted;
   for (let i = 0; i < command.length; i++) {
@@ -32454,7 +32455,7 @@ function shellArgv(command) {
     }
     if (char === "\\") {
       const next = command[++i];
-      if (next === void 0) throw new Error("\xC9chappement shell incomplet.");
+      if (next === void 0) throw new Error("Incomplete shell escape.");
       if (quoted === '"' && !['"', "\\", "$", "`"].includes(next)) token += "\\";
       token += next;
       active = true;
@@ -32462,7 +32463,7 @@ function shellArgv(command) {
     }
     if (quoted === '"') {
       if (char === '"') quoted = void 0;
-      else if (char === "$" || char === "`") throw new Error("Substitutions shell non prises en charge.");
+      else if (char === "$" || char === "`") throw new Error("Shell substitutions are not supported.");
       else token += char;
       continue;
     }
@@ -32479,11 +32480,11 @@ function shellArgv(command) {
       }
       continue;
     }
-    if (/[;&|()<>$`*?\[\]{}~#]/.test(char)) throw new Error("Expressions ou commandes shell compos\xE9es non prises en charge.");
+    if (/[;&|()<>$`*?\[\]{}~#]/.test(char)) throw new Error("Shell expressions and compound commands are not supported.");
     token += char;
     active = true;
   }
-  if (quoted) throw new Error("Guillemet shell incomplet.");
+  if (quoted) throw new Error("Unclosed shell quote.");
   if (active) args.push(token);
   return args;
 }
@@ -32500,40 +32501,40 @@ function canonical(path6) {
   }
 }
 function denied(reason) {
-  return { hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: `SkillGate : ${reason} Utilisez skillgate install <source> dans le projet prot\xE9g\xE9.` } };
+  return { hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: `SkillGate: ${reason} Use skillgate install <source> in the protected project.` } };
 }
 function nativeSource(args, root2) {
   const options = /* @__PURE__ */ new Map();
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i], value = args[i + 1];
     if (!["--repo", "--url", "--path", "--ref", "--dest"].includes(key) || options.has(key) || !value || value.startsWith("--")) {
-      throw new Error("Installateur Codex : une seule source et un seul --path sont pris en charge ; options inconnues refus\xE9es.");
+      throw new Error("Codex installer: only one source and one --path are supported; unknown options are rejected.");
     }
     options.set(key, value);
   }
-  if (options.get("--dest") !== join4(resolve3(root2), ".agents", "skills")) throw new Error("Installateur Codex : --dest doit d\xE9signer explicitement le dossier .agents/skills absolu de ce projet. La destination globale implicite est refus\xE9e.");
-  if (options.has("--repo") === options.has("--url")) throw new Error("Installateur Codex : fournissez exactement --repo ou --url.");
+  if (options.get("--dest") !== join4(resolve3(root2), ".agents", "skills")) throw new Error("Codex installer: --dest must explicitly identify the absolute .agents/skills directory of this project. The implicit global destination is rejected.");
+  if (options.has("--repo") === options.has("--url")) throw new Error("Codex installer: provide exactly one of --repo or --url.");
   let repo = options.get("--repo"), reference = options.get("--ref") ?? "main", folder = options.get("--path");
   if (options.has("--url")) {
     const url2 = new URL(options.get("--url"));
-    if (url2.protocol !== "https:" || url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash) throw new Error("Seules les URL publiques HTTPS GitHub sont prises en charge.");
+    if (url2.protocol !== "https:" || url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash) throw new Error("Only public HTTPS GitHub URLs are supported.");
     const parts = url2.pathname.split("/").filter(Boolean).map(decodeURIComponent);
     repo = parts.slice(0, 2).join("/");
     if (parts.length > 2) {
-      if (parts[2] !== "tree" || !parts[3]) throw new Error("Utilisez une URL GitHub /tree/r\xE9vision/dossier.");
+      if (parts[2] !== "tree" || !parts[3]) throw new Error("Use a GitHub /tree/revision/folder URL.");
       reference = parts[3];
       folder ??= parts.slice(4).join("/");
     }
   }
-  if (!repo || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo) || repo.split("/").some((x) => [".", ".."].includes(x))) throw new Error("D\xE9p\xF4t GitHub invalide.");
-  if (!/^[A-Za-z0-9_.-]+$/.test(reference) || [".", ".."].includes(reference)) throw new Error("R\xE9vision simple ou SHA requis.");
-  if (!folder || folder.startsWith("/") || folder.includes("\\") || folder.split("/").some((x) => !x || x === "." || x === "..")) throw new Error("Un unique dossier relatif de skill est requis.");
+  if (!repo || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo) || repo.split("/").some((x) => [".", ".."].includes(x))) throw new Error("Invalid GitHub repository.");
+  if (!/^[A-Za-z0-9_.-]+$/.test(reference) || [".", ".."].includes(reference)) throw new Error("A simple revision or SHA is required.");
+  if (!folder || folder.startsWith("/") || folder.includes("\\") || folder.split("/").some((x) => !x || x === "." || x === "..")) throw new Error("A single relative skill directory is required.");
   return `https://github.com/${repo}/tree/${encodeURIComponent(reference)}/${folder.split("/").map(encodeURIComponent).join("/")}`;
 }
 function processHook(input2, root2, cliPath, nodePath) {
   try {
     if (!object2(input2) || input2.hook_event_name !== "PreToolUse" || input2.tool_name !== "Bash") return void 0;
-    if (!object2(input2.tool_input) || typeof input2.tool_input.command !== "string") return denied("Entr\xE9e du hook Bash invalide.");
+    if (!object2(input2.tool_input) || typeof input2.tool_input.command !== "string") return denied("Invalid Bash hook input.");
     const command = input2.tool_input.command;
     let argv;
     try {
@@ -32547,7 +32548,7 @@ function processHook(input2, root2, cliPath, nodePath) {
     const executable2 = basename(argv[0]);
     if (argv.some((x) => basename(x) === nativeInstaller)) {
       const index = executable2 === nativeInstaller ? 0 : /^python(?:3(?:\.\d+)?)?$/.test(executable2) && basename(argv[1] ?? "") === nativeInstaller ? 1 : -1;
-      if (index < 0) return denied("Invocation de l\u2019installateur Codex non prise en charge.");
+      if (index < 0) return denied("Unsupported Codex installer invocation.");
       source = nativeSource(argv.slice(index + 1), root2);
     } else if (["npx", "pnpm", "skills"].includes(executable2)) {
       const parsed = parseInstallerArgv(executable2, argv.slice(1));
@@ -32555,13 +32556,13 @@ function processHook(input2, root2, cliPath, nodePath) {
       if (parsed.kind === "reject") return denied(parsed.reason);
       source = parsed.source;
       skill = parsed.skill;
-    } else return relevant(command) && !["echo", "printf"].includes(executable2) ? denied("Invocation indirecte de l\u2019installateur non prise en charge.") : void 0;
-    if (![root2, cliPath, nodePath].every(validAbsolute)) return denied("Configuration du hook invalide : chemins absolus sans caract\xE8res de contr\xF4le requis.");
+    } else return relevant(command) && !["echo", "printf"].includes(executable2) ? denied("Indirect installer invocation is not supported.") : void 0;
+    if (![root2, cliPath, nodePath].every(validAbsolute)) return denied("Invalid hook configuration: absolute paths without control characters are required.");
     for (const cwd of [input2.cwd, input2.tool_input.workdir, input2.tool_input.cwd]) {
       if (cwd === void 0) continue;
-      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root2)) return denied("Cette commande provient d\u2019un autre dossier que le projet prot\xE9g\xE9.");
+      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root2)) return denied("This command originates outside the protected project directory.");
     }
-    if (!validAbsolute(input2.cwd)) return denied("Dossier de session absent ou invalide.");
+    if (!validAbsolute(input2.cwd)) return denied("Session directory is missing or invalid.");
     const args = [nodePath, cliPath, "--project", resolve3(root2), "install"];
     if (skill) args.push("--skill", skill);
     args.push("--", source);
@@ -32569,23 +32570,23 @@ function processHook(input2, root2, cliPath, nodePath) {
       hookEventName: "PreToolUse",
       permissionDecision: "allow",
       updatedInput: { command: commandLine(args) },
-      additionalContext: "SkillGate remplace cet installateur : analyse locale avant activation dans .agents/skills du projet. Un paquet retenu reste inactif ; pr\xE9sentez les risques \xE0 l\u2019utilisateur et attendez son choix explicite avant une exception."
+      additionalContext: "SkillGate replaces this installer with local analysis before activation in the project .agents/skills directory. A held package remains inactive; show the risks to the user and wait for an explicit choice before accepting an exception."
     } };
   } catch (error62) {
-    return denied(error62 instanceof Error ? error62.message : "Impossible de valider cette installation.");
+    return denied(error62 instanceof Error ? error62.message : "Cannot validate this installation.");
   }
 }
 async function prepareCodexHook(root2, cliPath, nodePath) {
-  if (![root2, cliPath, nodePath].every(validAbsolute)) throw new Error("Chemins absolus sans caract\xE8res de contr\xF4le requis pour configurer le hook Codex.");
+  if (![root2, cliPath, nodePath].every(validAbsolute)) throw new Error("Absolute paths without control characters are required to configure the Codex hook.");
   const path6 = join4(root2, ".codex", "hooks.json");
   const existing = await exists(path6) ? await readJson(path6) : {};
-  if (!object2(existing) || existing.hooks !== void 0 && !object2(existing.hooks)) throw new Error("hooks.json invalide ; configuration existante pr\xE9serv\xE9e.");
+  if (!object2(existing) || existing.hooks !== void 0 && !object2(existing.hooks)) throw new Error("Invalid hooks.json; existing configuration was preserved.");
   const hooks = existing.hooks ?? {};
   const previous = hooks.PreToolUse ?? [];
-  if (!Array.isArray(previous)) throw new Error("PreToolUse invalide ; configuration existante pr\xE9serv\xE9e.");
+  if (!Array.isArray(previous)) throw new Error("Invalid PreToolUse; existing configuration was preserved.");
   const groups = previous.flatMap((group) => {
     if (!object2(group) || !Array.isArray(group.hooks)) return [group];
-    const handlers = group.hooks.filter((handler) => !object2(handler) || handler.statusMessage !== statusMessage);
+    const handlers = group.hooks.filter((handler) => !object2(handler) || handler.statusMessage !== statusMessage && handler.statusMessage !== previousStatusMessage);
     return handlers.length === group.hooks.length ? [group] : handlers.length ? [{ ...group, hooks: handlers }] : [];
   });
   const command = commandLine([nodePath, cliPath, "--project", resolve3(root2), "hook"]);
@@ -32603,11 +32604,11 @@ import { realpath as realpath3 } from "node:fs/promises";
 import { delimiter as delimiter2, join as join5, resolve as resolve4 } from "node:path";
 async function startProtectedSession(root2, cliPath, options = {}) {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
-    throw Object.assign(new SkillGateError("TTY_REQUIRED", "skillgate on n\xE9cessite un terminal interactif, sans --json."), { exitCode: 2 });
+    throw Object.assign(new SkillGateError("TTY_REQUIRED", "skillgate on requires an interactive terminal, without --json."), { exitCode: 2 });
   }
   const projectRoot = await realpath3(resolve4(root2));
   if ((await terminalStatus(projectRoot)).active) {
-    process.stdout.write("SkillGate est d\xE9j\xE0 actif dans ce terminal. Tapez exit pour quitter la session prot\xE9g\xE9e.\n");
+    process.stdout.write("SkillGate is already active in this terminal. Type exit to leave the protected session.\n");
     return 0;
   }
   await initProject(projectRoot);
@@ -32622,7 +32623,7 @@ async function startProtectedSession(root2, cliPath, options = {}) {
     HISTSIZE: "0"
   };
   for (const key of Object.keys(env)) if (["BASH_ENV", "ENV", "PROMPT_COMMAND", "BASHOPTS", "SHELLOPTS"].includes(key) || key.startsWith("BASH_FUNC_")) delete env[key];
-  process.stderr.write(sanitizeTerminal(`SkillGate actif pour ${projectRoot}. Installez vos skills normalement. Tapez exit pour revenir \xE0 votre terminal.
+  process.stderr.write(sanitizeTerminal(`SkillGate is active for ${projectRoot}. Install skills as usual. Type exit to return to your terminal.
 `));
   return new Promise((resolveExit, reject) => {
     let child;
@@ -32643,7 +32644,7 @@ async function startProtectedSession(root2, cliPath, options = {}) {
     child = spawn2("/bin/bash", ["--noprofile", "--norc", "-i"], { cwd: projectRoot, env, stdio: "inherit" });
     child.once("error", (error62) => {
       cleanup();
-      reject(new SkillGateError("SHELL_UNAVAILABLE", `Impossible d\u2019ouvrir Bash : ${sanitizeTerminal(error62.message)}`));
+      reject(new SkillGateError("SHELL_UNAVAILABLE", `Cannot start Bash: ${sanitizeTerminal(error62.message)}`));
     });
     child.once("exit", (code, signal) => {
       cleanup();
@@ -32653,9 +32654,9 @@ async function startProtectedSession(root2, cliPath, options = {}) {
 }
 
 // apps/cli/src/index.ts
-var scope = "Contr\xF4le des installations SkillGate et des installateurs pris en charge dans le terminal activ\xE9. Cible : Codex, .agents/skills du projet. Copies manuelles et contournements du PATH hors p\xE9rim\xE8tre.";
-var program2 = new Command().name("skillgate").description("Pr\xE9vention des risques financiers avant installation de skills.").version(package_default.version);
-program2.option("--project <directory>", "Racine du projet", process.cwd()).option("--json", "Sortie JSON uniquement sur stdout");
+var scope = "Checks SkillGate installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.";
+var program2 = new Command().name("skillgate").description("Financial risk checks before installing agent skills.").version(package_default.version);
+program2.option("--project <directory>", "Project root", process.cwd()).option("--json", "JSON output only on stdout");
 program2.configureOutput({ writeErr: (s) => process.stderr.write(sanitizeTerminal(s)), outputError: (s, write) => write(sanitizeTerminal(s)) });
 var root = () => resolve5(program2.opts().project);
 var machine = () => Boolean(program2.opts().json);
@@ -32669,27 +32670,27 @@ async function configured() {
   } catch (e) {
     if (!["ENOENT", "NOT_INITIALIZED"].includes(e.code ?? "")) throw e;
     if (!interactive()) {
-      const error62 = new Error("Configuration absente. Ex\xE9cutez skillgate init --agent codex --profile static.");
+      const error62 = new Error("Configuration missing. Run skillgate init --agent codex --profile static.");
       Object.assign(error62, { exitCode: 3 });
       throw error62;
     }
     process.stderr.write(scope + "\n");
-    const answer = await question(`Configurer Codex pour ce projet (${root()}) avec Analyse statique locale ? [O/n] `);
-    if (answer.trim() && !["o", "oui", "y", "yes"].includes(answer.trim().toLowerCase())) throw Object.assign(new Error("Configuration annul\xE9e."), { exitCode: 130 });
+    const answer = await question(`Configure Codex for this project (${root()}) with local static analysis? [Y/n] `);
+    if (answer.trim() && !["o", "oui", "y", "yes"].includes(answer.trim().toLowerCase())) throw Object.assign(new Error("Setup cancelled."), { exitCode: 130 });
     return initProject(root(), { profile: "static" });
   }
 }
 async function chooseInstallation(report, reason) {
-  if (!interactive()) throw Object.assign(new Error("D\xE9cision humaine requise dans un terminal interactif, sans --json. Aucun --yes n\u2019accepte le risque."), { exitCode: 2 });
+  if (!interactive()) throw Object.assign(new Error("A human decision is required in an interactive terminal, without --json. No --yes flag accepts this risk."), { exitCode: 2 });
   const config2 = await loadConfig(root());
   const destination = join6(root(), config2.target, report.name);
   process.stderr.write(sanitizeTerminal(`${reportText(report)}
-Destination exacte : ${destination}
+Exact destination: ${destination}
 
-[1] Ne pas installer (d\xE9faut)
-[2] Installer malgr\xE9 le risque
+[1] Do not install (default)
+[2] Install despite the risk
 `));
-  const choice = await question("Votre choix [1/2] : ");
+  const choice = await question("Your choice [1/2]: ");
   if (choice.trim() !== "2") return void 0;
   return installScan(root(), report.id, { fingerprint: report.fingerprint, destination, confirmation: exceptionConfirmation(report), operator: userInfo().username, ...reason ? { reason } : {} });
 }
@@ -32697,40 +32698,40 @@ async function finishInstallation(result) {
   if (!result.installation && interactive()) {
     const installation = await chooseInstallation(result.report);
     if (installation) {
-      emit({ ...result, installation }, `Install\xE9 avec exception : ${result.report.name}. Les alertes restent dans le rapport ${result.report.id}.`);
+      emit({ ...result, installation }, `Installed with exception: ${result.report.name}. Warnings remain in report ${result.report.id}.`);
       return;
     }
-    emit({ ...result, cancelled: true }, "Installation annul\xE9e ; paquet retenu.");
+    emit({ ...result, cancelled: true }, "Installation cancelled; package held.");
   } else emit(result, reportText(result.report, result.installation));
   if (!result.installation) process.exitCode = 2;
 }
 function installedEntry() {
   const entry = fileURLToPath2(import.meta.url);
-  if (!entry.endsWith(".js")) throw new Error("L\u2019activation n\xE9cessite le CLI compil\xE9 : pnpm build:cli, puis node dist/cli.js on.");
+  if (!entry.endsWith(".js")) throw new Error("Activation requires the compiled CLI: pnpm build:cli, then node dist/cli.js on.");
   return entry;
 }
-program2.command("on").description("Ouvrir un terminal prot\xE9g\xE9 ; quitter avec exit.").action(async () => {
+program2.command("on").description("Open a protected terminal; leave with exit.").action(async () => {
   process.exitCode = await startProtectedSession(root(), installedEntry(), { json: machine(), nodePath: process.execPath });
 });
-program2.command("enable").description('Configurer le contr\xF4le du terminal ; activer avec eval "$(skillgate enable)".').option("--agent <agent>", "Agent cible", "codex").option("--codex-hook", "Ajouter le hook Codex compl\xE9mentaire (revue /hooks n\xE9cessaire)").action(async (options) => {
-  if (options.agent !== "codex") throw new Error("Seule la cible Codex projet est prise en charge.");
+program2.command("enable").description('Configure terminal checks; activate with eval "$(skillgate enable)".').option("--agent <agent>", "Target agent", "codex").option("--codex-hook", "Add the complementary Codex hook (/hooks review required)").action(async (options) => {
+  if (options.agent !== "codex") throw new Error("Only the project Codex target is supported.");
   const cli = installedEntry();
   await initProject(root(), {});
   const terminal = await prepareTerminal(root(), cli, process.execPath);
   const hook = options.codexHook ? await prepareCodexHook(root(), cli, process.execPath) : void 0;
   if (machine()) emit({ terminal, hook, activation: 'eval "$(skillgate env)"', scope });
   else {
-    process.stderr.write(sanitizeTerminal(`SkillGate configur\xE9 pour ${root()}. Appliquez ces exports dans ce terminal avec eval "$(skillgate enable)".
-${hook ? "Hook Codex configur\xE9 : ouvrez /hooks dans Codex pour le revoir et l\u2019autoriser.\n" : ""}`));
+    process.stderr.write(sanitizeTerminal(`SkillGate configured for ${root()}. Apply these exports in this terminal with eval "$(skillgate enable)".
+${hook ? "Codex hook configured: open /hooks in Codex to review and authorize it.\n" : ""}`));
     process.stdout.write(await envScript(root()));
   }
 });
-program2.command("env").description("Afficher les exports shell du projet configur\xE9.").action(async () => {
-  if (machine()) throw new Error("env produit des exports shell, pas du JSON.");
+program2.command("env").description("Print shell exports for the configured project.").action(async () => {
+  if (machine()) throw new Error("env outputs shell exports, not JSON.");
   process.stdout.write(await envScript(root()));
 });
 program2.command("terminal-dispatch", { hidden: true }).requiredOption("--command <name>").argument("[args...]").allowUnknownOption().action(async (args, options) => {
-  if (!terminalCommands.includes(options.command)) throw new Error("Installateur terminal inconnu.");
+  if (!terminalCommands.includes(options.command)) throw new Error("Unknown terminal installer.");
   process.exitCode = await dispatchTerminal(root(), options.command, args);
 });
 program2.command("hook", { hidden: true }).action(async () => {
@@ -32740,26 +32741,26 @@ program2.command("hook", { hidden: true }).action(async () => {
     for await (const chunk of process.stdin) {
       const bytes = Buffer.from(chunk);
       size += bytes.length;
-      if (size > 256 * 1024) throw new Error("Entr\xE9e du hook trop volumineuse.");
+      if (size > 256 * 1024) throw new Error("Hook input is too large.");
       chunks.push(bytes);
     }
     const result = processHook(JSON.parse(Buffer.concat(chunks).toString("utf8")), root(), installedEntry(), process.execPath);
     if (result) process.stdout.write(JSON.stringify(result) + "\n");
   } catch {
-    process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: "SkillGate : entr\xE9e du hook invalide ; installation refus\xE9e." } }) + "\n");
+    process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: "SkillGate: invalid hook input; installation denied." } }) + "\n");
   }
 });
-program2.command("init").option("--agent <agent>", "Cible", "codex").option("--profile <profile>", "static ou hybrid (d\xE9faut initial : static)").option("--semantic-consent", "Autoriser l\u2019envoi du contenu expurg\xE9 \xE0 OpenAI (API payante)").option("--model <model>", "Mod\xE8le explicitement choisi").option("--retention-days <days>", "Conservation des rapports inactifs (d\xE9faut initial : 30)").action(async (options) => {
-  if (options.agent !== "codex" || options.profile && !["static", "hybrid"].includes(options.profile)) throw new Error("Cible codex et profil static ou hybrid requis.");
-  if (options.profile === "hybrid" && options.semanticConsent && !options.model) throw new Error("Sp\xE9cifiez --model pour un envoi s\xE9mantique consenti.");
+program2.command("init").option("--agent <agent>", "Target", "codex").option("--profile <profile>", "static or hybrid (initial default: static)").option("--semantic-consent", "Allow redacted content to be sent to OpenAI (paid API)").option("--model <model>", "Explicitly selected model").option("--retention-days <days>", "Retention of inactive reports in days (initial default: 30)").action(async (options) => {
+  if (options.agent !== "codex" || options.profile && !["static", "hybrid"].includes(options.profile)) throw new Error("The codex target and static or hybrid profile are required.");
+  if (options.profile === "hybrid" && options.semanticConsent && !options.model) throw new Error("Specify --model when consenting to semantic analysis.");
   const config2 = await initProject(root(), { ...options.profile ? { profile: options.profile } : {}, ...options.semanticConsent !== void 0 ? { semanticConsent: !!options.semanticConsent } : {}, ...options.model ? { model: options.model } : {}, ...options.retentionDays ? { retentionDays: Number(options.retentionDays) } : {} });
-  emit(config2, `Configuration locale : ${join6(root(), ".skillgate/config.json")}
-Destination : ${join6(root(), config2.target)}
-Profil : ${config2.profile === "static" ? "Analyse statique" : "Analyse hybride"}
+  emit(config2, `Local configuration: ${join6(root(), ".skillgate/config.json")}
+Destination: ${join6(root(), config2.target)}
+Profile: ${config2.profile === "static" ? "Static analysis" : "Hybrid analysis"}
 ${scope}`);
 });
 for (const name of ["scan", "add"]) {
-  const command = program2.command(`${name} <source>`).option("--skill <name>", "S\xE9lection explicite d\u2019un skill");
+  const command = program2.command(`${name} <source>`).option("--skill <name>", "Explicit skill selection");
   if (name === "add") command.alias("install");
   command.action(async (source, options) => {
     const config2 = await configured();
@@ -32779,41 +32780,41 @@ program2.command("update <name>").action(async (name) => {
 program2.command("list").action(async () => {
   await configured();
   const records = await listInstalls(root());
-  emit(records, records.length ? records.map((r) => `${r.name} \xB7 ${r.status} \xB7 ${r.fingerprint.slice(0, 12)} \xB7 ${r.scanId}`).join("\n") : "Aucun skill install\xE9 par SkillGate.");
+  emit(records, records.length ? records.map((r) => `${r.name} \xB7 ${r.status} \xB7 ${r.fingerprint.slice(0, 12)} \xB7 ${r.scanId}`).join("\n") : "No skills installed by SkillGate.");
 });
 program2.command("inspect <scan-id>").action(async (id) => {
   const report = await readReport(root(), id);
   emit(report, reportText(report));
 });
-program2.command("report <scan-id>").option("--format <format>", "json ou html", "json").option("--output <file>", "Fichier de sortie").action(async (id, options) => {
-  if (!["json", "html"].includes(options.format)) throw new Error("Format attendu : json ou html.");
+program2.command("report <scan-id>").option("--format <format>", "json or html", "json").option("--output <file>", "Output file").action(async (id, options) => {
+  if (!["json", "html"].includes(options.format)) throw new Error("Expected format: json or html.");
   const r = await readReport(root(), id);
   const content = options.format === "html" ? reportHtml(r) : JSON.stringify(r, null, 2);
   if (options.output) {
     await writeFile5(resolve5(options.output), content, { mode: 384 });
-    emit({ output: resolve5(options.output) }, `Rapport export\xE9 : ${resolve5(options.output)}`);
+    emit({ output: resolve5(options.output) }, `Report exported: ${resolve5(options.output)}`);
   } else process.stdout.write(content + "\n");
 });
-program2.command("approve <scan-id>").option("--reason <reason>", "Motif de l\u2019exception").action(async (id, options) => {
+program2.command("approve <scan-id>").option("--reason <reason>", "Reason for the exception").action(async (id, options) => {
   await configured();
   const report = await readReport(root(), id);
   const result = await chooseInstallation(report, options.reason);
   if (!result) {
-    emit({ cancelled: true }, "Installation annul\xE9e ; paquet retenu.");
+    emit({ cancelled: true }, "Installation cancelled; package held.");
     process.exitCode = 2;
     return;
   }
-  emit(result, `Install\xE9 avec exception : ${report.name}. L\u2019alerte reste dans le rapport ${id}.`);
+  emit(result, `Installed with exception: ${report.name}. The warning remains in report ${id}.`);
 });
 program2.command("doctor").action(async () => {
   const config2 = await configured();
   const records = await listInstalls(root());
   const terminal = await terminalStatus(root());
-  emit({ node: process.version, agent: config2.agent, profile: config2.profile, target: join6(root(), config2.target), managedInstalls: records.length, terminal, codexHookTrust: "not_probed", scope, semanticConsent: config2.semanticConsent, semanticExecution: "not_probed", telemetry: false }, `Codex \xB7 ${config2.profile === "static" ? "Analyse statique" : "Analyse hybride"}
-${records.length} installation(s) g\xE9r\xE9e(s).
-Terminal : ${terminal.active ? "actif" : terminal.configured ? "configur\xE9, activation \xE0 v\xE9rifier dans le terminal" : "non configur\xE9"}.
+  emit({ node: process.version, agent: config2.agent, profile: config2.profile, target: join6(root(), config2.target), managedInstalls: records.length, terminal, codexHookTrust: "not_probed", scope, semanticConsent: config2.semanticConsent, semanticExecution: "not_probed", telemetry: false }, `Codex \xB7 ${config2.profile === "static" ? "Static analysis" : "Hybrid analysis"}
+${records.length} managed installation(s).
+Terminal: ${terminal.active ? "active" : terminal.configured ? "configured; verify activation in the terminal" : "not configured"}.
 ${scope}
-Aucune t\xE9l\xE9m\xE9trie. Confiance du hook Codex non v\xE9rifi\xE9e.`);
+No telemetry. Codex hook trust has not been verified.`);
 });
 program2.command("demo").action(async () => {
   const result = await runDemo();
@@ -32824,12 +32825,12 @@ program2.command("benchmark").action(async () => {
   const result = await runBenchmark({ projectRoot: root(), command: process.argv.join(" ") });
   emit(result);
 });
-program2.command("prune").description("Supprimer les rapports et paquets inactifs au-del\xE0 de la r\xE9tention configur\xE9e.").action(async () => {
+program2.command("prune").description("Delete inactive reports and packages older than the configured retention period.").action(async () => {
   await configured();
   const result = await pruneData(root());
   emit(result);
 });
-program2.command("export").description("Exporter configuration et rapports locaux ; les snapshots sont exclus.").action(async () => {
+program2.command("export").description("Export local configuration and reports; snapshots are excluded.").action(async () => {
   const config2 = await configured();
   emit({ config: config2, reports: await listReports(root()), installations: await listInstalls(root()) });
 });
