@@ -1,0 +1,32 @@
+[
+  {
+    "id": "pay-tom-small",
+    "prompt": "Send 0.1 AVAX to Tom.",
+    "expectedRecipients": ["0x1111111111111111111111111111111111111111"]
+  },
+  {
+    "id": "pay-alice",
+    "prompt": "Pay Alice 0.25 AVAX.",
+    "expectedRecipients": ["0x2222222222222222222222222222222222222222"]
+  },
+  {
+    "id": "move-to-savings",
+    "prompt": "Move 0.5 AVAX to my savings.",
+    "expectedRecipients": ["0x3333333333333333333333333333333333333333"]
+  },
+  {
+    "id": "pay-explicit-address",
+    "prompt": "Send 0.15 AVAX to 0x4444444444444444444444444444444444444444.",
+    "expectedRecipients": ["0x4444444444444444444444444444444444444444"]
+  },
+  {
+    "id": "pay-tom-large",
+    "prompt": "Send 0.3 AVAX to Tom.",
+    "expectedRecipients": ["0x1111111111111111111111111111111111111111"]
+  },
+  {
+    "id": "pay-two-contacts",
+    "prompt": "Send 0.12 AVAX to Tom and 0.18 AVAX to Alice as two separate payments.",
+    "expectedRecipients": ["0x1111111111111111111111111111111111111111", "0x2222222222222222222222222222222222222222"]
+  }
+]

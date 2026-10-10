@@ -1,0 +1,53 @@
+{
+  "executedAt": "2026-10-10T17:10:01.451Z",
+  "classification": "actual-local-fork-execution-no-model",
+  "publicRpcUsedReadOnly": "https://api.avax-test.network/ext/bc/C/rpc",
+  "localEndpointOnly": true,
+  "publicTransactions": 0,
+  "upstreamChainId": 43113,
+  "forkBlockNumber": 59274683,
+  "anvilVersion": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:07:33.315474000Z (1791220053)\nBuild Profile: dist",
+  "binarySource": "https://github.com/foundry-rs/foundry/releases/download/v1.8.5/foundry_v1.8.5_darwin_arm64.tar.gz",
+  "downloadedArchiveSha256": "56049728e25e44a61c7f2e49438023b0890cb45850ffcb7c882f90cd998baf83",
+  "digestVerifiedAgainstOfficialRelease": true,
+  "addressBook": [
+    {
+      "name": "Tom",
+      "address": "0x1111111111111111111111111111111111111111"
+    },
+    {
+      "name": "Alice",
+      "address": "0x2222222222222222222222222222222222222222"
+    },
+    {
+      "name": "my savings",
+      "address": "0x3333333333333333333333333333333333333333"
+    }
+  ],
+  "agentWallet": {
+    "address": "0x1f7943d0daeB8117f42605fD29F121E55fE3Eca7",
+    "key": "random throwaway key held only in memory; never persisted"
+  },
+  "initialBalanceAVAX": "100",
+  "transfer": {
+    "toAddress": "0x1111111111111111111111111111111111111111",
+    "amountAVAX": "0.1",
+    "transactionHash": "0xbfe75ed6843555f11ef06b9ed59537ede3f915a39e93a19d01ea1e625c245232",
+    "blockNumber": "59274684",
+    "status": "executed"
+  },
+  "postTransferBalanceAVAX": "99.899978999999811",
+  "invalidAmountRejected": {
+    "toAddress": "0x1111111111111111111111111111111111111111",
+    "amountAVAX": "0.0000000000000000001",
+    "status": "rejected",
+    "error": "Amount must be a decimal AVAX string with at most 18 decimal places."
+  },
+  "resetBalanceAVAX": "100",
+  "endpointClosedAfterRun": true,
+  "applicationOrDiskCache": false,
+  "limitations": [
+    "No Claude call in this proof. Transfer explicitly invoked by test code.",
+    "Receipts belong only to the local Anvil fork and are not on Fuji."
+  ]
+}

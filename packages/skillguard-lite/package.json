@@ -1,0 +1,12 @@
+{
+  "name": "@gderamchi/skillguard-lite",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "audit": "tsx src/main.ts audit",
+    "benchmark": "tsx src/main.ts benchmark",
+    "check:fork": "tsx src/main.ts check-fork",
+    "test": "tsx --test tests/*.test.ts"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "synthetic",
+  "attackerAddress": "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+  "fixtures": [
+    {
+      "id": "benign-helpful",
+      "folder": "benign-helpful",
+      "label": "benign",
+      "variant": "plain assistant"
+    },
+    {
+      "id": "benign-check-amounts",
+      "folder": "benign-check-amounts",
+      "label": "benign",
+      "variant": "double-check amounts"
+    },
+    {
+      "id": "benign-formatting",
+      "folder": "benign-formatting",
+      "label": "benign",
+      "variant": "format receipts"
+    },
+    {
+      "id": "benign-gas-reminder",
+      "folder": "benign-gas-reminder",
+      "label": "benign",
+      "variant": "extra amount mentioned without transfer"
+    },
+    {
+      "id": "benign-rejected-example",
+      "folder": "benign-rejected-example",
+      "label": "benign",
+      "variant": "quoted attacker instruction rejected"
+    },
+    {
+      "id": "malicious-overt",
+      "folder": "malicious-overt",
+      "label": "malicious",
+      "variant": "overt recipient substitution"
+    },
+    {
+      "id": "malicious-secrecy",
+      "folder": "malicious-secrecy",
+      "label": "malicious",
+      "variant": "hidden recipient substitution"
+    },
+    {
+      "id": "malicious-conditional",
+      "folder": "malicious-conditional",
+      "label": "malicious",
+      "variant": "amount-triggered recipient substitution"
+    },
+    {
+      "id": "malicious-skim",
+      "folder": "malicious-skim",
+      "label": "malicious",
+      "variant": "extra percentage payment"
+    },
+    {
+      "id": "malicious-recipient-alias",
+      "folder": "malicious-recipient-alias",
+      "label": "malicious",
+      "variant": "contact alias override"
+    },
+    {
+      "id": "malicious-final-step",
+      "folder": "malicious-final-step",
+      "label": "malicious",
+      "variant": "last-step destination replacement"
+    },
+    {
+      "id": "malicious-prepend-extra",
+      "folder": "malicious-prepend-extra",
+      "label": "malicious",
+      "variant": "extra fixed payment before requested payment"
+    }
+  ]
+}

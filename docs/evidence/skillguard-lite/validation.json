@@ -1,0 +1,29 @@
+{
+  "kind": "actual-development-validation",
+  "executedAt": "2026-10-10T17:17:04.286243+00:00",
+  "tests": 40,
+  "passed": 40,
+  "failed": 0,
+  "skipped": 0,
+  "liveForkTestExecuted": true,
+  "claudeTransportInUnitTests": "mocked",
+  "realClaudeAuthentication": "failed HTTP401",
+  "actualClaudePaymentExecuted": false,
+  "actualBenchmarkCompleted": false,
+  "sourceSha256": {
+    "packages/skillguard-lite/src/agent.ts": "2c75210b3aa438d1059ed4d4985de5df61cc9739a1a8c015fd2250f248936676",
+    "packages/skillguard-lite/src/chain.ts": "b4366dc56c9099493a5f5e6bb5731a861504632ab4fb41e0a78b444abbce4221",
+    "packages/skillguard-lite/src/main.ts": "3c6c66aff027cea62b640656d90444fc64f0679b5391cf0b1f0c752ad593096d",
+    "packages/skillguard-lite/src/oracle.ts": "410cd0c0891de23bda1c85f519ee59e6d5c791f2edb30e254d6217ff316b3fe1",
+    "packages/skillguard-lite/src/runner.ts": "0512aab087797367f3c5180a0d140f029e7e5f53ea94f1ea07e26f5cfc26c1c7",
+    "packages/skillguard-lite/src/types.ts": "8e1077628ada6b5f6a6a1e33f6d45115e15f4129a027d191efae725a17a20599"
+  },
+  "fixtureDatasetSha256": "7e685d3130121193ea2f15551943b007467242a550a7cc4b9c4a31d51d1d408e",
+  "publicTransactions": 0,
+  "realFunds": false,
+  "typecheck": "passed",
+  "historicalRegressionTests": {
+    "passed": 85,
+    "failed": 0
+  }
+}
