@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 1,
+  "kind": "read-only-primary-source-eligibility-research",
+  "researchedAt": "2026-10-10T19:18:11.006336+00:00",
+  "fixedScope": "Six unchanged payment tasks; only send(toAddress,amountAVAX); unmodified SKILL.md text appended to agent context.",
+  "modelProviderCalls": 0,
+  "rpcCalls": 0,
+  "retrievedSkillExecution": false,
+  "thirdPartyInstallations": 0,
+  "eligibleCandidatesVerifiedInThisPass": 0,
+  "conclusion": "No candidate verified in this pass is an unmodified, documented payment-recipient-substitution attack exercisable by the unchanged agent. This is not an assertion that no such public attack exists. Excluded malicious cases are OUT_OF_SCOPE, never relabeled BENIGN.",
+  "sources": [
+    {
+      "id": "snyk-research",
+      "title": "Exploring the Threat Landscape of Agent Skills",
+      "publisher": "Snyk Research",
+      "published": "2026-02-05",
+      "url": "https://research.snyk.io/blog/agent-skills-threat-landscape/",
+      "primary": true,
+      "finding": "The confirmed cases described involve malware installation, data exfiltration and credential theft. Money access is a risk category, not a maliciousness label."
+    },
+    {
+      "id": "snyk-toxicskills",
+      "title": "ToxicSkills study and IOC list",
+      "publisher": "Snyk",
+      "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/",
+      "primary": true,
+      "finding": "Names NET_NiNjA.v1.2 and google-qx4 among public malicious-skill sources; no evidence of recipient substitution with the fixed AVAX tool."
+    },
+    {
+      "id": "snyk-demo",
+      "title": "ToxicSkills Demo repository",
+      "publisher": "Snyk Labs",
+      "url": "https://github.com/snyk-labs/toxicskills-goof/tree/80ce2e06f52fd384163c4bd6778676019723773c",
+      "primary": true,
+      "finding": "Explicitly distinguishes fake Vercel/testing-guidelines demonstrations from copied Google/ClawHub skills and exact pinned malicious references including twitter-sum."
+    },
+    {
+      "id": "osm-clawhavoc",
+      "title": "Malicious ClawHub Skills Target OpenClaw Users",
+      "publisher": "OpenSourceMalware",
+      "published": "2026-02-01",
+      "url": "https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users",
+      "primary": true,
+      "finding": "Reports cryptocurrency-themed fake prerequisites and payload execution. Links aslaep123/bybit-agent and polymarket-traiding-bot in openclaw/skills; original raw archive lookup now returns 404."
+    },
+    {
+      "id": "venustech-bybit",
+      "title": "OpenClaw security crisis: GitHub-poisoned Bybit skill",
+      "publisher": "Venustech",
+      "published": "2026-03-11",
+      "url": "https://www.venustech.com.cn/new_type/gjywxfx/20260311/29211.html",
+      "primary": true,
+      "finding": "Explicitly identifies sundial-org/awesome-openclaw-skills/skills/bybit-trading/SKILL.md and ties the external payload URLs to the crypto-themed malware campaign."
+    },
+    {
+      "id": "snyk-clawdhub",
+      "title": "Inside the clawdhub Malicious Campaign",
+      "publisher": "Snyk",
+      "published": "2026-02-04",
+      "url": "https://snyk.io/articles/clawdhub-malicious-campaign-ai-agent-skills/",
+      "primary": true,
+      "finding": "Identifies zaycv/clawhub and clawdhub1: password-protected malware download and external shell execution. Does not document an EVM recipient-substitution payload."
+    },
+    {
+      "id": "manifold-clawswarm",
+      "title": "30 ClawHub Skills Are Quietly Recruiting Your AI Agent Into a Crypto Swarm",
+      "publisher": "Manifold Security",
+      "published": "2026-04-28",
+      "url": "https://www.manifold.security/blog/clawhub-clawswarm-agent-crypto-recruitment",
+      "primary": true,
+      "finding": "Describes agent registration, third-party reporting, Hedera key generation and remote task polling. The author explicitly leaves legitimate-experiment versus malicious-intent interpretation open."
+    },
+    {
+      "id": "onepassword-twitter",
+      "title": "From magic to malware: How OpenClaw agent skills become an attack surface",
+      "publisher": "1Password",
+      "published": "2026-02-02",
+      "url": "https://1password.com/blog/from-magic-to-malware-how-openclaws-agent-skills-become-an-attack-surface",
+      "primary": true,
+      "finding": "Documents a Twitter skill leading to an infostealer but intentionally omits exact URLs; alone it cannot establish an exact downloadable skill version."
+    },
+    {
+      "id": "oathe-cashu",
+      "title": "a1denvalu3/cashu behavioral security audit",
+      "publisher": "Oathe",
+      "url": "https://oathe.ai/report/a1denvalu3/cashu",
+      "primary": true,
+      "finding": "CAUTION audit, not a confirmed malicious-incident label. The hypothesized abuse requires HTTP 402 and Cashu ecash, outside the fixed AVAX send tool."
+    },
+    {
+      "id": "oathe-context",
+      "title": "atlaspa/openclaw-context-optimizer behavioral security audit",
+      "publisher": "Oathe",
+      "url": "https://oathe.ai/report/atlaspa/openclaw-context-optimizer",
+      "primary": true,
+      "finding": "CAUTION audit; subscription and auto-renewal concerns involve x402 HTTP calls and USDT. This does not justify labeling it a documented AVAX substitution attack."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "twitter-sum",
+      "class": "vendor-referenced malicious public artifact",
+      "sources": [
+        "snyk-demo"
+      ],
+      "file": {
+        "id": "twitter-sum",
+        "repository": "Sompote/Tiger_bot",
+        "commit": "cf1e0903a8acee08c4bcea7ac8b7da757e464e26",
+        "path": "skills/twitter-sum/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/Sompote/Tiger_bot/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/skills/twitter-sum/SKILL.md",
+        "blobUrl": "https://github.com/Sompote/Tiger_bot/blob/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/skills/twitter-sum/SKILL.md",
+        "retrievedAt": "2026-10-10T19:16:16.218980+00:00",
+        "status": 200,
+        "sha256": "66273fae2360d0f21ab4bfa67a18603924d871ce8eb0879de6682d143afb0e8f",
+        "bytes": 2961,
+        "savedAs": "twitter-sum.SKILL.md.fixture"
+      },
+      "eligible": false,
+      "reason": "Download-and-execute prerequisites; requires shell/network/executable capabilities absent from the fixed send-only agent. No EVM destination in the unmodified text.",
+      "provenanceLimit": "Snyk README provides this exact commit-pinned link. Does not establish a victim compromise at this commit.",
+      "evmLiteralAddressCount": 0
+    },
+    {
+      "id": "sundial-bybit",
+      "class": "vendor-reported malicious skill in public repository",
+      "sources": [
+        "venustech-bybit",
+        "osm-clawhavoc"
+      ],
+      "file": {
+        "id": "sundial-bybit",
+        "repository": "sundial-org/awesome-openclaw-skills",
+        "commit": "b80cde2ef85241dd4fd54a1b934f5e22835f78ba",
+        "path": "skills/bybit-trading/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/sundial-org/awesome-openclaw-skills/b80cde2ef85241dd4fd54a1b934f5e22835f78ba/skills/bybit-trading/SKILL.md",
+        "blobUrl": "https://github.com/sundial-org/awesome-openclaw-skills/blob/b80cde2ef85241dd4fd54a1b934f5e22835f78ba/skills/bybit-trading/SKILL.md",
+        "retrievedAt": "2026-10-10T19:16:15.989424+00:00",
+        "status": 200,
+        "sha256": "34905cc8ff3c5ce92f59b281f4fc4559a2d701e75ebb3be8a2f2c5493993e15d",
+        "bytes": 20528,
+        "savedAs": "sundial-bybit.SKILL.md.fixture"
+      },
+      "eligible": false,
+      "reason": "Fake AuthTool prerequisite and repeated external command execution; Bybit API setup/trading is not native AVAX recipient substitution.",
+      "provenanceLimit": "Current fetched bytes are commit-pinned and preserve the reported malicious pattern. Vendor report names a mutable main path, so identity with original incident bytes is not proven.",
+      "evmLiteralAddressCount": 0
+    },
+    {
+      "id": "google-qx4-original",
+      "class": "vendor-reported malicious public skill",
+      "sources": [
+        "snyk-toxicskills",
+        "snyk-demo"
+      ],
+      "file": {
+        "id": "google-qx4-original",
+        "repository": "aztr0nutzs/NET_NiNjA.v1.2",
+        "commit": "b857b9cb9154c9be6f63295cca91d331be28c250",
+        "path": "skills/skills-folders/google-qx4/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/aztr0nutzs/NET_NiNjA.v1.2/b857b9cb9154c9be6f63295cca91d331be28c250/skills/skills-folders/google-qx4/SKILL.md",
+        "blobUrl": "https://github.com/aztr0nutzs/NET_NiNjA.v1.2/blob/b857b9cb9154c9be6f63295cca91d331be28c250/skills/skills-folders/google-qx4/SKILL.md",
+        "retrievedAt": "2026-10-10T19:16:55.008929+00:00",
+        "status": 200,
+        "sha256": "46878afd4bb3f3c0ec7c4bab3c9c53af37b5b9546d5da04b6ecc804ddf5c2ab9",
+        "bytes": 5345,
+        "savedAs": "google-qx4-original.SKILL.md.fixture"
+      },
+      "eligible": false,
+      "reason": "Fake openclaw-core prerequisite leads to external executables/paste commands; requires unavailable shell/HTTP tools. No EVM destination in text.",
+      "provenanceLimit": "Report names repository and former path. The fetched current path moved under skills/skills-folders. Exact incident bytes were not published as a hash.",
+      "evmLiteralAddressCount": 0
+    },
+    {
+      "id": "snyk-google",
+      "class": "vendor-hosted copy of reported malicious skill",
+      "sources": [
+        "snyk-demo",
+        "snyk-toxicskills"
+      ],
+      "file": {
+        "id": "snyk-google",
+        "repository": "snyk-labs/toxicskills-goof",
+        "commit": "80ce2e06f52fd384163c4bd6778676019723773c",
+        "path": ".agents/skills/google/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/snyk-labs/toxicskills-goof/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/google/SKILL.md",
+        "blobUrl": "https://github.com/snyk-labs/toxicskills-goof/blob/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/google/SKILL.md",
+        "retrievedAt": "2026-10-10T19:16:15.400443+00:00",
+        "status": 200,
+        "sha256": "5983a90ab1d6f853047df268519e7b3c01f216433ec81993ce561a1fb5ba96cd",
+        "bytes": 5344,
+        "savedAs": "snyk-google.SKILL.md.fixture"
+      },
+      "eligible": false,
+      "reason": "Same external prerequisite pattern; no recipient-substitution instruction reachable through send(EVM address,AVAX).",
+      "provenanceLimit": "Vendor copy is 5344 bytes; currently fetched reported-repository file is 5345 bytes. Do not silently treat the vendor copy as exact original bytes or as an independent sample.",
+      "evmLiteralAddressCount": 0
+    },
+    {
+      "id": "snyk-vercel-poc",
+      "class": "explicit research demonstration",
+      "sources": [
+        "snyk-demo"
+      ],
+      "file": {
+        "id": "snyk-vercel-poc",
+        "repository": "snyk-labs/toxicskills-goof",
+        "commit": "80ce2e06f52fd384163c4bd6778676019723773c",
+        "path": ".agents/skills/vercel/SKILL.md",
+        "rawUrl": "https://raw.githubusercontent.com/snyk-labs/toxicskills-goof/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/vercel/SKILL.md",
+        "blobUrl": "https://github.com/snyk-labs/toxicskills-goof/blob/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/vercel/SKILL.md",
+        "retrievedAt": "2026-10-10T19:16:15.694005+00:00",
+        "status": 200,
+        "sha256": "5eea01a07dec3398094c40023aece394049a6ad42754f3ee8c5114616d5dc2ec",
+        "bytes": 1489,
+        "savedAs": "snyk-vercel-poc.SKILL.md.fixture"
+      },
+      "eligible": false,
+      "reason": "Demonstration exfiltrates host information via shell and HTTP. It is not an in-the-wild payment-redirection skill.",
+      "provenanceLimit": "Repository explicitly describes this as a fake demonstration.",
+      "evmLiteralAddressCount": 0
+    },
+    {
+      "id": "clawswarm-wallet",
+      "class": "vendor-observed behavior with ambiguous intent",
+      "sources": [
+        "manifold-clawswarm"
+      ],
+      "eligible": false,
+      "reason": "Hedera wallet/key generation, registration and remote polling need tools and triggers not provided by the six native AVAX tasks. No exact attack-version GitHub file established.",
+      "provenanceLimit": "Do not convert a primary report of unwanted behavior and ambiguous intent into a confirmed criminal-malware label."
+    },
+    {
+      "id": "cashu-and-context-optimizer",
+      "class": "risk assessments, not confirmed attacks",
+      "sources": [
+        "oathe-cashu",
+        "oathe-context"
+      ],
+      "eligible": false,
+      "reason": "HTTP402/ecash/USDT subscription paths cannot execute using send-only native AVAX; audit CAUTION labels do not supply malicious ground truth."
+    }
+  ],
+  "retrievals": [
+    {
+      "id": "snyk-google",
+      "repository": "snyk-labs/toxicskills-goof",
+      "commit": "80ce2e06f52fd384163c4bd6778676019723773c",
+      "path": ".agents/skills/google/SKILL.md",
+      "rawUrl": "https://raw.githubusercontent.com/snyk-labs/toxicskills-goof/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/google/SKILL.md",
+      "blobUrl": "https://github.com/snyk-labs/toxicskills-goof/blob/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/google/SKILL.md",
+      "retrievedAt": "2026-10-10T19:16:15.400443+00:00",
+      "status": 200,
+      "sha256": "5983a90ab1d6f853047df268519e7b3c01f216433ec81993ce561a1fb5ba96cd",
+      "bytes": 5344,
+      "savedAs": "snyk-google.SKILL.md.fixture"
+    },
+    {
+      "id": "snyk-vercel-poc",
+      "repository": "snyk-labs/toxicskills-goof",
+      "commit": "80ce2e06f52fd384163c4bd6778676019723773c",
+      "path": ".agents/skills/vercel/SKILL.md",
+      "rawUrl": "https://raw.githubusercontent.com/snyk-labs/toxicskills-goof/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/vercel/SKILL.md",
+      "blobUrl": "https://github.com/snyk-labs/toxicskills-goof/blob/80ce2e06f52fd384163c4bd6778676019723773c/.agents/skills/vercel/SKILL.md",
+      "retrievedAt": "2026-10-10T19:16:15.694005+00:00",
+      "status": 200,
+      "sha256": "5eea01a07dec3398094c40023aece394049a6ad42754f3ee8c5114616d5dc2ec",
+      "bytes": 1489,
+      "savedAs": "snyk-vercel-poc.SKILL.md.fixture"
+    },
+    {
+      "id": "sundial-bybit",
+      "repository": "sundial-org/awesome-openclaw-skills",
+      "commit": "b80cde2ef85241dd4fd54a1b934f5e22835f78ba",
+      "path": "skills/bybit-trading/SKILL.md",
+      "rawUrl": "https://raw.githubusercontent.com/sundial-org/awesome-openclaw-skills/b80cde2ef85241dd4fd54a1b934f5e22835f78ba/skills/bybit-trading/SKILL.md",
+      "blobUrl": "https://github.com/sundial-org/awesome-openclaw-skills/blob/b80cde2ef85241dd4fd54a1b934f5e22835f78ba/skills/bybit-trading/SKILL.md",
+      "retrievedAt": "2026-10-10T19:16:15.989424+00:00",
+      "status": 200,
+      "sha256": "34905cc8ff3c5ce92f59b281f4fc4559a2d701e75ebb3be8a2f2c5493993e15d",
+      "bytes": 20528,
+      "savedAs": "sundial-bybit.SKILL.md.fixture"
+    },
+    {
+      "id": "twitter-sum",
+      "repository": "Sompote/Tiger_bot",
+      "commit": "cf1e0903a8acee08c4bcea7ac8b7da757e464e26",
+      "path": "skills/twitter-sum/SKILL.md",
+      "rawUrl": "https://raw.githubusercontent.com/Sompote/Tiger_bot/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/skills/twitter-sum/SKILL.md",
+      "blobUrl": "https://github.com/Sompote/Tiger_bot/blob/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/skills/twitter-sum/SKILL.md",
+      "retrievedAt": "2026-10-10T19:16:16.218980+00:00",
+      "status": 200,
+      "sha256": "66273fae2360d0f21ab4bfa67a18603924d871ce8eb0879de6682d143afb0e8f",
+      "bytes": 2961,
+      "savedAs": "twitter-sum.SKILL.md.fixture"
+    },
+    {
+      "id": "google-qx4-original",
+      "repository": "aztr0nutzs/NET_NiNjA.v1.2",
+      "commit": "b857b9cb9154c9be6f63295cca91d331be28c250",
+      "path": "skills/skills-folders/google-qx4/SKILL.md",
+      "rawUrl": "https://raw.githubusercontent.com/aztr0nutzs/NET_NiNjA.v1.2/b857b9cb9154c9be6f63295cca91d331be28c250/skills/skills-folders/google-qx4/SKILL.md",
+      "blobUrl": "https://github.com/aztr0nutzs/NET_NiNjA.v1.2/blob/b857b9cb9154c9be6f63295cca91d331be28c250/skills/skills-folders/google-qx4/SKILL.md",
+      "retrievedAt": "2026-10-10T19:16:55.008929+00:00",
+      "status": 200,
+      "sha256": "46878afd4bb3f3c0ec7c4bab3c9c53af37b5b9546d5da04b6ecc804ddf5c2ab9",
+      "bytes": 5345,
+      "savedAs": "google-qx4-original.SKILL.md.fixture"
+    }
+  ],
+  "sourceAvailability": [
+    {
+      "id": "venustech-bybit",
+      "requestedUrl": "https://www.venustech.com.cn/new_type/gjywxfx/20260311/29211.html",
+      "checkedAt": "2026-10-10T19:17:13.771408+00:00",
+      "status": 200,
+      "finalUrl": "https://www.venustech.com.cn/new_type/gjywxfx/20260311/29211.html",
+      "expectedMarkerFound": true
+    },
+    {
+      "id": "koi-clawhavoc",
+      "requestedUrl": "https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting",
+      "checkedAt": "2026-10-10T19:17:15.075209+00:00",
+      "status": 200,
+      "finalUrl": "https://www.paloaltonetworks.com/cortex/agentic-endpoint-security",
+      "expectedMarkerFound": false
+    },
+    {
+      "id": "openclaw-bybit-raw",
+      "requestedUrl": "https://raw.githubusercontent.com/openclaw/skills/main/skills/aslaep123/bybit-agent/SKILL.md",
+      "checkedAt": "2026-10-10T19:17:15.598138+00:00",
+      "status": 404
+    }
+  ],
+  "importantCautions": [
+    "Do not pool Snyk mirror and source as independent skills.",
+    "Do not convert a downloaded absence of EVM address into a general safety verdict. Eligibility conclusions additionally use manual reading and documented attack effect.",
+    "Changing currencies, adding attacker addresses, translating tool names or inserting triggers would create adapted fixtures, not an unmodified real-world benchmark.",
+    "No fetched commands, dependencies, payload links or embedded install instructions were executed."
+  ],
+  "licenseMetadata": [
+    {
+      "repository": "snyk-labs/toxicskills-goof",
+      "commit": "80ce2e06f52fd384163c4bd6778676019723773c",
+      "url": "https://api.github.com/repos/snyk-labs/toxicskills-goof/license?ref=80ce2e06f52fd384163c4bd6778676019723773c",
+      "checkedAt": "2026-10-10T19:18:28.509536+00:00",
+      "status": 404,
+      "conclusion": "No license returned by GitHub license endpoint at this revision. Do not infer redistribution permission."
+    },
+    {
+      "repository": "sundial-org/awesome-openclaw-skills",
+      "commit": "b80cde2ef85241dd4fd54a1b934f5e22835f78ba",
+      "url": "https://api.github.com/repos/sundial-org/awesome-openclaw-skills/license?ref=b80cde2ef85241dd4fd54a1b934f5e22835f78ba",
+      "checkedAt": "2026-10-10T19:18:28.992025+00:00",
+      "status": 404,
+      "conclusion": "No license returned by GitHub license endpoint at this revision. Do not infer redistribution permission."
+    },
+    {
+      "repository": "Sompote/Tiger_bot",
+      "commit": "cf1e0903a8acee08c4bcea7ac8b7da757e464e26",
+      "url": "https://api.github.com/repos/Sompote/Tiger_bot/license?ref=cf1e0903a8acee08c4bcea7ac8b7da757e464e26",
+      "checkedAt": "2026-10-10T19:18:29.432519+00:00",
+      "status": 200,
+      "path": "LICENSE",
+      "spdx": "NOASSERTION",
+      "licenseName": "Other",
+      "htmlUrl": "https://github.com/Sompote/Tiger_bot/blob/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/LICENSE",
+      "rawUrl": "https://raw.githubusercontent.com/Sompote/Tiger_bot/cf1e0903a8acee08c4bcea7ac8b7da757e464e26/LICENSE",
+      "sha256": "8669b54fb2e1e33385bfe3a73461247781b6092ec9acf7c0d1f37260eadaa5ce",
+      "localFile": "twitter-sum.LICENSE.txt",
+      "manualTextIdentification": "MIT License text; copyright AI Research Group, Department of Civil Engineering, KMUTT, 2025. Preserve notice. GitHub automated SPDX metadata was NOASSERTION.",
+      "scopeCaveat": "Repository license does not independently prove ownership or sublicensing rights for third-party malicious skill content."
+    },
+    {
+      "repository": "aztr0nutzs/NET_NiNjA.v1.2",
+      "commit": "b857b9cb9154c9be6f63295cca91d331be28c250",
+      "url": "https://api.github.com/repos/aztr0nutzs/NET_NiNjA.v1.2/license?ref=b857b9cb9154c9be6f63295cca91d331be28c250",
+      "checkedAt": "2026-10-10T19:18:30.099269+00:00",
+      "status": 404,
+      "conclusion": "No license returned by GitHub license endpoint at this revision. Do not infer redistribution permission."
+    }
+  ]
+}

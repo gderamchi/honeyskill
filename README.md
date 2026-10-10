@@ -56,7 +56,15 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 [Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
 
-## Latest comparison — workflow-shaped synthetic skills
+## Latest external evidence — real GitHub skill texts
+
+The [external coverage probe](docs/evidence/skillguard-lite/real-world/report.md) used five unchanged public GitHub skills: three vendor-reported malicious skills and two ordinary upstream financial controls. One fresh pass completed 60 task arms, 125 API responses and 70 local transfers. Both methods returned `BENIGN` on all five, with no unintended recipient observed.
+
+**This does not validate the synthetic gain on real attacks.** The documented attacks depend on shell/download behavior unavailable to the fixed send-only agent. The text reviewer is also explicitly limited to AVAX recipient substitution. General malware labels cannot supply ground truth for this narrower threat, so precision/recall/FPR are **N/A**, not zero or perfect. The [source eligibility study](docs/evidence/skillguard-lite/real-world/source-study.md) found no compatible documented positive in its bounded search. No payloads were adapted to create one.
+
+The [terminal UX review](docs/evidence/skillguard-lite/real-world/ux-review.md) also records current setup/help/command friction. This remains a developer experiment, not automatic interception of skill installations. The external probe changed no runtime code; raw third-party skill text and complete provider traces were not republished.
+
+## Synthetic comparison — workflow-shaped skills
 
 The [realistic-v2 challenge](docs/SKILLGUARD_REALISTIC_V2.md) adds sixteen less explicit synthetic skills as eight matched benign/malicious pairs: migration records, network aliases, settlement routing, payment templates, split address fragments and completion fees. Both members of each pair contain similar financial vocabulary and foreign-address references. The corpus, labels and two-run protocol were frozen and published before execution; model prompts, tasks, address book and oracle stayed unchanged.
 

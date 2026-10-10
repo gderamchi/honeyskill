@@ -1,0 +1,69 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { compareSkill, type ComparisonResult } from '../../packages/skillguard-lite/src/comparison.js';
+import { startFork } from '../../packages/skillguard-lite/src/chain.js';
+import { DEFAULT_MODEL, loadSkill } from '../../packages/skillguard-lite/src/runner.js';
+
+// One-off external coverage probe. No classification labels are sent to either method.
+const root = path.resolve('work/skillguard-lite/real-world-probe');
+const hash = (bytes: Buffer | string) => createHash('sha256').update(bytes).digest('hex');
+const manifestBytes = await readFile(path.join(root, 'manifest.json'));
+const manifest = JSON.parse(manifestBytes.toString('utf8'));
+const freeze = JSON.parse(await readFile(path.join(root, 'freeze.json'), 'utf8'));
+assert.equal(hash(manifestBytes), freeze.manifestSha256);
+assert.equal(manifest.cases.length, 5);
+assert.equal(manifest.model, DEFAULT_MODEL);
+assert.equal(manifest.repetitions, 1);
+for (const [file, digest] of Object.entries(freeze.runtimeFiles)) assert.equal(hash(await readFile(file)), digest, file);
+for (const entry of manifest.cases) {
+  assert.match(entry.id, /^case-0[1-5]$/);
+  assert.equal(hash(await loadSkill(path.join(root, entry.id))), entry.sha256, entry.id);
+}
+assert.equal(new Set(manifest.cases.map((entry: {id: string}) => entry.id)).size, 5);
+if (process.argv.includes('--preflight')) {
+  console.log(JSON.stringify({ preflight: 'passed', cases: 5, manifestSha256: hash(manifestBytes), runtimeUnchanged: true, apiCalls: 0 }));
+  process.exit(0);
+}
+assert.ok(process.env.OPENAI_API_KEY, 'OPENAI_API_KEY is required. No live probe performed.');
+const output = path.join(root, 'run-1.raw.json');
+const publicOutput = path.resolve('outputs/skillguard-lite/real-world/run-1.observations.json');
+const metadata = { schemaVersion: 1, kind: 'actual-openai-external-coverage-probe', startedAt: new Date().toISOString(), model: DEFAULT_MODEL, reasoning: 'none', forkBlockNumber: manifest.forkBlockNumber, manifestSha256: hash(manifestBytes), runtimeFiles: freeze.runtimeFiles, protocol: manifest.protocol, repetitions: 1 };
+const rows: (ComparisonResult & { sourceId: string })[] = [];
+await mkdir(path.dirname(publicOutput), { recursive: true });
+await writeFile(output, JSON.stringify({ ...metadata, complete: false, rows }), { flag: 'wx', mode: 0o600 });
+await writeFile(publicOutput, JSON.stringify({ ...metadata, complete: false, rows: [] }), { flag: 'wx', mode: 0o600 });
+const clean = (row: ComparisonResult & {sourceId:string}) => ({
+  skill: row.skill, sourceId: row.sourceId, skillSha256: row.skillSha256, order: row.order, consistentInput: row.consistentInput,
+  textReview: { verdict: row.textReview.verdict, reason: row.textReview.reason, complete: row.textReview.complete, error: row.textReview.error, elapsedMs: row.textReview.elapsedMs, inputTokens: row.textReview.inputTokens, outputTokens: row.textReview.outputTokens,
+    responseIds: row.textReview.trace.filter((item: any) => item.type === 'response').map((item: any) => item.body.id) },
+  behavioral: { verdict: row.behavioral.verdict, reason: row.behavioral.reason, complete: row.behavioral.complete, baselineVerdict: row.behavioral.baselineVerdict, violations: row.behavioral.violations, errors: row.behavioral.errors, elapsedMs: row.behavioralElapsedMs, inputTokens: row.behavioral.inputTokens, outputTokens: row.behavioral.outputTokens, protocol: row.behavioral.protocol,
+    tasks: row.behavioral.tasks.map(task => ({ task: task.task, baselineViolations: task.baselineViolations, violations: task.violations, baselineReachedExpectedRecipients: task.baselineReachedExpectedRecipients, skillReachedExpectedRecipients: task.skillReachedExpectedRecipients,
+      baseline: { completed: task.baseline.completed, sends: task.baseline.sends, error: task.baseline.error, turns: task.baseline.turns, responseIds: task.baseline.trace?.filter((item: any) => item.type === 'response').map((item: any) => item.body.id) },
+      withSkill: { completed: task.withSkill.completed, sends: task.withSkill.sends, error: task.withSkill.error, turns: task.withSkill.turns, responseIds: task.withSkill.trace?.filter((item: any) => item.type === 'response').map((item: any) => item.body.id) } })) }
+});
+const persist = async (state: Record<string, unknown>) => {
+  const raw = JSON.stringify({ ...metadata, ...state, rows }, null, 2) + '\n';
+  await writeFile(output, raw);
+  await writeFile(publicOutput, JSON.stringify({ ...metadata, ...state, rawEvidenceSha256: hash(raw), rawEvidenceRetainedLocallyOnly: true, classificationMetrics: null, classificationMetricsReason: 'No independently documented in-scope recipient-substitution attack. External incident labels and ordinary upstream controls are not valid binary ground truth for this fixed threat.', rows: rows.map(clean) }, null, 2) + '\n');
+};
+let chain: Awaited<ReturnType<typeof startFork>> | undefined;
+try {
+  chain = await startFork({ forkBlockNumber: manifest.forkBlockNumber });
+  for (const [index, entry] of manifest.cases.entries()) {
+    console.error(`External coverage probe ${index + 1}/${manifest.cases.length}: ${entry.id}`);
+    const result = await compareSkill({ folder: path.join(root, entry.id), model: DEFAULT_MODEL, chain, order: index % 2 === 0 ? 'text-first' : 'behavioral-first', progress: message => console.error(message) });
+    rows.push({ ...result, sourceId: entry.sourceId });
+    await persist({ complete: false });
+    console.error(`${entry.id}: text ${result.textReview.verdict}; behavioral ${result.behavioral.verdict}; violations ${result.behavioral.violations.length}`);
+    if ([result.textReview.error ?? '', ...result.behavioral.errors].some(error => /OpenAI API|client unavailable|Local fork reset failed/.test(error))) break;
+  }
+  const complete = rows.length === manifest.cases.length && rows.every(row => row.consistentInput && row.textReview.complete && row.behavioral.complete && row.behavioral.baselineVerdict === 'BENIGN');
+  await persist({ complete, completedAt: new Date().toISOString(), notRun: manifest.cases.slice(rows.length).map((entry: {id:string}) => entry.id) });
+  console.log(JSON.stringify({ complete, cases: rows.length, observations: publicOutput, classificationMetrics: 'N/A: external coverage probe, not an in-scope accuracy benchmark' }));
+  if (!complete) process.exitCode = 1;
+} catch (error) {
+  await persist({ complete: false, failedAt: new Date().toISOString(), error: error instanceof Error ? error.message : 'Probe failed' });
+  throw error;
+} finally { await chain?.close(); }
