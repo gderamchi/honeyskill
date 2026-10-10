@@ -6,16 +6,23 @@ SkillGate acquiert le paquet en quarantaine et analyse son contenu sans exécute
 
 ## Installer et activer
 
-Node.js 22.18+ requis ; testé avec Node.js 25.6.1. Le produit est distribué comme paquet autonome dans les releases GitHub, **sans publication au registre npm**. Aucun serveur ou navigateur requis.
+Installer une fois (macOS/Linux, Node.js 22.18+ et Git requis) :
 
 ```sh
-npm install --global https://github.com/gderamchi/skillgate/releases/download/v0.2.1/gderamchi-skillgate-0.2.1.tgz --ignore-scripts --no-audit --no-fund
-cd /CHEMIN/PROJET-DE-DEMO
-# Cette commande initialise le projet et active le contrôle dans ce terminal.
-eval "$(skillgate enable)"
+npm i -g gderamchi/skillgate
 ```
 
-Le `eval` exécute uniquement les exports shell générés par le CLI installé localement. `enable` seul ne peut pas modifier l’environnement du terminal parent. Les terminaux déjà ouverts et les applications déjà lancées n’héritent pas de cette activation. Aucun fichier de profil shell n’est modifié.
+Puis, dans le projet à protéger :
+
+```sh
+skillgate on
+```
+
+Le prompt **[SkillGate]** indique que le terminal est protégé. Installez ensuite vos skills avec vos commandes habituelles. Tapez **exit** pour revenir au terminal initial.
+
+`on` ouvre une session Bash dédiée, sans charger les fichiers de démarrage du shell ni modifier votre profil. Les commandes et agents lancés dans cette session héritent du contrôle. Les autres terminaux et applications déjà ouverts ne sont pas activés. Les paramètres du projet et les skills déjà installés restent conservés à la fermeture.
+
+L’installation courte utilise le dépôt GitHub public et son CLI déjà compilé, sans compte npm, clé API ou compilation locale. Le paquet est également disponible dans les releases GitHub ; il n’est pas inscrit au registre npm sous le nom `skillgate`. Version actuelle : **0.3.0**. Aucun serveur ou navigateur requis.
 
 Les commandes prises en charge passent ensuite automatiquement par SkillGate, qu’elles soient lancées par une personne ou par un agent héritant de ce terminal :
 
@@ -27,15 +34,16 @@ npx skills add gderamchi/skillgate-demo-skills --skill portfolio-summary-trap --
 
 Le premier skill s’installe automatiquement ; le second est retenu et expliqué. Dans un terminal interactif, taper `2` accepte explicitement le risque pour le snapshot affiché. Entrée annule. Sans terminal interactif, le paquet reste retenu (code 2) ; `skillgate approve RAPPORT` permet la décision ultérieure. Aucun `--yes` d’un installateur ne confirme un risque.
 
-La cible est **Codex dans le projet activé**, sous `.agents/skills`. Les demandes globales, multi-skills et options non prises en charge sont refusées. Changer de projet exige une activation dans ce projet. Les commandes sans rapport avec l’installation sont déléguées au programme original.
+La cible est **Codex dans le projet activé**, sous `.agents/skills`. Les demandes globales, multi-skills et options non prises en charge sont refusées. Pour changer de projet, quittez la session avec `exit`, changez de dossier, puis relancez `skillgate on`. Les commandes sans rapport avec l’installation sont déléguées au programme original.
 
 ## Codex : garde complémentaire
 
 ```sh
-eval "$(skillgate enable --codex-hook)"
+skillgate enable --codex-hook --json
+skillgate on
 ```
 
-Cela ajoute un hook `PreToolUse` dans `.codex/hooks.json`, en préservant les autres hooks. **Codex exige de revoir et autoriser ce hook via `/hooks` dans un projet de confiance** ; SkillGate ne modifie pas cette confiance. Le hook reconnaît les installateurs pris en charge et remplace leur commande par le CLI contrôlé avant toute acquisition/activation. Le script Python natif de Codex n’est accepté qu’avec une destination explicite correspondant à `.agents/skills` du projet ; sa cible globale implicite est refusée.
+La première commande ajoute un hook `PreToolUse` dans `.codex/hooks.json`, en préservant les autres hooks. **Codex exige de revoir et autoriser ce hook via `/hooks` dans un projet de confiance** ; SkillGate ne modifie pas cette confiance. Le hook reconnaît les installateurs pris en charge et remplace leur commande par le CLI contrôlé avant toute acquisition/activation. Le script Python natif de Codex n’est accepté qu’avec une destination explicite correspondant à `.agents/skills` du projet ; sa cible globale implicite est refusée.
 
 Ce hook complète le terminal, il ne remplace pas l’activation du terminal pour les installations externes à Codex. Il ne lance pas l’analyse dans le processus de hook : la commande substituée effectue la collecte, les checks et l’installation.
 
@@ -86,12 +94,15 @@ Pour reconstruire les sources : pnpm 10.33.0, Python 3 (ZIP et tests PTY) et un 
 ```sh
 pnpm install --frozen-lockfile
 pnpm validate
+# Compilation seule : pnpm build:cli
 ```
 
-La validation exécute typecheck, tests, build CLI, scénarios de choix dans un vrai PTY, démonstration isolée, packaging et installation du paquet hors dépôt. Les preuves actuelles sont dans `outputs/cli-validation.json`. Le paquet compilé n’a aucune dépendance runtime externe et exclut le serveur, React, Vite et les assets web. Les anciens fichiers `apps/web`, tests HTTP et preuves 0.1.0 sont conservés pour traçabilité, sans faire partie du produit 0.2.1.
+La validation exécute typecheck, tests, build CLI, scénarios de choix dans un vrai PTY, démonstration isolée, packaging et installation du paquet hors dépôt. Les preuves actuelles sont dans `outputs/cli-validation.json`. Le paquet compilé n’a aucune dépendance runtime externe et exclut le serveur, React, Vite et les assets web. Les anciens fichiers `apps/web`, tests HTTP et preuves 0.1.0 sont conservés pour traçabilité, sans faire partie du produit 0.3.0.
 
 Les rapports, snapshots et journaux locaux sont privés au compte, mais ne sont pas inviolables. Les extraits masquent certains motifs de secrets ; les snapshots peuvent contenir le texte original. `prune` retire explicitement les données inactives selon la rétention configurée et préserve les versions encore actives. Ne pas effacer des snapshots référencés.
 
 Le dépôt public contient le code source, le corpus, les fixtures inertes et les scripts de vérification. Les rapports publics expurgés se trouvent dans `docs/evidence/` et les empreintes dans la release ; les journaux bruts restent locaux.
 
 Le cahier des charges initial est conservé dans `docs/SPECIFICATION.md`, avec le changement de périmètre demandé ensuite : CLI et interception terminal, sans UI web.
+
+Le script de compilation est nommé `build:cli` : un script nommé `build` ferait reconstruire la dépendance Git par npm à l’installation. Le dossier `dist/` est donc commité dans le dépôt public, et les outils de développement restent en devDependencies. `enable` et `env` restent disponibles pour les intégrations automatisées existantes ; `on` est le parcours interactif recommandé.

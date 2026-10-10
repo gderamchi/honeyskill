@@ -3,7 +3,7 @@ import { mkdir,writeFile,readFile,readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 await mkdir('outputs',{recursive:true});
-const commands=[['pnpm',['typecheck']],['pnpm',['test']],['pnpm',['build']],['python3',['scripts/cli-pty-smoke.py']],['node',['dist/cli.js','demo','--json']],['pnpm',['pack:local']],['pnpm',['smoke:package']]];
+const commands=[['pnpm',['typecheck']],['pnpm',['test']],['pnpm',['build:cli']],['python3',['scripts/cli-pty-smoke.py']],['python3',['scripts/session-pty-smoke.py']],['node',['dist/cli.js','demo','--json']],['pnpm',['pack:local']],['pnpm',['smoke:package']]];
 const entries=[];
 for(const [binary,args] of commands){
   const command=[binary,...args].join(' '),startedAt=new Date().toISOString(),started=performance.now();

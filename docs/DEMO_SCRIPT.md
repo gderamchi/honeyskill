@@ -1,20 +1,20 @@
 # Démonstration terminal — environ 3 minutes
 
-SkillGate 0.2.1, sans plateforme web. Skills synthétiques publics : https://github.com/gderamchi/skillgate-demo-skills ; release v0.1.0. Le ZIP a été téléchargé anonymement et vérifié ; preuves dans `outputs/demo-publication.json`.
+SkillGate 0.3.0, sans plateforme web. Skills synthétiques publics : https://github.com/gderamchi/skillgate-demo-skills ; release v0.1.0. Le ZIP a été téléchargé anonymement et vérifié ; preuves dans `outputs/demo-publication.json`.
 
 ## Préparation isolée
 
-Installer le tarball public GitHub (pas un paquet du registre npm), puis ouvrir un projet temporaire. Ne jamais installer la fixture piégée dans le profil réel ou ce dépôt de développement.
+Installer le CLI compilé depuis GitHub (pas un paquet du registre npm), puis ouvrir un projet temporaire. Ne jamais installer la fixture piégée dans le profil réel ou ce dépôt de développement.
 
 ```sh
-npm install --global https://github.com/gderamchi/skillgate/releases/download/v0.2.1/gderamchi-skillgate-0.2.1.tgz --ignore-scripts --no-audit --no-fund
+npm i -g gderamchi/skillgate
 DEMO_PROJECT=$(mktemp -d)
 cd "$DEMO_PROJECT"
-eval "$(skillgate enable)"
+skillgate on
 skillgate doctor
 ```
 
-L’activation concerne ce terminal et les agents qui héritent de son environnement. Aucune modification de profil shell global. Le code des skills n’est jamais exécuté par le scanner.
+Le prompt [SkillGate] confirme la session protégée ; `exit` permet de la quitter. L’activation concerne cette session et les agents qui héritent de son environnement. Aucune modification de profil shell global. Le code des skills n’est jamais exécuté par le scanner.
 
 ## Skill utile : aucun clic supplémentaire
 

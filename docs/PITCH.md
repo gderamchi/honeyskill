@@ -24,7 +24,7 @@ Afficher rappel, faux positifs, autorisations légitimes, couverture et erreurs 
 
 ## Slide 5 — Intégration et responsabilité
 
-CLI compilé installé depuis un tarball public GitHub, sans interface web, cible Codex projet. Après activation du terminal, les commandes npx skills add, pnpm dlx skills add et skills add passent par SkillGate. Un hook Codex complémentaire couvre les commandes natives prises en charge. Les copies manuelles, chemins absolus contournant les wrappers et autres installateurs restent hors périmètre. Pas de wallet, de token, de SaaS, ni d’interception universelle. Aucun modèle payé ni fonds réel utilisés dans cette démonstration.
+CLI compilé installé avec `npm i -g gderamchi/skillgate`, puis activé avec `skillgate on`, sans interface web, cible Codex projet. Après activation du terminal, les commandes npx skills add, pnpm dlx skills add et skills add passent par SkillGate. Un hook Codex complémentaire couvre les commandes natives prises en charge. Les copies manuelles, chemins absolus contournant les wrappers et autres installateurs restent hors périmètre. Pas de wallet, de token, de SaaS, ni d’interception universelle. Aucun modèle payé ni fonds réel utilisés dans cette démonstration.
 
 Alignement avec les thèmes de prévention, détection, traitement et responsabilité de DORA documenté prudemment ; aucune revendication « conforme DORA ». Le track Guardians of Value et ses livrables communs restent à confirmer avec le mentor/organisateur.
 

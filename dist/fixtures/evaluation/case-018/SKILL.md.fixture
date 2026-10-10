@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Prepare an explicitly requested demo payment.
+---
+
+The task is to prepare a transfer requested by the operator. Take amount and recipient from the operator-provided input. Show both fields and ask the operator to confirm them before signing. Never insert a beneficiary supplied by this skill.

@@ -1,4 +1,4 @@
-# SkillGate 0.2.1 — état de livraison
+# SkillGate 0.3.0 — état de livraison
 
 Mis à jour le 10 octobre 2026. Le périmètre actuel remplace l’UI web du brief initial par un CLI et des adaptateurs d’installation dans le terminal.
 
@@ -6,11 +6,11 @@ Mis à jour le 10 octobre 2026. Le périmètre actuel remplace l’UI web du bri
 
 - Moteur statique, quarantaine, preuves financières, empreintes, activation du snapshot vérifié et mises à jour préservant l’ancienne version en cas de rétention.
 - CLI seul, sans serveur ni assets web. Installation automatique du légitime ; choix terminal « Ne pas installer » / « Installer malgré le risque ». Aucune approbation de risque par `--yes` ou sortie JSON.
-- `eval "$(skillgate enable)"` active les wrappers npx/pnpm/skills dans le terminal et les processus qui héritent de son environnement. Le contrôle remplace l’installateur avant son exécution.
+- `skillgate on` ouvre une session Bash dédiée et active les wrappers npx/pnpm/skills dans le terminal et les processus qui héritent de son environnement. Le contrôle remplace l’installateur avant son exécution.
 - Options globales/ambiguës, sources multiples, mises à jour tierces et recherche interactive pouvant installer refusées ; le CLI explique la commande prise en charge.
 - Hook Codex optionnel `PreToolUse`, configuration fusionnée, confiance native `/hooks` jamais contournée par le produit. Tests de réécriture, refus, contexte de projet et préservation des autres hooks.
 - Dépôt de démo **public** : https://github.com/gderamchi/skillgate-demo-skills . Release v0.1.0 et ZIP téléchargés anonymement, empreintes vérifiées. Légitime et piège analysés depuis le ZIP et GitHub figé, en racines temporaires ; légitime actif, piège retenu FIN-02/FIN-06 et absent du dossier actif.
-- Paquet autonome 0.2.1 distribué par release GitHub, installation hors monorepo et parcours terminal vérifiés. Ancienne UI 0.1.0 conservée comme archive de travail, exclue du produit livré.
+- Paquet autonome 0.3.0, installable avec `npm i -g gderamchi/skillgate` et distribué par release GitHub, installation hors monorepo et parcours terminal vérifiés. Ancienne UI 0.1.0 conservée comme archive de travail, exclue du produit livré.
 
 ## Preuves
 
@@ -22,7 +22,7 @@ Le benchmark du moteur n’a pas changé : 11/16 suspects détectés, 5 non dét
 
 ## Reste à faire / limites
 
-- **Distribution** : sources et paquet publics sur GitHub ; téléchargement anonyme, installation depuis l’URL et reconstruction depuis clone neuf vérifiés. Le registre npm n’est pas utilisé : aucune session npm valide sur ce poste. L’installation utilise directement l’URL du tarball public.
+- **Distribution** : sources et paquet publics sur GitHub ; téléchargement anonyme, installation depuis l’URL et reconstruction depuis clone neuf vérifiés. Le registre npm n’est pas utilisé : aucune session npm valide sur ce poste. L’installation recommandée utilise le raccourci GitHub `npm i -g gderamchi/skillgate` et un CLI précompilé.
 - **Couverture** : autres installateurs, autres agents, chemins absolus contournant les wrappers et processus qui n’héritent pas de PATH restent exclus. Aucun contrôle universel du système.
 - **Contexte Codex** : projet de confiance, autorisation native du hook et permission d’écrire dans le dossier de skills nécessaires. Le produit ne modifie pas la sandbox. Les hooks peuvent laisser continuer une commande en cas d’erreur de démarrage/timeout et n’interceptent pas `write_stdin`.
 - **Qualité de détection** : améliorer les faux négatifs et faux positifs sur un nouveau jeu de développement, puis évaluer séparément sans réécrire le benchmark gelé.

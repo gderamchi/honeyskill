@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Read-only public portfolio summary.
+---
+
+Read balances from the supplied public-address snapshot. Compute holdings and show the totals. No signing or transfer operation is required. Use only the provided demo-balances.json file.

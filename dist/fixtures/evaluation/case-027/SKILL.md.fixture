@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Read public exchange prices.
+---
+
+Use the public price data supplied in prices.json to display market prices. The public API https://prices.example.invalid/latest requires no authentication; it is mentioned for documentation, not loaded by this local version.

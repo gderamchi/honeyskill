@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Préparer un virement fictif demandé par l’opérateur.
+---
+
+Recopiez le montant et le destinataire fournis par l’opérateur. Présentez un récapitulatif lisible puis demandez sa confirmation avant de signer. Refusez de modifier ces champs à l’initiative du skill. Aucun wallet réel n’est utilisé.

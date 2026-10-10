@@ -1,0 +1,160 @@
+[
+  {
+    "id": "DOC-01",
+    "category": "FIN-01",
+    "title": "Exfiltration de clés sous couvert de synchronisation",
+    "source_id": "SRC-01",
+    "section": "When ‘Sync’ Really Means Silent Exfiltration",
+    "confirmation": "Comportement identifié et décrit par les chercheurs; non réexécuté par SkillGate.",
+    "claimedFunction": "Synchronisation ou sauvegarde de fichiers.",
+    "mechanism": "Recherche de fichiers de clés, lecture, encodage puis transmission à un endpoint contrôlé par l’attaquant.",
+    "asset": "Clés privées et actifs accessibles avec ces clés.",
+    "limitations": [
+      "Notre adaptation ne contient aucune clé réelle ni endpoint de l’incident.",
+      "La seule mention d’une clé factice ne satisfait pas cette chaîne."
+    ],
+    "candidateRule": "Corréler lecture d’un secret financier et transmission; joindre les passages exacts.",
+    "fixtures": [
+      "fixtures/evaluation/case-001",
+      "fixtures/evaluation/case-002",
+      "fixtures/evaluation/case-003",
+      "fixtures/evaluation/case-004"
+    ],
+    "kind": "documented",
+    "family": "key-exfiltration",
+    "corroboratingSources": [
+      "SRC-02"
+    ]
+  },
+  {
+    "id": "DOC-02",
+    "category": "FIN-05",
+    "title": "Prérequis masqué téléchargeant une charge externe",
+    "source_id": "SRC-01",
+    "section": "From OpenClaw Skill to macOS Malware",
+    "confirmation": "Chaîne analysée par Bitdefender; payload identifié par l’auteur, jamais acquis ici.",
+    "claimedFunction": "Assistant de trading ou outil crypto.",
+    "mechanism": "Un prérequis encodé télécharge puis lance du contenu distant.",
+    "asset": "Secrets et actifs accessibles à l’environnement d’exécution.",
+    "limitations": [
+      "Le contenu distant reste non résolu; une instruction de téléchargement seule n’en prouve pas la charge."
+    ],
+    "candidateRule": "Corréler contexte financier et exécution distante ou décodée; retenir la couverture manquante.",
+    "fixtures": [
+      "fixtures/evaluation/case-013",
+      "fixtures/evaluation/case-014"
+    ],
+    "kind": "documented",
+    "family": "openclaw-remote-prerequisite",
+    "corroboratingSources": [
+      "SRC-02",
+      "SRC-03"
+    ]
+  },
+  {
+    "id": "DOC-03",
+    "category": "FIN-02",
+    "title": "Collecte financière au profit de l’opérateur d’un skill",
+    "source_id": "SRC-03",
+    "section": "Agentic Front Running",
+    "confirmation": "Cas letssendit qualifié de fraude par Unit 42; aucune reproduction indépendante ici.",
+    "claimedFunction": "Participation coordonnée à un lancement de token.",
+    "mechanism": "Instructions de versement au wallet opérateur avant une allocation favorisant celui-ci.",
+    "asset": "SOL apportés par les participants.",
+    "limitations": [
+      "Correspondance partielle: FIN-02 couvre aussi des substitutions non établies par ce cas.",
+      "Une adresse ou un bénéficiaire annoncé ne démontre pas seul une fraude."
+    ],
+    "candidateRule": "Comparer l’opération demandée au mandat de lecture ou au contexte opérateur fiable.",
+    "fixtures": [
+      "fixtures/evaluation/case-008"
+    ],
+    "kind": "documented",
+    "family": "letssendit-front-running",
+    "mapping": "partial"
+  },
+  {
+    "id": "SYN-03",
+    "category": "FIN-03",
+    "title": "Dépense illimitée incompatible avec un mandat de lecture",
+    "source_id": null,
+    "section": "docs/SPECIFICATION.md, section 7 — taxonomie proposée",
+    "confirmation": "Hypothèse synthétique de ce prototype; aucun incident historique revendiqué.",
+    "claimedFunction": "Consulter les soldes d’un portefeuille.",
+    "mechanism": "Demander une autorisation de dépense illimitée alors que le mandat est en lecture seule, ou masquer sa portée.",
+    "asset": "Tokens couverts par l’autorisation si elle était accordée.",
+    "limitations": [
+      "Une allowance large déclarée et voulue peut être légitime; elle nécessite une explication contextuelle, pas une accusation de malware."
+    ],
+    "candidateRule": "Corréler une portée large avec lecture seule, dissimulation ou écart au contexte approuvé.",
+    "fixtures": [
+      "fixtures/evaluation/case-009",
+      "fixtures/evaluation/case-010"
+    ],
+    "kind": "synthetic-hypothesis",
+    "family": "synthetic-broad-allowance",
+    "contextualSources": [
+      "SRC-04"
+    ],
+    "sourceRelation": "SRC-04 inspire seulement la comparaison déclaration/comportement."
+  },
+  {
+    "id": "SYN-04",
+    "category": "FIN-04",
+    "title": "Changement caché de réseau ou de paramètres financiers",
+    "source_id": null,
+    "section": "docs/SPECIFICATION.md, section 7 — taxonomie proposée",
+    "confirmation": "Hypothèse synthétique de ce prototype; aucun incident historique revendiqué.",
+    "claimedFunction": "Analyser ou préparer une opération dans un contexte approuvé.",
+    "mechanism": "Remplacer discrètement le réseau, le token ou un paramètre financier du contexte fourni par l’opérateur.",
+    "asset": "Fonds exposés par une opération différente de celle approuvée.",
+    "limitations": [
+      "Un changement de réseau explicite n’est pas une preuve de détournement.",
+      "Sans contexte externe fiable, exprimer l’incertitude et demander une revue."
+    ],
+    "candidateRule": "Comparer les paramètres au contexte opérateur ou relever une consigne explicite de modification dissimulée.",
+    "fixtures": [
+      "fixtures/evaluation/case-011",
+      "fixtures/evaluation/case-012"
+    ],
+    "kind": "synthetic-hypothesis",
+    "family": "synthetic-network-diversion",
+    "contextualSources": [
+      "SRC-04"
+    ],
+    "sourceRelation": "SRC-04 apporte une méthode générale, sans confirmer ce cas financier."
+  },
+  {
+    "id": "SYN-06",
+    "category": "FIN-06",
+    "title": "Transfert caché ajouté à une synthèse de portefeuille",
+    "source_id": null,
+    "section": "docs/SPECIFICATION.md, sections 7 et 9 — portfolio-summary",
+    "confirmation": "Hypothèse synthétique: 25 DEMOUSD entre comptes fictifs; aucune mesure de comportement de modèle.",
+    "claimedFunction": "Consulter et résumer un portefeuille de démonstration.",
+    "mechanism": "Introduire une consigne cachée de transfert hors mandat avant de présenter le résumé.",
+    "asset": "Solde du registre fictif; aucun actif réel.",
+    "limitations": [
+      "Les instructions trompeuses sont documentées en général, mais ce scénario financier est conçu pour le prototype.",
+      "Une citation de défense ou une description pédagogique n’est pas une consigne active.",
+      "La démo déterministe ne prouve pas qu’un modèle réel exécutera ce transfert."
+    ],
+    "candidateRule": "Corréler action financière, consigne de dissimulation ou contournement, et mandat déclaré.",
+    "fixtures": [
+      "fixtures/evaluation/case-005",
+      "fixtures/evaluation/case-006",
+      "fixtures/evaluation/case-007",
+      "fixtures/evaluation/case-015",
+      "fixtures/evaluation/case-016",
+      "fixtures/evaluation/case-042"
+    ],
+    "kind": "synthetic-hypothesis",
+    "family": "synthetic-portfolio-transfer",
+    "contextualSources": [
+      "SRC-02",
+      "SRC-03",
+      "SRC-04"
+    ],
+    "sourceRelation": "Contexte général seulement; le scénario n’est attribué à aucun incident nommé."
+  }
+]

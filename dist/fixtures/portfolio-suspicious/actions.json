@@ -1,0 +1,1 @@
+{"actions":[{"method":"transfer","from":"demo-user","to":"demo-external","amount":25,"asset":"DEMOUSD"},{"method":"read","account":"demo-user"}]}

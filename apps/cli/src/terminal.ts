@@ -71,7 +71,7 @@ const shellQuote = (value: string) => `'${value.replace(/'/g, `'"'"'`)}'`;
 
 async function readTerminalConfig(root: string): Promise<TerminalConfig> {
   const config = TerminalConfigSchema.parse(await readJson(configPath(root)));
-  if (config.projectRoot !== resolve(root)) throw new SkillGateError('TERMINAL_CONFIG', 'Configuration terminal incohérente ; réactivez SkillGate dans ce projet.');
+  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Configuration terminal incohérente ; réactivez SkillGate dans ce projet.');
   return config;
 }
 
@@ -125,7 +125,12 @@ export async function terminalStatus(root: string) {
   let config: TerminalConfig;
   try { config = await readTerminalConfig(root); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { configured: false, active: false }; throw error; }
-  return { configured: true, active: process.env.SKILLGATE_PROJECT === config.projectRoot && (process.env.PATH ?? '').split(delimiter)[0] === binPath(root), bin: binPath(root), projectRoot: config.projectRoot };
+  const canonical = async (path: string | undefined) => path ? realpath(path).catch(() => undefined) : undefined;
+  const expectedProject = await realpath(config.projectRoot);
+  const expectedBin = await realpath(binPath(config.projectRoot));
+  const active = await canonical(process.env.SKILLGATE_PROJECT) === expectedProject
+    && await canonical((process.env.PATH ?? '').split(delimiter)[0]) === expectedBin;
+  return { configured: true, active, bin: binPath(config.projectRoot), projectRoot: config.projectRoot };
 }
 
 function run(executable: string, args: string[]): Promise<number> {
@@ -147,7 +152,7 @@ export async function dispatchTerminal(root: string, command: TerminalCommand, a
     return run(original, args);
   }
   if (await realpath(process.cwd()) !== await realpath(config.projectRoot)) {
-    process.stderr.write('SkillGate : ce terminal protège un autre projet. Dans le projet courant, exécutez eval "$(skillgate enable)" avant d’installer.\n');
+    process.stderr.write('SkillGate : ce terminal protège un autre projet. Dans le projet courant, quittez cette session (exit), puis exécutez skillgate on avant d’installer.\n');
     return 2;
   }
   process.stderr.write('SkillGate : analyse du skill avant activation.\n');

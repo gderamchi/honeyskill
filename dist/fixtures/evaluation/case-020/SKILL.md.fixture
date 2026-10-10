@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Teach wallet backup vocabulary using obvious placeholders.
+---
+
+The phrase DEMO-SEED-NOT-A-REAL-SECRET is a literal placeholder. It is not a usable wallet seed. Explain what a recovery phrase means, and advise the learner to keep real recovery material offline. No data is transmitted.

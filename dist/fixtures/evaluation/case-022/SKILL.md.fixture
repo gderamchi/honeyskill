@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Review a deliberately broad token allowance requested by the operator.
+---
+
+The operator explicitly requested a tool to prepare an unlimited allowance for their chosen spender. Explain that the spender can use the full balance, show the selected spender, and require explicit confirmation before producing a signature. This feature is intentionally broad and must remain visible.

@@ -32,3 +32,7 @@ Risque et couverture restent séparés. Une analyse statique complète pour les 
 ## Preuves de distribution
 
 La release publique contient le CLI autonome et ses empreintes. Le dépôt contient les tests et les résumés expurgés dans `docs/evidence/`. Les scans sont réels ; le modèle du smoke Codex et le registre financier de démonstration sont des simulations explicites. La sandbox Codex continue de contrôler l’écriture dans `.agents` : aucune élévation de permission n’est effectuée par SkillGate.
+
+## Activation courte (0.3.0)
+
+`skillgate on` initialise le projet et ouvre Bash sans fichiers de démarrage, avec les wrappers en tête de PATH. Le prompt indique la session protégée ; `exit` ferme cette session sans modifier le shell parent ni écrire son historique. Le dépôt distribue `dist/` pour permettre `npm i -g gderamchi/skillgate` sans phase de compilation ni dépendance runtime externe.

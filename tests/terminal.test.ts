@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, writeFile, access } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, access, realpath, symlink } from 'node:fs/promises';
 import { join, resolve, delimiter } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
@@ -38,6 +38,29 @@ test('terminal parser rejects ambiguous/global/multiple/shell installers and upd
     ['npx', ['skills', 'search', 'portfolio']],
     ['skills', ['add', 'owner/repo', '--yes', '--skip-checks']],
   ] as [TerminalCommand, string[]][]) assert.equal(parseInstallerArgv(command, args).kind, 'reject', args.join(' '));
+});
+
+test('terminal status treats path aliases as one project and never activates a different project', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'skillgate-terminal-alias-'));
+  const project = join(directory, 'project'), alias = join(directory, 'alias'), other = join(directory, 'other');
+  await mkdir(project); await mkdir(other);
+  await initProject(project);
+  await prepareTerminal(project, resolve('dist/cli.js'));
+  await symlink(project, alias, 'dir');
+  const canonical = await realpath(project);
+  assert.equal((await terminalStatus(canonical)).configured, true);
+  assert.equal((await terminalStatus(alias)).configured, true);
+  const priorProject = process.env.SKILLGATE_PROJECT, priorPath = process.env.PATH;
+  try {
+    process.env.SKILLGATE_PROJECT = alias;
+    process.env.PATH = `${join(alias, '.skillgate/bin')}${delimiter}${priorPath}`;
+    assert.equal((await terminalStatus(canonical)).active, true);
+    process.env.SKILLGATE_PROJECT = other;
+    assert.equal((await terminalStatus(canonical)).active, false);
+  } finally {
+    if (priorProject === undefined) delete process.env.SKILLGATE_PROJECT; else process.env.SKILLGATE_PROJECT = priorProject;
+    process.env.PATH = priorPath;
+  }
 });
 
 test('real PATH shims guard clean and suspect skills, preserve delegation, and stay in their project', async () => {

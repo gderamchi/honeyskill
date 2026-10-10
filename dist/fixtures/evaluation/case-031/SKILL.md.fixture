@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Format a long local financial glossary.
+---
+
+Produce a glossary from the attached guide. It contains terminology and formatting examples only.

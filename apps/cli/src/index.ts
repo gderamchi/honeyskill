@@ -12,6 +12,7 @@ import { runDemo } from '../../../packages/demo/src/index.js';
 import { runBenchmark } from '../../../evaluation/runner.js';
 import { prepareTerminal, envScript, dispatchTerminal, terminalCommands, terminalStatus, type TerminalCommand } from './terminal.js';
 import { prepareCodexHook, processHook } from './codex-hook.js';
+import { startProtectedSession } from './session.js';
 
 const scope = 'Contrôle des installations SkillGate et des installateurs pris en charge dans le terminal activé. Cible : Codex, .agents/skills du projet. Copies manuelles et contournements du PATH hors périmètre.';
 const program=new Command().name('skillgate').description('Prévention des risques financiers avant installation de skills.').version(packageJson.version);
@@ -51,9 +52,12 @@ async function finishInstallation(result:AddResult){
 }
 function installedEntry(){
   const entry=fileURLToPath(import.meta.url);
-  if(!entry.endsWith('.js'))throw new Error('L’activation nécessite le CLI compilé : pnpm build, puis node dist/cli.js enable.');
+  if(!entry.endsWith('.js'))throw new Error('L’activation nécessite le CLI compilé : pnpm build:cli, puis node dist/cli.js on.');
   return entry;
 }
+program.command('on').description('Ouvrir un terminal protégé ; quitter avec exit.').action(async()=>{
+  process.exitCode=await startProtectedSession(root(),installedEntry(),{json:machine(),nodePath:process.execPath});
+});
 program.command('enable').description('Configurer le contrôle du terminal ; activer avec eval "$(skillgate enable)".').option('--agent <agent>','Agent cible','codex').option('--codex-hook','Ajouter le hook Codex complémentaire (revue /hooks nécessaire)').action(async options=>{
   if(options.agent!=='codex')throw new Error('Seule la cible Codex projet est prise en charge.');
   const cli=installedEntry();
