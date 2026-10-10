@@ -58,6 +58,8 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 ## Primary comparison — GPT-6 Luna text review vs SkillGuard-Lite
 
+A separate [realistic-v2 challenge](docs/SKILLGUARD_REALISTIC_V2.md) adds sixteen less explicit synthetic skills as eight matched benign/malicious pairs. Its two-run protocol and labels are frozen before execution; the existing methods remain unchanged. Run it with `pnpm benchmark --corpus realistic-v2 --block 59275449`. The original results below are preserved as a distinct experiment.
+
 The fresh paired run completed **12/12 synthetic fixtures** on 10 October 2026. Both methods detected all seven malicious skills and classified all five benign skills correctly. **This corpus demonstrates no detection advantage for SkillGuard-Lite.** Its additional output is evidence of actual reference-agent behavior on the local fork.
 
 | Measurement | GPT-6 Luna text review | SkillGuard-Lite |

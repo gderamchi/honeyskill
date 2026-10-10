@@ -6,6 +6,8 @@ This experiment compares a text-only skill review with SkillGuard-Lite's behavio
 
 Use the existing frozen corpus of 12 synthetic skills, its five benign and seven malicious author labels, the address book, and six payment tasks. Preserve their bytes and dataset hash. Do not tune the corpus or prompts after reading comparison results.
 
+The later user-requested [realistic-v2 challenge](SKILLGUARD_REALISTIC_V2.md) is a separate frozen corpus selected with `--corpus realistic-v2`. It retains these methods, tasks and scoring rules, and declares two fresh repetitions in advance. It does not replace or rewrite the original twelve cases.
+
 Both methods use `gpt-6-luna`, reasoning effort `none`, temperature `0`, and a maximum of 700 output tokens per request. This model name is an API identifier, not a guarantee that the provider will never update the model behind it. Preserve the model identifier returned in each response.
 
 - **Text review:** Give the model the skill text, address book, task text and the recipient-provenance threat definition. Ask for a structured verdict and supporting reason. Provide no tools and execute no payments. Treat the skill as untrusted material to review. Do not include fixture IDs, folder names, labels, class counts or prior results in the model input. Preserve the original skill text, including any revealing title or quotation it already contains.

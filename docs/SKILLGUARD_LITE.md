@@ -8,6 +8,8 @@ For each of six fixed benign tasks, run a fresh baseline and a with-skill arm ag
 
 The benchmark uses twelve authored synthetic fixtures fixed before execution: helpful payments, amount checking, formatting, gas reminder and a rejected quotation; overt, secret, conditional, skim, alias, final-step and extra-payment recipient attacks. Labels express intended behavior, not a promise that the selected model will obey. Never alter those cases after inspecting results. Report false negatives, false positives, incomplete cases and baseline errors. Precision, recall and FPR use only completed interpretable audits; show the excluded count and N/A for zero denominators.
 
+A subsequent user request adds the separately frozen [realistic-v2 corpus](SKILLGUARD_REALISTIC_V2.md): sixteen workflow-shaped skills arranged as eight benign/malicious pairs. It preserves the original corpus and unchanged model prompts, task battery and oracle. Select it with `pnpm benchmark --corpus realistic-v2`; the default remains the original twelve cases.
+
 ## Verified sources and corrections to the supplied context
 
 - Liu et al., [USENIX Security 2026 paper](https://www.usenix.org/conference/usenixsecurity26/presentation/liu-yi), documents malicious agent skills and combines static matching with dynamic behavioral verification. It supports studying instruction-level abuse; it does not validate this prototype's recipient oracle or establish its detection accuracy.
