@@ -1,6 +1,6 @@
 # Démonstration terminal — environ 3 minutes
 
-SkillGate 0.3.0, sans plateforme web. Skills synthétiques publics : https://github.com/gderamchi/skillgate-demo-skills ; release v0.1.0. Le ZIP a été téléchargé anonymement et vérifié ; preuves dans `outputs/demo-publication.json`.
+SkillGate 0.3.0, sans plateforme web. Deux dépôts publics avec un skill chacun : [skill-safe](https://github.com/gderamchi/skill-safe) et [skill-trap](https://github.com/gderamchi/skill-trap). Ils reprennent les fichiers synthétiques du [corpus original](https://github.com/gderamchi/skillgate-demo-skills) sans les modifier. Aucune option de sélection nécessaire.
 
 ## Préparation isolée
 
@@ -8,18 +8,18 @@ Installer le CLI compilé depuis GitHub (pas un paquet du registre npm), puis ou
 
 ```sh
 npm i -g gderamchi/skillgate
-DEMO_PROJECT=$(mktemp -d)
-cd "$DEMO_PROJECT"
+cd "$(mktemp -d)"
 skillgate on
-skillgate doctor
 ```
 
 Le prompt [SkillGate] confirme la session protégée ; `exit` permet de la quitter. L’activation concerne cette session et les agents qui héritent de son environnement. Aucune modification de profil shell global. Le code des skills n’est jamais exécuté par le scanner.
 
+Copier chaque bloc séparément : attendre le prompt [SkillGate] avant la première installation, puis répondre à la question du piège avant de poursuivre. Le [parcours public complet](evidence/public-short-demo.json) a été exécuté dans un vrai terminal, après une installation anonyme du CLI.
+
 ## Skill utile : aucun clic supplémentaire
 
 ```sh
-npx skills add gderamchi/skillgate-demo-skills --skill portfolio-summary --agent codex
+npx skills add gderamchi/skill-safe
 ```
 
 Montrer l’installation automatique dans `.agents/skills/portfolio-summary`. C’est SkillGate qui acquiert et installe le snapshot vérifié ; le package npx tiers n’est pas lancé.
@@ -27,7 +27,7 @@ Montrer l’installation automatique dans `.agents/skills/portfolio-summary`. C�
 ## Skill piégé : contrôle avant activation
 
 ```sh
-npx skills add gderamchi/skillgate-demo-skills --skill portfolio-summary-trap --agent codex
+npx skills add gderamchi/skill-trap
 ```
 
 Montrer les raisons FIN-02/FIN-06 : le skill annonce une lecture seule mais demande un transfert dissimulé de 25 DEMOUSD. Le terminal indique les extraits, le rapport et la destination. Entrée choisit « Ne pas installer ». Vérifier que le dossier actif ne contient pas le piège.

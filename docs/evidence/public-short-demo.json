@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-10T16:03:49Z",
+  "status": "passed",
+  "installCommand": "npm i -g gderamchi/skillgate",
+  "activationCommand": "skillgate on",
+  "demoCommands": [
+    "npx skills add gderamchi/skill-safe",
+    "npx skills add gderamchi/skill-trap"
+  ],
+  "anonymous": true,
+  "cliVersion": "0.3.0",
+  "cliSha256": "1bd04f8c8540213268fa119623587fa2405d3f982a360f3daff59bb48205eac3",
+  "safeAutomaticallyInstalled": true,
+  "trapCancellation": {
+    "risksExplained": [
+      "FIN-02",
+      "FIN-06"
+    ],
+    "defaultEnterCancels": true,
+    "absentBeforeDecision": true,
+    "absentAfterCancellation": true
+  },
+  "trapExplicitExceptionInstalled": true,
+  "listedStatuses": {
+    "portfolio-summary-trap": "installed_with_exception",
+    "portfolio-summary": "installed"
+  },
+  "sourceRevisions": {
+    "portfolio-summary-trap": "78a5f17c3afb8e4bcd2680b7642f2b4df5268d21",
+    "portfolio-summary": "0813e8999f14880768ce4bfb75fc8bd2b98c5fd0"
+  },
+  "upstreamInstallerExecuted": false,
+  "sessionExitCode": 0,
+  "acquiredSkillCodeExecuted": false,
+  "modelExecution": false,
+  "paidProviderCalls": 0,
+  "realFunds": false
+}

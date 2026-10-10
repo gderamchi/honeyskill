@@ -27,8 +27,8 @@ L’installation courte utilise le dépôt GitHub public et son CLI déjà compi
 Les commandes prises en charge passent ensuite automatiquement par SkillGate, qu’elles soient lancées par une personne ou par un agent héritant de ce terminal :
 
 ```sh
-npx skills add gderamchi/skillgate-demo-skills --skill portfolio-summary --agent codex
-npx skills add gderamchi/skillgate-demo-skills --skill portfolio-summary-trap --agent codex
+npx skills add gderamchi/skill-safe
+npx skills add gderamchi/skill-trap
 # Aussi : npx -y skills@VERSION add …, pnpm dlx skills add …, skills add …
 ```
 
