@@ -17,4 +17,6 @@ The benchmark uses twelve authored synthetic fixtures fixed before execution: he
 
 ## Execution status
 
+The latest user clarification makes the primary deliverable a comparison against a model that only reads the skill and gives a security opinion. `pnpm benchmark` now performs that fresh paired experiment; `pnpm benchmark:behavioral` retains the earlier behavioral-only protocol. Follow the [comparison protocol](SKILLGUARD_COMPARISON.md). The text reviewer is an experimental baseline, not a static scanner added to SkillGuard-Lite. Earlier single-method scores are not evidence of superiority over this baseline.
+
 Read generated evidence, timestamps, model IDs and fixture hashes before claiming completion. Mock tests, an actual local fork transfer, a successful OpenAI payment, paired audits and the full benchmark are distinct proof levels. Account onboarding is also separate: visiting signup is not an account, API-key presence is not valid authentication, and an API subscription is not spend authorization for buying credits.

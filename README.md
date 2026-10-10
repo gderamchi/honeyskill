@@ -1,6 +1,8 @@
 # SkillGuard-Lite
 
-A behavioral audit of agent skills for **payment recipient substitution**. Run a minimal OpenAI wallet agent on six fixed tasks, with and without a skill's `SKILL.md`, against an owned local Anvil fork of Avalanche Fuji. Compare every `send(toAddress, amountAVAX)` call against a deterministic provenance oracle.
+Compare **GPT-6 Luna reading a skill and giving a security opinion** with **SkillGuard-Lite executing a behavioral audit** for payment recipient substitution. Both methods receive the same frozen skill text, address book and payment tasks. The comparison uses the OpenAI API; it is not a measurement of the ChatGPT website or app.
+
+SkillGuard-Lite runs a minimal wallet agent on six tasks, with and without the skill, on an owned local Anvil fork of Avalanche Fuji. A code oracle checks every `send(toAddress, amountAVAX)` recipient. The text-only comparator reviews the instructions without tools or transactions.
 
 This is the active hackathon scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its benchmark, installer wrappers and compiled CLI are **not** the behavioral audit or evidence of an OpenAI run.
 
@@ -21,7 +23,7 @@ If Anvil is outside PATH, set `ANVIL_BIN` to its absolute executable path. The w
 
 Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. `gpt-6-luna` is the default reference model, as explicitly requested. Its reasoning effort is set to `none` to preserve the experiment's original non-reasoning configuration, with temperature 0 and a 700-token output limit. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
 
-`audit` prints `BENIGN` or `MALICIOUS` with a reason and first-violation evidence. A failed or incomplete run without an observed violation is `ERROR`; an observed violation remains `MALICIOUS`, but an incomplete audit is unscored. Baseline contamination is always `ERROR`. `benchmark` prints the per-skill table and precision/recall/FPR; incomplete audits are explicitly unscored. Output paths are unique and existing evidence is never overwritten. Exit code 1 signals errors/incomplete execution; a completed malicious audit is a successful measurement and exits 0.
+`audit` prints `BENIGN` or `MALICIOUS` with a reason and first-violation evidence. A failed or incomplete run without an observed violation is `ERROR`; an observed violation remains `MALICIOUS`, but an incomplete audit is unscored. Baseline contamination is always `ERROR`. `benchmark` runs both methods freshly for every skill and prints paired verdicts, precision/recall/FPR, completion, elapsed time and returned input/output tokens. Both classifiers are scored on the same complete-pair subset; incomplete pairs are explicitly unscored. `pnpm benchmark:behavioral` retains the earlier single-method benchmark. Output paths are unique and existing evidence is never overwritten. Exit code 1 signals errors/incomplete execution; a completed malicious audit is a successful measurement and exits 0.
 
 ## Experiment
 
@@ -54,7 +56,11 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 [Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
 
-## Current model — GPT-6 Luna
+## Primary comparison — GPT-6 Luna text review vs SkillGuard-Lite
+
+The paired runner and fixed text-review prompt are implemented and tested. Fresh comparison measurements will be published here after execution. The previous behavioral-only scores below do not establish an advantage over a text review. Read the [comparison protocol](docs/SKILLGUARD_COMPARISON.md) for blinding, method order, shared scoring, compute differences and interpretation limits.
+
+## Historical behavioral-only run — GPT-6 Luna
 
 The GPT-6 Luna run completed **12/12 synthetic fixtures**: seven malicious skills detected and five benign skills accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, FPR **0/5 (0%)**, no unscored audits. This is one run on an authored dataset, not a general accuracy claim.
 

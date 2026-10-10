@@ -13,6 +13,7 @@
     "test": "tsx --test tests/*.test.ts",
     "test:ui": "playwright test",
     "benchmark": "tsx packages/skillguard-lite/src/main.ts benchmark",
+    "benchmark:behavioral": "tsx packages/skillguard-lite/src/main.ts benchmark-behavioral",
     "demo": "tsx packages/demo/src/run.ts",
     "pack:local": "node scripts/pack.mjs",
     "smoke:package": "node scripts/smoke-package.mjs",

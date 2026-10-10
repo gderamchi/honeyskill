@@ -1,6 +1,6 @@
 # Active scope: SkillGuard-Lite
 
-The latest user specification replaces the static SkillGate installation product with a behavioral TypeScript experiment. Read `packages/skillguard-lite/AGENTS.md` and `docs/SKILLGUARD_LITE.md`. Active entry scripts: `pnpm run audit <folder>`, `pnpm benchmark`, `pnpm check:fork`, `pnpm test:behavioral`.
+The latest user specification replaces the static SkillGate installation product with a behavioral TypeScript experiment. The primary benchmark now compares a text-only GPT-6 Luna security review with SkillGuard-Lite on the same frozen corpus. Read `packages/skillguard-lite/AGENTS.md`, `docs/SKILLGUARD_LITE.md` and `docs/SKILLGUARD_COMPARISON.md`. Active entry scripts: `pnpm run audit <folder>`, `pnpm benchmark` (paired comparison), `pnpm benchmark:behavioral` (historical behavioral-only protocol), `pnpm check:fork`, `pnpm test:behavioral`.
 
 OpenAI SDK + viem + an owned local Anvil Fuji fork only. The user explicitly selected gpt-6-luna as the reference model; use reasoning effort none for the current experiment. No real wallet or public signed transaction. Fixtures are natural-language SKILL.md under the experiment folder, never installed into an agent profile. Preserve historical static code/releases and results as history; do not confuse them with new live model evidence. English deliverables. No secret, raw workstation log or private account data in publication.
 

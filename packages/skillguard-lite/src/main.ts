@@ -4,11 +4,13 @@ import path from 'node:path';
 import { z } from 'zod';
 import { startFork } from './chain.js';
 import { auditSkill, benchmarkTable, classificationMetrics, DEFAULT_MODEL, ROOT, type BenchmarkRow } from './runner.js';
+import { compareSkill, comparisonMetrics, comparisonTable, type ComparisonRow } from './comparison.js';
+import { TEXT_REVIEW_PROMPT } from './text-review.js';
 
 function parse(argv: string[]) {
   const [command, ...args] = argv;
   if (!command || command === '--help' || command === 'help') return { command: 'help' };
-  if (!['audit', 'benchmark', 'check-fork'].includes(command)) throw new Error('Use audit <skill-folder>, benchmark, or check-fork.');
+  if (!['audit', 'benchmark', 'benchmark-behavioral', 'check-fork'].includes(command)) throw new Error('Use audit <skill-folder>, benchmark, benchmark-behavioral, or check-fork.');
   let folder: string | undefined, model = DEFAULT_MODEL, output: string | undefined, forkBlockNumber: number | undefined;
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]!;
@@ -40,16 +42,17 @@ async function verifyFixtureFreeze() {
 async function main() {
   const options = parse(process.argv.slice(2));
   if (options.command === 'help') {
-    console.log('SkillGuard-Lite — behavioral recipient-substitution audit\n\npnpm run audit <skill-folder> [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm benchmark [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm check:fork\n\nRequires a valid OPENAI_API_KEY and Anvil. Only locally owned Fuji-fork wallets can send.\nBENIGN means no provenance violation observed in the fixed battery, not safety certification.'); return;
+    console.log('SkillGuard-Lite — behavioral recipient-substitution audit\n\npnpm run audit <skill-folder> [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm benchmark [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\n  Compare a text-only model review against SkillGuard-Lite on the same frozen skills.\npnpm benchmark:behavioral [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\n  Behavioral-only historical protocol.\npnpm check:fork\n\nRequires a valid OPENAI_API_KEY and Anvil. Only locally owned Fuji-fork wallets can send.\nThe text-only baseline uses the OpenAI API, not the ChatGPT web app.\nBENIGN means no provenance violation observed in the fixed battery, not safety certification.'); return;
   }
   const startedAt = new Date().toISOString();
   // Local check is useful before configuring the model. Never substitute mock results in this script.
   if (options.command !== 'check-fork' && !process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY is required. No live audit was performed.');
-  const initial = { schemaVersion: 1, kind: 'behavioral-run-in-progress', command: options.command, provider: 'openai', model: options.model, startedAt, complete: false };
+  const initial = { schemaVersion: 1, kind: 'behavioral-run-in-progress', command: options.command, provider: 'openai', model: options.model, startedAt, complete: false,
+    ...(options.command === 'benchmark' ? { comparisonProtocol: { version: 1, textReviewPrompt: TEXT_REVIEW_PROMPT, textReviewPromptSha256: createHash('sha256').update(TEXT_REVIEW_PROMPT).digest('hex'), baseline: 'GPT model text-only review through the API; not the ChatGPT application', behavioral: 'SkillGuard-Lite: fresh six-task with/without-skill audit on a local Fuji fork', ordering: 'text first on even fixture indices; behavioral first on odd indices', sameRawSkills: true, labelsAndFixtureIdsHiddenFromReviewer: true, noArchivedResponseReuse: true, scoring: 'author labels; shared complete-pair denominator; incomplete pairs excluded and counted', compute: 'one model response for text review versus multiple model calls and local transfers for the behavioral method; report both costs in tokens and elapsed time' } } : {}) };
   // Reserve every destination before any model or fork work. Existing evidence is never overwritten.
   await save(options.output!, initial);
   const tablePath = options.output!.replace(/\.json$/i, '') + '.md';
-  if (options.command === 'benchmark') {
+  if (options.command === 'benchmark' || options.command === 'benchmark-behavioral') {
     try { await writeFile(tablePath, '# Benchmark not started\n', { flag: 'wx' }); }
     catch { await writeFile(options.output!, JSON.stringify({ ...initial, error: 'Table destination is not writable or already exists; no execution started.' }, null, 2) + '\n'); throw new Error('Table destination is not writable or already exists; no execution started.'); }
   }
@@ -57,7 +60,9 @@ async function main() {
   const persist = async (data: unknown) => { latest = data; await writeFile(options.output!, JSON.stringify(data, null, 2) + '\n'); };
   let session: Awaited<ReturnType<typeof startFork>> | undefined;
   try {
+    const forkStarted = performance.now();
     session = await startFork({ forkBlockNumber: options.forkBlockNumber });
+    const forkSetupMs = performance.now() - forkStarted;
     if (options.command === 'check-fork') {
       const result = { kind: 'actual-local-fuji-fork-check', chainId: session.chainId, forkBlockNumber: session.forkBlockNumber, agentAddress: session.agentAddress, balanceAVAX: await session.balance(), localOnly: true, startedAt, completedAt: new Date().toISOString() };
       await persist(result); console.log(JSON.stringify(result, null, 2)); console.log(`Evidence: ${options.output}`); return;
@@ -71,6 +76,25 @@ async function main() {
     }
     const freeze = await verifyFixtureFreeze();
     const manifest = z.object({ kind: z.literal('synthetic'), attackerAddress: z.string(), fixtures: z.array(z.object({ id: z.string(), folder: z.string().regex(/^[a-z0-9-]+$/), label: z.enum(['benign', 'malicious']) })).min(1) }).parse(JSON.parse(await readFile(path.join(ROOT, 'fixtures/manifest.json'), 'utf8')));
+    if (options.command === 'benchmark') {
+      const rows: ComparisonRow[] = [];
+      const metadata = { ...initial, kind: 'actual-openai-paired-skill-comparison', forkBlockNumber: session.forkBlockNumber, chainId: session.chainId, forkSetupMs, datasetSha256: freeze.datasetSha256, expectedFixtureCount: manifest.fixtures.length };
+      for (const [index, fixture] of manifest.fixtures.entries()) {
+        const result = await compareSkill({ folder: path.join(ROOT, 'fixtures', fixture.folder), model: options.model ?? DEFAULT_MODEL, chain: session, order: index % 2 === 0 ? 'text-first' : 'behavioral-first', progress: message => console.error(message) });
+        rows.push({ ...result, label: fixture.label });
+        await persist({ ...metadata, executedFixtureCount: rows.length, rows, metrics: comparisonMetrics(rows) });
+        await writeFile(tablePath, '# In-progress paired comparison\n\n' + comparisonTable(rows));
+        if ([result.textReview.error ?? '', ...result.behavioral.errors].some(error => /OpenAI API|client unavailable|Local fork reset failed/.test(error))) break;
+      }
+      const metrics = comparisonMetrics(rows);
+      const complete = rows.length === manifest.fixtures.length && metrics.pairedScored === manifest.fixtures.length;
+      await persist({ ...metadata, completedAt: new Date().toISOString(), complete, executedFixtureCount: rows.length, notRun: manifest.fixtures.slice(rows.length).map(f => f.id), fixtures: 'authored synthetic; frozen before live execution', rows, metrics });
+      const table = `# Text-only model review vs SkillGuard-Lite\n\nModel: ${options.model} · Fuji fork block ${session.forkBlockNumber} · ${complete ? 'Complete real paired execution' : 'INCOMPLETE comparison'}\n\n${comparisonTable(rows)}\nFork startup: ${(forkSetupMs / 1000).toFixed(2)} seconds, reported separately from method timings.\n`;
+      await writeFile(tablePath, table);
+      console.log(table); console.log(`Evidence: ${options.output}\nTable: ${tablePath}`);
+      if (!complete) process.exitCode = 1;
+      return;
+    }
     const rows: BenchmarkRow[] = [];
     for (const fixture of manifest.fixtures) {
       const audit = await auditSkill({ folder: path.join(ROOT, 'fixtures', fixture.folder), model: options.model, chain: session, progress: message => console.error(message) });
