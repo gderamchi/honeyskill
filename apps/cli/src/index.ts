@@ -3,7 +3,7 @@ import { writeFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { userInfo } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { initProject, loadConfig, scanSkill, addSkill, updateSkill, listInstalls, listReports, readReport, installScan, exceptionConfirmation, sanitizeTerminal, OpenAIResponsesProvider, pruneData, type AddResult } from '../../../packages/core/src/index.js';
+import { initProject, loadConfig, fullPipelineComplete, scanSkill, addSkill, updateSkill, listInstalls, listReports, readReport, installScan, exceptionConfirmation, sanitizeTerminal, OpenAIResponsesProvider, pruneData, type AddResult } from '../../../packages/core/src/index.js';
 import type { ScanReport } from '../../../packages/contracts/src/index.js';
 import packageJson from '../../../package.json' with { type: 'json' };
 import { question, reportText } from './interaction.js';
@@ -13,6 +13,8 @@ import { runBenchmark } from '../../../evaluation/runner.js';
 import { prepareTerminal, envScript, dispatchTerminal, terminalCommands, terminalStatus, type TerminalCommand } from './terminal.js';
 import { prepareCodexHook, processHook } from './codex-hook.js';
 import { startProtectedSession } from './session.js';
+import { labStatus, tryInstallation } from './lab.js';
+import { fullReportHtml, fullReportTerminal } from './full-report.js';
 
 const scope = 'Checks SkillGate installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.';
 const program=new Command().name('skillgate').description('Financial risk checks before installing agent skills.').version(packageJson.version);
@@ -22,6 +24,16 @@ const root=()=>resolve(program.opts().project);
 const machine=()=>Boolean(program.opts().json);
 const interactive=()=>!machine() && Boolean(process.stdin.isTTY && process.stdout.isTTY && process.stderr.isTTY);
 function emit(data:unknown,text?:string){process.stdout.write(machine()||!text?JSON.stringify(data,null,2)+'\n':sanitizeTerminal(text)+'\n');}
+program.command('lab').description('Create/check an isolated test lab (no model calls).').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').action(async options=>{
+  const status=await labStatus(options.lab);
+  emit(status,`Lab: ${status.root}\nModel: ${status.model}\nAnvil: ${status.anvil.available ? status.anvil.version : 'missing — install Foundry'}\nOpenAI key: ${status.apiKeyPresent ? 'available' : 'will be requested privately by try'}\nTry: skillgate try good\nThen: skillgate try trap\nOnly this lab can be activated. Each try uses paid API calls and disposable local funds.`);
+  if(!status.anvil.available)process.exitCode=3;
+});
+program.command('try <source>').description('Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').option('--skill <name>','Select a skill from a multi-skill repository').action(async(source,options)=>{
+  const result=await tryInstallation(source,{...options,json:machine(),interactive:interactive()});
+  emit(result,result.installation ? `${result.installation.status==='installed_with_exception'?'Installed with exception; risks remain':'Installed automatically after all three checks'}: ${result.report.name}\nLab only: ${result.lab}\nSecurity report: ${result.reports.html}` : `${result.status==='unverified'?'UNVERIFIED: required checks or coverage are incomplete; override is unavailable':'HELD: risk detected; skill not installed'}.\nSecurity report: ${result.reports.html}`);
+  if(!result.installation)process.exitCode=result.status==='unverified'?3:2;
+});
 async function configured(){
   try{return await loadConfig(root());}
   catch(e){
@@ -35,9 +47,10 @@ async function configured(){
 }
 async function chooseInstallation(report:ScanReport,reason?:string){
   if(!interactive())throw Object.assign(new Error('A human decision is required in an interactive terminal, without --json. No --yes flag accepts this risk.'),{exitCode:2});
+  if(report.profile==='full' && (!fullPipelineComplete(report) || report.behavioral?.kind!=='actual-openai-local-fuji-fork-audit'))throw Object.assign(new Error('Required checks or coverage are incomplete; this lab report cannot be overridden.'),{exitCode:3});
   const config=await loadConfig(root());
   const destination=join(root(),config.target,report.name);
-  process.stderr.write(sanitizeTerminal(`${reportText(report)}\nExact destination: ${destination}\n\n[1] Do not install (default)\n[2] Install despite the risk\n`));
+  process.stderr.write(sanitizeTerminal(`${report.profile==='full'?fullReportTerminal(report):reportText(report)}\nExact destination: ${destination}\n\n[1] Do not install (default)\n[2] Install despite the risk\n`));
   const choice=await question('Your choice [1/2]: ');
   if(choice.trim()!=='2')return undefined;
   return installScan(root(),report.id,{fingerprint:report.fingerprint,destination,confirmation:exceptionConfirmation(report),operator:userInfo().username,...(reason?{reason}:{})});
@@ -93,23 +106,24 @@ program.command('init').option('--agent <agent>','Target','codex').option('--pro
   if(options.agent!=='codex'||(options.profile&&!['static','hybrid'].includes(options.profile)))throw new Error('The codex target and static or hybrid profile are required.');
   if(options.profile==='hybrid'&&options.semanticConsent&&!options.model)throw new Error('Specify --model when consenting to semantic analysis.');
   const config=await initProject(root(),{...(options.profile?{profile:options.profile}:{}),...(options.semanticConsent!==undefined?{semanticConsent:!!options.semanticConsent}:{}),...(options.model?{model:options.model}:{}),...(options.retentionDays?{retentionDays:Number(options.retentionDays)}:{})});
-  emit(config,`Local configuration: ${join(root(),'.skillgate/config.json')}\nDestination: ${join(root(),config.target)}\nProfile: ${config.profile==='static'?'Static analysis':'Hybrid analysis'}\n${scope}`);
+  emit(config,`Local configuration: ${join(root(),'.skillgate/config.json')}\nDestination: ${join(root(),config.target)}\nProfile: ${config.profile==='static'?'Static analysis':config.profile==='full'?'Full lab analysis':'Hybrid analysis'}\n${scope}`);
 });
 for(const name of ['scan','add'] as const){
 const command=program.command(`${name} <source>`).option('--skill <name>','Explicit skill selection');
 if(name==='add')command.alias('install');
 command.action(async(source,options)=>{
   const config=await configured();
+  if(config.profile==='full')throw new Error('Use skillgate try <source> --lab <directory> to run every required stage in this lab.');
   const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;
   if(name==='scan'){const report=await scanSkill(root(),source,{skill:options.skill,provider});emit(report,reportText(report));if(report.decision!=='allow')process.exitCode=2;}
   else await finishInstallation(await addSkill(root(),source,{skill:options.skill,provider}));
 });}
-program.command('update <name>').action(async name=>{const config=await configured();const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;await finishInstallation(await updateSkill(root(),name,{provider}));});
+program.command('update <name>').action(async name=>{const config=await configured();if(config.profile==='full')throw new Error('Use skillgate try <source> --lab <directory> to rescan and update every required stage.');const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;await finishInstallation(await updateSkill(root(),name,{provider}));});
 program.command('list').action(async()=>{await configured();const records=await listInstalls(root());emit(records,records.length?records.map(r=>`${r.name} · ${r.status} · ${r.fingerprint.slice(0,12)} · ${r.scanId}`).join('\n'):'No skills installed by SkillGate.');});
-program.command('inspect <scan-id>').action(async id=>{const report=await readReport(root(),id);emit(report,reportText(report));});
+program.command('inspect <scan-id>').action(async id=>{const report=await readReport(root(),id);emit(report,report.profile==='full'?fullReportTerminal(report):reportText(report));});
 program.command('report <scan-id>').option('--format <format>','json or html','json').option('--output <file>','Output file').action(async(id,options)=>{
   if(!['json','html'].includes(options.format))throw new Error('Expected format: json or html.');
-  const r=await readReport(root(),id);const content=options.format==='html'?reportHtml(r):JSON.stringify(r,null,2);
+  const r=await readReport(root(),id);const content=options.format==='html'?(r.profile==='full'?fullReportHtml(r):reportHtml(r)):JSON.stringify(r,null,2);
   if(options.output){await writeFile(resolve(options.output),content,{mode:0o600});emit({output:resolve(options.output)},`Report exported: ${resolve(options.output)}`);}else process.stdout.write(content+'\n');
 });
 program.command('approve <scan-id>').option('--reason <reason>','Reason for the exception').action(async(id,options)=>{
@@ -117,7 +131,7 @@ program.command('approve <scan-id>').option('--reason <reason>','Reason for the 
   if(!result){emit({cancelled:true},'Installation cancelled; package held.');process.exitCode=2;return;}
   emit(result,`Installed with exception: ${report.name}. The warning remains in report ${id}.`);
 });
-program.command('doctor').action(async()=>{const config=await configured();const records=await listInstalls(root());const terminal=await terminalStatus(root());emit({node:process.version,agent:config.agent,profile:config.profile,target:join(root(),config.target),managedInstalls:records.length,terminal,codexHookTrust:'not_probed',scope,semanticConsent:config.semanticConsent,semanticExecution:'not_probed',telemetry:false},`Codex · ${config.profile==='static'?'Static analysis':'Hybrid analysis'}\n${records.length} managed installation(s).\nTerminal: ${terminal.active?'active':terminal.configured?'configured; verify activation in the terminal':'not configured'}.\n${scope}\nNo telemetry. Codex hook trust has not been verified.`);});
+program.command('doctor').action(async()=>{const config=await configured();const records=await listInstalls(root());const terminal=await terminalStatus(root());emit({node:process.version,agent:config.agent,profile:config.profile,target:join(root(),config.target),managedInstalls:records.length,terminal,codexHookTrust:'not_probed',scope,semanticConsent:config.semanticConsent,semanticExecution:'not_probed',telemetry:false},`Codex · ${config.profile==='static'?'Static analysis':config.profile==='full'?'Full lab analysis':'Hybrid analysis'}\n${records.length} managed installation(s).\nTerminal: ${terminal.active?'active':terminal.configured?'configured; verify activation in the terminal':'not configured'}.\n${scope}\nNo telemetry. Codex hook trust has not been verified.`);});
 program.command('demo').action(async()=>{const result=await runDemo();emit(result);});
 program.command('benchmark').action(async()=>{await configured();const result=await runBenchmark({projectRoot:root(),command:process.argv.join(' ')});emit(result);});
 program.command('prune').description('Delete inactive reports and packages older than the configured retention period.').action(async()=>{await configured();const result=await pruneData(root());emit(result);});

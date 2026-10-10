@@ -1,6 +1,6 @@
 {
   "name": "@gderamchi/skillgate",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Financial-risk checks before agent skill installation. Local CLI prototype.",
   "type": "module",
   "bin": {
@@ -20,6 +20,8 @@
     "research",
     "fixtures",
     "evaluation",
+    "skillguard-lite",
+    "lab-skills",
     "README.md",
     "THIRD_PARTY_NOTICES.txt"
   ],

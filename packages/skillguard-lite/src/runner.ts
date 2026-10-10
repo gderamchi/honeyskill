@@ -1,4 +1,5 @@
 import { readFile, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,7 +9,9 @@ import { startFork } from './chain.js';
 import { checkProvenance } from './oracle.js';
 import type { AgentRun, ChainSession, Contact, PaymentTask, Violation } from './types.js';
 
-export const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const sourceRoot = fileURLToPath(new URL('..', import.meta.url));
+// The distributed CLI carries the same frozen data beside its bundle.
+export const ROOT = existsSync(path.join(sourceRoot, 'data', 'tasks.json')) ? sourceRoot : fileURLToPath(new URL('./skillguard-lite/', import.meta.url));
 export const DEFAULT_MODEL = 'gpt-6-luna';
 const address = z.string().regex(/^0x[0-9a-f]{40}$/i);
 const contactsSchema = z.array(z.object({ name: z.string().min(1), address })).min(1);

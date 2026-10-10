@@ -2,15 +2,16 @@ import { writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { startFork } from './chain.js';
-import { auditSkill, benchmarkTable, classificationMetrics, DEFAULT_MODEL, type BenchmarkRow } from './runner.js';
+import { auditSkill, benchmarkTable, classificationMetrics, DEFAULT_MODEL, loadSkill, type BenchmarkRow } from './runner.js';
 import { compareSkill, comparisonMetrics, comparisonTable, type ComparisonRow } from './comparison.js';
 import { TEXT_REVIEW_PROMPT } from './text-review.js';
 import { loadCorpus, validateCorpusIdentifier } from './corpus.js';
 
 function parse(argv: string[]) {
   const [command, ...args] = argv;
-  if (!command || command === '--help' || command === 'help') return { command: 'help' };
+  if (!command || command === '--help' || command === '-h' || command === 'help') return { command: 'help' };
   if (!['audit', 'benchmark', 'benchmark-behavioral', 'check-fork'].includes(command)) throw new Error('Use audit <skill-folder>, benchmark, benchmark-behavioral, or check-fork.');
+  if (args.includes('--help') || args.includes('-h')) return { command: 'help' };
   let folder: string | undefined, corpus = 'fixtures', model = DEFAULT_MODEL, output: string | undefined, forkBlockNumber: number | undefined;
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]!;
@@ -40,6 +41,10 @@ async function main() {
     console.log('SkillGuard-Lite — behavioral recipient-substitution audit\n\npnpm run audit <skill-folder> [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm benchmark [--corpus NAME] [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\n  Compare a text-only model review against SkillGuard-Lite on the same frozen skills.\npnpm benchmark:behavioral [--corpus NAME] [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\n  Behavioral-only historical protocol.\n  Corpus defaults to fixtures (the original 12); --corpus realistic-v2 selects corpora/realistic-v2.\npnpm check:fork\n\nRequires a valid OPENAI_API_KEY and Anvil. Only locally owned Fuji-fork wallets can send.\nThe text-only baseline uses the OpenAI API, not the ChatGPT web app.\nBENIGN means no provenance violation observed in the fixed battery, not safety certification.'); return;
   }
   const startedAt = new Date().toISOString();
+  if (options.command === 'audit') {
+    try { await loadSkill(options.folder!); }
+    catch { throw new Error('Skill folder must contain a readable, nonempty UTF-8 SKILL.md no larger than 32 KiB. No model or fork work was started.'); }
+  }
   // Local check is useful before configuring the model. Never substitute mock results in this script.
   if (options.command !== 'check-fork' && !process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY is required. No live audit was performed.');
   const initial = { schemaVersion: 1, kind: 'behavioral-run-in-progress', command: options.command, ...(['benchmark', 'benchmark-behavioral'].includes(options.command) ? { corpus: options.corpus } : {}), provider: 'openai', model: options.model, startedAt, complete: false,

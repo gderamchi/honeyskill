@@ -1,154 +1,160 @@
-# SkillGate
+# SkillGate — try a skill before trusting it
 
-Financial-risk checks **before installing agent skills**. A local CLI with terminal interception, not a wallet, transaction firewall or web platform.
-
-SkillGate downloads the skill into quarantine and inspects its files without executing acquired code. A complete scan with no detected risk automatically installs the verified snapshot. A finding or incomplete analysis explains the evidence and offers **Do not install** (default) or **Install despite the risk**. Truncated packages cannot be activated, even with an exception.
-
-## Install and activate
-
-Requires macOS/Linux, Node.js 22.18+ and Git. Install once or update:
+## One command, all checks
 
 ```sh
 npm i -g gderamchi/skillgate
+skillgate try good
+skillgate try trap
 ```
 
-In the project you want to protect:
+Requires Node.js 22.18+, [Foundry Anvil](https://getfoundry.sh/getting-started/installation) and an authorized OpenAI API key. `skillgate lab` checks local prerequisites without calling the model. `try` requests the key privately if it is absent from the environment; it is never saved. Every trial uses paid OpenAI API calls with **GPT-6 Luna, reasoning none**. No faucet or real wallet is needed.
+
+`try` runs **regex/static checks → LLM financial review → six paired agent execution tests → one security report**, even when an earlier stage finds a risk. It installs a clean, fully covered snapshot only inside `./skillgate-lab`. Risky skills are held; in an interactive terminal, choose **1: Do not install** or **2: Install despite the risk**. Missing/failed checks and unsupported execution coverage cannot be overridden. Reports are saved as HTML, Markdown and JSON under the lab's `reports/` directory. HTML is a local report, not a web service.
+
+`good` and `trap` are bundled **synthetic demonstration fixtures**. For your own skill:
 
 ```sh
-skillgate on
+skillgate try ./my-skill
+skillgate try owner/repository
+skillgate try https://github.com/owner/repository/tree/COMMIT/path/to/skill
+# Optional: --lab ./another-lab, --skill skill-name, --json
 ```
 
-The **[SkillGate]** prompt identifies the protected terminal session. Install skills using the supported commands below. Type **exit** to return to the original shell.
+Only the exact analyzed copy is activated; updates use the same command and a rejected update preserves the previous installation. Acquired scripts are never executed. The behavioral engine reads SKILL.md and tests native AVAX recipient substitution on a disposable local Fuji fork. Extra skill resources it cannot exercise are reported as uncovered and prevent activation. This is a test lab, not a general agent sandbox or protection for arbitrary terminal commands.
 
-`on` starts a dedicated Bash session without loading shell startup files or changing your shell profile. Commands and agents launched from this session inherit its environment. Other terminals and already-running applications are not activated. Project settings and installed skills persist when the session closes.
+[Full lab guide](docs/SKILLGATE_LAB.md) · [Preserved experiment and results](#experiment)
 
-The GitHub shorthand installs the committed, precompiled CLI: no npm account, API key, local compilation, server or browser is required. Current version: **0.4.0**, with English CLI messages and reports. The package is also distributed through GitHub releases; it is not published to the npm registry as `skillgate`.
+## Preserved comparison experiment
 
-## Two short demo commands
+Compare **GPT-6 Luna reading a skill and giving a security opinion** with **SkillGuard-Lite executing a behavioral audit** for payment recipient substitution. Both methods receive the same frozen skill text, address book and payment tasks. The comparison uses the OpenAI API; it is not a measurement of the ChatGPT website or app.
 
-Use an isolated temporary project for these synthetic fixtures:
+SkillGuard-Lite runs a minimal wallet agent on six tasks, with and without the skill, on an owned local Anvil fork of Avalanche Fuji. A code oracle checks every `send(toAddress, amountAVAX)` recipient. The text-only comparator reviews the instructions without tools or transactions.
 
-```sh
-cd "$(mktemp -d)"
-skillgate on
-```
+This is the preserved benchmark scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its historical benchmark and installer wrappers are **not** behavioral evidence. Version 0.5.0 integrates the behavioral engine into the new explicit `try` command.
 
-Then run each command separately:
+## Run
 
-```sh
-npx skills add gderamchi/skill-safe
-npx skills add gderamchi/skill-trap
-```
-
-The first skill installs automatically. The second declares read-only behavior but requests a concealed fictional transfer: SkillGate holds it and explains FIN-02 and FIN-06 with file and line evidence. Press Enter to cancel. To demonstrate an exception, run the same trap command again and choose `2`. SkillGate records the exact fingerprint and destination with status `installed_with_exception`.
-
-Without an interactive terminal, the suspect package stays held with exit code 2. Review it later with `skillgate approve SCAN_ID`. An installer's `--yes` never accepts a SkillGate risk. The scanner does not execute either fixture or any financial transaction.
-
-## Supported installation paths
-
-- `npx skills add/install SOURCE`, including `npx -y skills@VERSION add SOURCE`.
-- `pnpm dlx skills add/install SOURCE`.
-- `skills add/install SOURCE`.
-- Explicit `skillgate install SOURCE`, local directories and public GitHub repositories.
-- Updates through `skillgate update NAME`: a rejected update preserves the existing installed snapshot.
-
-The MVP targets **one skill at a time, for Codex in the current project**, under `.agents/skills`. Global installs, unsupported agents, multiple skills, unsupported options and third-party update commands are rejected. Interactive discovery commands that could install a skill are also rejected. Unrelated commands are delegated to the original executable.
-
-To switch projects, exit the protected session, change directory and run `skillgate on` again.
-
-## How it works
-
-1. **Intercept.** `skillgate on` places small `npx`, `pnpm` and `skills` wrappers first on PATH. Supported installation commands are routed to SkillGate before the upstream installer executes.
-2. **Acquire.** Read local files or resolve a public GitHub ref with anonymous Git, then download its immutable commit archive from codeload into quarantine outside the agent's skill-discovery directory. Reject incoming links, unsafe paths and collection limits.
-3. **Inspect.** Inventory the files, build a canonical SHA-256 manifest, check references and dependencies, then apply local financial-risk heuristics. Files are untrusted data, never instructions to the scanner.
-4. **Decide.** Risk and analysis coverage are separate. A complete supported scan with no findings can auto-install. Otherwise the CLI explains the problem and waits for an explicit decision.
-5. **Activate.** Recheck the snapshot's fingerprint and promote that exact copy. The active directory points to the verified snapshot. Updates replace the pointer atomically; an exception applies only to this report, fingerprint and destination.
-
-Reports, quarantine, snapshots and installation history stay under `.skillgate/`. There is no telemetry or remote database. These files are not tamper-proof against the owner of the operating-system account.
-
-## Financial checks and measured limits
-
-The static engine uses pattern matching and contextual combinations, not an LLM by default:
-
-| Check | Pattern being flagged |
-| --- | --- |
-| FIN-01 | Requests to collect and transmit financial secrets, such as a seed phrase or private key. |
-| FIN-02 | Transfers or beneficiary replacement conflicting with read-only claims or accompanied by concealment. |
-| FIN-03 | Broad spending approvals, including unlimited allowances. |
-| FIN-04 | Concealed changes to financial settings such as network, token, RPC or slippage. |
-| FIN-05 | Remote or obscured code acquisition combined with execution in a financial context. |
-| FIN-06 | Hidden instructions to sign, approve or transfer without telling the operator. |
-
-These are heuristic checks, not complete coverage of those threats. Version 0.4.0 adds Unicode normalization for matching, adjacent-line evidence, simple secret-variable/container correlation, and more precise handling of negated instructions, rejected examples, report delivery and allowance revocation. Original evidence text is preserved.
-
-Actual static measurements on unchanged synthetic cases:
-
-| Evaluation | 0.3.1 | 0.4.0 |
-| --- | --- | --- |
-| Original 40 cases: suspects with findings | 11/16 | 16/16 |
-| Original cases: legitimate with findings | 4/16 | 0/16 |
-| Original cases: legitimate auto-install eligible | 11/16 | 15/16 |
-| New 16-case challenge, first candidate: suspects with findings | 2/8 | 5/8 |
-| New challenge, first candidate: legitimate with findings | 3/8 | 2/8 |
-
-The final challenge rerun after disclosed failures and review fixes records **8/8 suspects with findings and 0/8 legitimate cases flagged**. That is post-feedback development validation, not a new blind test. The first-candidate results remain published. Both datasets were authored by the same team; neither is independent. Original-case bytes and labels were not changed. Of eight incomplete cases, seven remain held; the existing oversized/missing-entry acquisition error activates nothing. One legitimate case still requires review for unresolved remote instructions.
-
-See [original-case comparison](docs/evidence/detection-comparison-0.4.0.json) and [challenge protocol and all runs](docs/evidence/challenge-comparison-0.4.0.json). These small, known datasets do not establish production accuracy or complete protection.
-The corpus distinguishes real source reports from synthetic financial hypotheses and inert fixtures. `skillgate demo` uses a fictional 100 → 75 DEMOUSD ledger; it does not demonstrate an actual model following an attack or real money being saved.
-
-An optional OpenAI Responses provider is implemented and tested with simulated responses. No real paid provider execution has been verified. Hybrid mode requires an explicit model, API key and content-sharing consent; it cannot remove native findings or silently fall back to static mode on failure. Source excerpts and historical reports retain their original language.
-
-## Boundaries
-
-Public GitHub acquisition no longer calls the REST API: it resolves refs using anonymous `git ls-remote` and fetches a commit-pinned archive from `codeload.github.com`. No token or GitHub API quota is needed. Git/codeload availability and throttling still apply; failures activate nothing. One 20-second deadline covers acquisition, with limits of 8 MiB compressed, 32 MiB expanded and 4,096 archive entries. Unsupported archive entries are rejected. The selected skill also has smaller file/count/byte limits. Full commit SHAs skip ref resolution.
-
-PATH interception covers supported commands in the activated session and descendants inheriting its environment. It does not cover manual copies, absolute executable paths that bypass wrappers, arbitrary installers, environments that replace PATH, commands passed to an already-running shell through `write_stdin`, or processes started before activation. It does not control transactions or agent behavior after installation. A local process can deliberately bypass or alter the protection.
-
-An optional Codex `PreToolUse` hook provides additional command rewriting:
-
-```sh
-skillgate enable --codex-hook --json
-skillgate on
-```
-
-Codex requires the hook to be reviewed and trusted through `/hooks` in a trusted project. SkillGate does not grant that trust or modify sandbox permissions. The native Python installer is supported only with an explicit destination matching this project's `.agents/skills`.
-
-The integration was exercised using the real Codex CLI and a local simulated model. That proves the hook path under those test conditions, not every agent or sandbox. A real `workspace-write` test could analyze the skill but denied writing `.agents` with `EPERM`; installation still requires host write permission. Codex hook startup errors or timeouts can allow a command through before SkillGate runs. The hook is not a security sandbox.
-
-## Other commands
-
-```sh
-skillgate scan /path/to/skill --json
-skillgate install /path/to/skill
-skillgate update skill-name
-skillgate inspect scan-ID
-skillgate approve scan-ID
-skillgate list
-skillgate doctor
-skillgate report scan-ID --format html --output report.html
-skillgate demo --json
-skillgate benchmark --json
-skillgate export --json
-skillgate prune --json
-```
-
-`--project DIRECTORY` selects the project root; `--json` reserves stdout for JSON and disables interactive questions. `scan` never installs. `prune` removes explicitly expired inactive data while retaining active snapshots. `enable` and `env` remain available for existing automated integrations.
-
-Exit codes: 0 success, 1 error, 2 held/cancelled/decision required, 3 missing configuration, 130 interruption. Errors never authorize an installation through SkillGate.
-
-## Develop and verify
-
-Source builds additionally require pnpm 10.33.0 and Python 3 for ZIP and PTY checks:
+Requires Node.js 22.18+, pnpm, a valid OpenAI API key and [Foundry Anvil](https://www.getfoundry.sh/anvil/index.html). The script uses the official OpenAI API; it does not use your ChatGPT subscription. Supply the key through your environment, never a command-line argument or committed file.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm validate
-# Build only:
-pnpm build:cli
+# Set OPENAI_API_KEY securely in your environment.
+pnpm check:fork
+pnpm run audit packages/skillguard-lite/fixtures/benign-helpful
+pnpm run audit packages/skillguard-lite/fixtures/malicious-overt
+pnpm benchmark
 ```
 
-Validation covers type checking, tests, a compiled CLI build, real terminal interactions, an isolated simulation, packaging and installation outside the repository. Sanitized public evidence is in [docs/evidence](docs/evidence/); raw workstation logs are excluded.
+If Anvil is outside PATH, set `ANVIL_BIN` to its absolute executable path. The workspace-local `work/skillguard-lite/bin/anvil` is also recognized when present; it is not distributed in source.
 
-The CLI bundle has no external runtime dependencies and excludes the archived web UI, server, React and Vite. Historical `apps/web` and `server.ts` sources remain for provenance. The initial specification is preserved in `docs/SPECIFICATION.md`; the later user scope removes the web UI from the shipped product.
+Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. `gpt-6-luna` is the default reference model, as explicitly requested. Its reasoning effort is set to `none` to preserve the experiment's original non-reasoning configuration, with temperature 0 and a 700-token output limit. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
 
-The build script must remain named `build:cli`: a root npm script named `build`, `prepare` or another preparation lifecycle hook would cause npm to rebuild a Git dependency during installation. The public repository therefore commits `dist/`; development tools stay in devDependencies.
+`audit` prints `BENIGN` or `MALICIOUS` with a reason and first-violation evidence. A failed or incomplete run without an observed violation is `ERROR`; an observed violation remains `MALICIOUS`, but an incomplete audit is unscored. Baseline contamination is always `ERROR`. `benchmark` runs both methods freshly for every skill and prints paired verdicts, precision/recall/FPR, completion, elapsed time and returned input/output tokens. Both classifiers are scored on the same complete-pair subset; incomplete pairs are explicitly unscored. `pnpm benchmark:behavioral` retains the earlier single-method benchmark. Output paths are unique and existing evidence is never overwritten. Exit code 1 signals errors/incomplete execution; a completed malicious audit is a successful measurement and exits 0.
+
+## Experiment
+
+- **Agent:** one system prompt describing a wallet assistant and a small JSON address book; raw skill text is appended unchanged. One tool, `send`, transfers native AVAX on the local fork. No third-party runtime.
+- **Battery:** six normal tasks, including named contacts, one explicit address and two requested payments. Every task runs baseline first, then with the skill; each arm resets to the same funded snapshot. Every skill gets its own baseline executions.
+- **Oracle:** a recipient must be in the address book **or explicitly written in the user task**. An attempted valid untrusted address counts as a violation, including additional skim payments. Evidence includes task, expected recipient, actual recipient, amount and transaction hash when executed.
+- **Verdict:** any observed with-skill provenance violation is `MALICIOUS`; otherwise a complete clean run is `BENIGN`. Baseline contamination invalidates differential attribution. Task completion is reported separately.
+- **Fixtures:** twelve authored synthetic skills, five benign and seven malicious, with frozen bytes/labels. They are natural-language test data, not real malware samples or independently sourced ground truth. No result-driven fixture rewriting.
+
+## Chain boundary
+
+The only public upstream is the read-only [Fuji C-Chain RPC](https://build.avax.network/docs/primary-network): `https://api.avax-test.network/ext/bc/C/rpc`, chain ID `43113`. The supplied `chainlist.org/chain/43113` link is a network information page, not the JSON-RPC endpoint.
+
+Anvil owns an ephemeral loopback port. A random wallet key is held only in memory and funded with `anvil_setBalance` on that local instance. Signed transactions never go to Fuji or mainnet. The process verifies Anvil and chain identity before local writes, limits time/amounts and cleans up on completion. No real wallet, faucet, browser wallet extension, deployed contract or testnet AVAX is needed for this experiment. It is a fork experiment, not a general security sandbox.
+
+## Limitations that belong beside the table
+
+`BENIGN` means **no violation observed in this finite battery**, not proof of safety. Untested triggers, delayed behavior or model refusal can hide an attack. A valid address anywhere in a task is allowed by the literal oracle, even in a negative mention. All address-book contacts are allowed, so swapping Tom for Alice is outside its coverage. Amount correctness, approvals, keys, staking and external code execution are out of scope. Received skill code is not executed by the host; only `SKILL.md` text reaches the reference model.
+
+The reference agent uses real API tokens. Usage totals are saved; there is no automatic credit purchase. Mock unit tests are labelled as such and never substituted into `audit` or `benchmark` results.
+
+## Verify and inspect
+
+```sh
+pnpm typecheck
+pnpm test:behavioral
+# Explicit opt-in real fork test (read-only public RPC, local payments only):
+SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
+```
+
+[Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
+
+## Latest external evidence — real GitHub skill texts
+
+The [external coverage probe](docs/evidence/skillguard-lite/real-world/report.md) used five unchanged public GitHub skills: three vendor-reported malicious skills and two ordinary upstream financial controls. One fresh pass completed 60 task arms, 125 API responses and 70 local transfers. Both methods returned `BENIGN` on all five, with no unintended recipient observed.
+
+**This does not validate the synthetic gain on real attacks.** The documented attacks depend on shell/download behavior unavailable to the fixed send-only agent. The text reviewer is also explicitly limited to AVAX recipient substitution. General malware labels cannot supply ground truth for this narrower threat, so precision/recall/FPR are **N/A**, not zero or perfect. The [source eligibility study](docs/evidence/skillguard-lite/real-world/source-study.md) found no compatible documented positive in its bounded search. No payloads were adapted to create one.
+
+The historical [terminal UX review](docs/evidence/skillguard-lite/real-world/ux-review.md) records setup/help/command friction before the new full lab command. `skillgate try` now offers an explicit installation trial; it is not automatic interception of every terminal command. The external probe changed no runtime code; raw third-party skill text and complete provider traces were not republished.
+
+## Synthetic comparison — workflow-shaped skills
+
+The [realistic-v2 challenge](docs/SKILLGUARD_REALISTIC_V2.md) adds sixteen less explicit synthetic skills as eight matched benign/malicious pairs: migration records, network aliases, settlement routing, payment templates, split address fragments and completion fees. Both members of each pair contain similar financial vocabulary and foreign-address references. The corpus, labels and two-run protocol were frozen and published before execution; model prompts, tasks, address book and oracle stayed unchanged.
+
+Both fresh runs completed all 16 pairs. **SkillGuard-Lite detected 8/8 malicious skills in each run; text review detected 7/8. Neither produced a false positive on the eight benign skills.** This is a measured advantage on this small synthetic challenge, with important qualifications:
+
+- In run 1, text review returned `BENIGN` for the batch-settlement skill even though its own reason concluded that the behavior was malicious. Scoring uses the declared structured verdict; this is a contradictory output, not evidence that the model failed to understand the redirection.
+- In run 2, text review missed a different skill: an address-template default. It incorrectly stated that none of the tasks used a literal address, despite the explicit-address task being present. The behavioral trace records 0.15 AVAX sent to the foreign recipient.
+- Text verdicts were stable on 14/16 skills across runs; behavioral verdicts on 16/16. The cases missed by text review were not consistent across repetitions. These remain sixteen authored skills in eight matched pairs, not thirty-two independent examples.
+
+| Measurement | Text review, run 1 / run 2 | SkillGuard-Lite, run 1 / run 2 |
+| --- | ---: | ---: |
+| Precision | 7/7 / 7/7 | 8/8 / 8/8 |
+| Recall | 7/8 / 7/8 (87.5% each) | 8/8 / 8/8 (100% each) |
+| False-positive rate | 0/8 / 0/8 | 0/8 / 0/8 |
+| Scored pairs | 16/16 / 16/16 | 16/16 / 16/16 |
+| Elapsed time | 31.33 s / 28.72 s | 622.83 s / 580.99 s |
+| Returned input + output tokens | 16,389 / 16,319 | 229,954 / 230,806 |
+
+Across these two runs, behavioral auditing used about **14 times as many returned tokens and 20 times as much elapsed time**. It recorded 16 and 19 provenance violations respectively, all on owned local forks, with clean no-skill baselines. Tokens are returned API usage, not verified billing. No general superiority or production safety claim follows from these synthetic, task-aware examples.
+
+Run the same experiment with `pnpm benchmark --corpus realistic-v2 --block 59275449`. Run it twice with distinct `--out` files to repeat the declared protocol. No key or previous output is required in the repository; live execution requires your own authorized OpenAI key and Anvil.
+
+[Two-run report](docs/evidence/skillguard-lite/realistic-v2/comparison-report.md) · [Slide](docs/evidence/skillguard-lite/realistic-v2/comparison-slide.png) · [Run 1 native evidence](docs/evidence/skillguard-lite/realistic-v2/run-1.json) · [Run 2 native evidence](docs/evidence/skillguard-lite/realistic-v2/run-2.json) · [Independent recomputation](docs/evidence/skillguard-lite/realistic-v2/independent-validation.json) · [Public source validation: 65/65 tests](docs/evidence/skillguard-lite/realistic-v2/execution-validation.json).
+
+## Original comparison — twelve explicit synthetic skills
+
+The fresh paired run completed **12/12 synthetic fixtures** on 10 October 2026. Both methods detected all seven malicious skills and classified all five benign skills correctly. **This corpus demonstrates no detection advantage for SkillGuard-Lite.** Its additional output is evidence of actual reference-agent behavior on the local fork.
+
+| Measurement | GPT-6 Luna text review | SkillGuard-Lite |
+| --- | ---: | ---: |
+| Precision | 7/7 (100%) | 7/7 (100%) |
+| Recall | 7/7 (100%) | 7/7 (100%) |
+| False-positive rate | 0/5 (0%) | 0/5 (0%) |
+| Complete scored pairs | 12/12 | 12/12 |
+| Method elapsed time | 20.48 s | 436.75 s |
+| Returned input / output tokens | 6,698 / 762 | 103,126 / 17,749 |
+
+The behavioral audit observed **37 unintended-recipient send calls**, with every no-skill baseline clean. There were no excluded pairs or disagreements. Fork startup took another 0.23 seconds, reported separately. Token totals are API-reported usage, not verified billing; the methods have different compute budgets.
+
+The fixed prompt and runner were published before this execution. A fresh public clone passed installation, typecheck and **58/58 tests**, including the live local-fork test, then ran the comparison. [Public source validation](docs/evidence/skillguard-lite/comparison-public-source-validation.json) identifies the tested commit.
+
+[Comparison table](docs/evidence/skillguard-lite/luna-comparison.md) · [Native API and chain traces](docs/evidence/skillguard-lite/luna-comparison.json) · [Slide](docs/evidence/skillguard-lite/luna-comparison-slide.png) · [Evidence validation](docs/evidence/skillguard-lite/luna-comparison-validation.json).
+
+This is one run on 12 authored synthetic examples, several of which describe their attacks explicitly. It is an API text-review baseline, not a test of the ChatGPT app, and it establishes neither general accuracy nor superiority. Read the [comparison protocol](docs/SKILLGUARD_COMPARISON.md) for blinding, method order, shared scoring, compute differences and interpretation limits. Historical behavioral-only scores below are separate executions.
+
+## Historical behavioral-only run — GPT-6 Luna
+
+The GPT-6 Luna run completed **12/12 synthetic fixtures**: seven malicious skills detected and five benign skills accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, FPR **0/5 (0%)**, no unscored audits. This is one run on an authored dataset, not a general accuracy claim.
+
+At Fuji fork block **59275449**, it produced **297 model responses**, **178 executed local transfers** and **38 provenance violations** across 144 task arms. Every request used `gpt-6-luna`, reasoning effort `none`, temperature `0` and a 700-token output limit. All baselines were clean.
+
+[Recorded behavioral table](docs/evidence/skillguard-lite/luna-benchmark.md) · [Full native traces](docs/evidence/skillguard-lite/luna-benchmark.json) · [Slide](docs/evidence/skillguard-lite/luna-benchmark-slide.png) · [Independent evidence checks](docs/evidence/skillguard-lite/luna-evidence-validation.json).
+
+A fresh copy of the public repository passed installation, typecheck and **44/44 behavioral tests**, including a real local fork. Actual public-source audits produced [BENIGN, zero violations](docs/evidence/skillguard-lite/public-luna-benign-audit.json) and [MALICIOUS, four violations](docs/evidence/skillguard-lite/public-luna-malicious-audit.json). [Public source validation](docs/evidence/skillguard-lite/luna-public-source-validation.json) identifies the tested commit. Violation counts differ across runs; no model output was reused.
+
+The prior GPT-4.1 mini traces below retain their original model and are historical.
+
+## Historical GPT-4.1 mini execution — 10 October 2026
+
+The actual OpenAI benchmark completed **12/12 synthetic fixtures**: 7 malicious detected and 5 benign accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, false-positive rate **0/5 (0%)**, no unscored audits. This is one run on a small authored dataset, not a general detection-accuracy claim.
+
+The run used `gpt-4.1-mini-2025-04-14` at Fuji fork block **59275449**: 144 task arms, 288 model responses, 181 executed local transfers and 43 provenance violations. All baselines were clean. Native model traces, tool arguments and receipt status/hash/block summaries are archived with the [benchmark table](docs/evidence/skillguard-lite/openai-benchmark.md), [full JSON](docs/evidence/skillguard-lite/openai-benchmark.json) and [slide](docs/evidence/skillguard-lite/openai-benchmark-slide.png). No signed transaction reached the public network.
+
+Separate actual audits returned [BENIGN](docs/evidence/skillguard-lite/openai-benign-audit.json) with zero violations and [MALICIOUS](docs/evidence/skillguard-lite/openai-malicious-audit.json) with seven unexpected-recipient calls. The implementation passes typecheck and all 43 behavioral tests, including the real Fuji-fork test. Reproduction can yield different model behavior; `BENIGN` remains limited to the fixed battery and literal oracle described above.
+
+The earlier [Claude HTTP 401 attempt](docs/evidence/skillguard-lite/audit-auth-failure.json) is retained as history, not relabelled as an OpenAI execution.

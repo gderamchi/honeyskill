@@ -181,7 +181,7 @@ test('OpenAI provider uses the actual Responses contract, bounds requests and re
     assert.equal(request.max_output_tokens, 2500); assert.equal(request.text.format.type, 'json_schema'); assert.equal(request.text.format.strict, true);
     assert.deepEqual(request.text.format.schema.required, ['findings']); assert.equal(request.tools, undefined);
     assert.equal(request.input[0].role, 'system'); assert.equal(request.input[1].role, 'user');
-    return new Response(JSON.stringify({ status: apiStatus, output: [{ type: 'message', content: [refusal ? { type: 'refusal', refusal: 'test refusal' } : { type: 'output_text', text: '{"findings":[]}' }] }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ id: 'resp_mocked_legacy_test', model: 'test-model-not-called-live', usage: { input_tokens: 10, output_tokens: 5, total_tokens: 15 }, status: apiStatus, output: [{ type: 'message', status: 'completed', content: [refusal ? { type: 'refusal', refusal: 'test refusal' } : { type: 'output_text', text: '{"findings":[]}' }] }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   };
   const complete = await scanSkill(root, source, { provider }); assert.equal(complete.decision, 'allow');
   apiStatus = 'incomplete'; assert.equal((await scanSkill(root, source, { provider })).decision, 'review');

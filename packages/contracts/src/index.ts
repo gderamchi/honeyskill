@@ -28,20 +28,45 @@ export const CoverageSchema = z.object({
 export const ManifestEntrySchema = z.object({
   path: z.string(), size: z.number().int().nonnegative(), sha256: z.string().regex(/^[a-f0-9]{64}$/), executable: z.boolean(),
 });
+export const BehavioralSummarySchema = z.object({
+  kind: z.enum(['actual-openai-local-fuji-fork-audit', 'mocked-test']), provider: z.string().min(1), model: z.string().min(1),
+  skillSha256: z.string().regex(/^[a-f0-9]{64}$/), verdict: z.enum(['BENIGN', 'MALICIOUS', 'ERROR']),
+  baselineVerdict: z.enum(['BENIGN', 'MALICIOUS', 'ERROR']), complete: z.boolean(), covered: z.boolean(),
+  reason: z.string().max(4000), startedAt: z.string(), completedAt: z.string(),
+  tasks: z.array(z.object({
+    taskId: z.string().min(1), task: z.string().max(4000), baselineComplete: z.boolean(), skillComplete: z.boolean(),
+    baselineTaskComplete: z.boolean(), skillTaskComplete: z.boolean(),
+    baselineTransfers: z.number().int().nonnegative(), skillTransfers: z.number().int().nonnegative(),
+  })).max(6),
+  violations: z.array(z.object({
+    taskId: z.string().min(1), task: z.string().max(4000), expectedRecipients: z.array(z.string()).min(1),
+    actualRecipient: z.string(), amountAVAX: z.string(), transactionHash: z.string().optional(),
+  })),
+  inputTokens: z.number().int().nonnegative(), outputTokens: z.number().int().nonnegative(),
+  errors: z.array(z.string()), limitations: z.array(z.string()),
+  evidence: z.object({ path: z.string(), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).optional(),
+  chain: z.object({ chainId: z.number().int().positive(), forkBlockNumber: z.string() }).optional(),
+});
 export const ScanReportSchema = z.object({
   schemaVersion: z.literal(1), id: z.string().regex(/^[a-z0-9-]{1,80}$/), name: z.string(),
   source: SourceSchema, fingerprint: z.string().regex(/^[a-f0-9]{64}$/),
-  startedAt: z.string(), completedAt: z.string(), profile: z.enum(['static', 'hybrid']),
+  startedAt: z.string(), completedAt: z.string(), profile: z.enum(['static', 'hybrid', 'full']),
   engineVersion: z.string(), rulesVersion: z.string(), corpusVersion: z.string(), policyVersion: z.string(),
-  analyses: z.array(z.object({ engine: z.string(), status: z.enum(['completed', 'failed', 'unavailable']), detail: z.string() })),
+  analyses: z.array(z.object({
+    engine: z.string(), stage: z.enum(['native', 'semantic', 'behavioral']).optional(),
+    status: z.enum(['completed', 'failed', 'unavailable']), detail: z.string(),
+    durationMs: z.number().nonnegative().optional(), model: z.string().optional(), responseId: z.string().optional(),
+    usage: z.object({ inputTokens: z.number().int().nonnegative(), outputTokens: z.number().int().nonnegative(), totalTokens: z.number().int().nonnegative() }).optional(),
+  })),
   coverage: CoverageSchema, findings: z.array(FindingSchema),
   risk: z.enum(['none', 'detected']), decision: z.enum(['allow', 'hold', 'review']),
   capabilities: z.array(z.string()), durationMs: z.number().nonnegative(), limitations: z.array(z.string()),
   manifest: z.array(ManifestEntrySchema),
+  behavioral: BehavioralSummarySchema.optional(),
 });
 export const ConfigSchema = z.object({
   version: z.literal(1), agent: z.literal('codex'), target: z.literal('.agents/skills'),
-  profile: z.enum(['static', 'hybrid']), semanticConsent: z.boolean(), model: z.string().min(1).max(100),
+  profile: z.enum(['static', 'hybrid', 'full']), semanticConsent: z.boolean(), model: z.string().min(1).max(100),
   retentionDays: z.number().int().min(1).max(3650),
 });
 export const ExceptionSchema = z.object({
@@ -72,6 +97,7 @@ export type Finding = z.infer<typeof FindingSchema>;
 export type Evidence = z.infer<typeof EvidenceSchema>;
 export type Coverage = z.infer<typeof CoverageSchema>;
 export type ManifestEntry = z.infer<typeof ManifestEntrySchema>;
+export type BehavioralSummary = z.infer<typeof BehavioralSummarySchema>;
 export type ScanReport = z.infer<typeof ScanReportSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 export type InstallRecord = z.infer<typeof InstallRecordSchema>;

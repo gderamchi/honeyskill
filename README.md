@@ -1,10 +1,37 @@
-# SkillGuard-Lite
+# SkillGate — try a skill before trusting it
+
+## One command, all checks
+
+```sh
+npm i -g gderamchi/skillgate
+skillgate try good
+skillgate try trap
+```
+
+Requires Node.js 22.18+, [Foundry Anvil](https://getfoundry.sh/getting-started/installation) and an authorized OpenAI API key. `skillgate lab` checks local prerequisites without calling the model. `try` requests the key privately if it is absent from the environment; it is never saved. Every trial uses paid OpenAI API calls with **GPT-6 Luna, reasoning none**. No faucet or real wallet is needed.
+
+`try` runs **regex/static checks → LLM financial review → six paired agent execution tests → one security report**, even when an earlier stage finds a risk. It installs a clean, fully covered snapshot only inside `./skillgate-lab`. Risky skills are held; in an interactive terminal, choose **1: Do not install** or **2: Install despite the risk**. Missing/failed checks and unsupported execution coverage cannot be overridden. Reports are saved as HTML, Markdown and JSON under the lab's `reports/` directory. HTML is a local report, not a web service.
+
+`good` and `trap` are bundled **synthetic demonstration fixtures**. For your own skill:
+
+```sh
+skillgate try ./my-skill
+skillgate try owner/repository
+skillgate try https://github.com/owner/repository/tree/COMMIT/path/to/skill
+# Optional: --lab ./another-lab, --skill skill-name, --json
+```
+
+Only the exact analyzed copy is activated; updates use the same command and a rejected update preserves the previous installation. Acquired scripts are never executed. The behavioral engine reads SKILL.md and tests native AVAX recipient substitution on a disposable local Fuji fork. Extra skill resources it cannot exercise are reported as uncovered and prevent activation. This is a test lab, not a general agent sandbox or protection for arbitrary terminal commands.
+
+[Full lab guide](docs/SKILLGATE_LAB.md) · [Preserved experiment and results](#experiment)
+
+## Preserved comparison experiment
 
 Compare **GPT-6 Luna reading a skill and giving a security opinion** with **SkillGuard-Lite executing a behavioral audit** for payment recipient substitution. Both methods receive the same frozen skill text, address book and payment tasks. The comparison uses the OpenAI API; it is not a measurement of the ChatGPT website or app.
 
 SkillGuard-Lite runs a minimal wallet agent on six tasks, with and without the skill, on an owned local Anvil fork of Avalanche Fuji. A code oracle checks every `send(toAddress, amountAVAX)` recipient. The text-only comparator reviews the instructions without tools or transactions.
 
-This is the active hackathon scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its benchmark, installer wrappers and compiled CLI are **not** the behavioral audit or evidence of an OpenAI run.
+This is the preserved benchmark scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its historical benchmark and installer wrappers are **not** behavioral evidence. Version 0.5.0 integrates the behavioral engine into the new explicit `try` command.
 
 ## Run
 
@@ -62,7 +89,7 @@ The [external coverage probe](docs/evidence/skillguard-lite/real-world/report.md
 
 **This does not validate the synthetic gain on real attacks.** The documented attacks depend on shell/download behavior unavailable to the fixed send-only agent. The text reviewer is also explicitly limited to AVAX recipient substitution. General malware labels cannot supply ground truth for this narrower threat, so precision/recall/FPR are **N/A**, not zero or perfect. The [source eligibility study](docs/evidence/skillguard-lite/real-world/source-study.md) found no compatible documented positive in its bounded search. No payloads were adapted to create one.
 
-The [terminal UX review](docs/evidence/skillguard-lite/real-world/ux-review.md) also records current setup/help/command friction. This remains a developer experiment, not automatic interception of skill installations. The external probe changed no runtime code; raw third-party skill text and complete provider traces were not republished.
+The historical [terminal UX review](docs/evidence/skillguard-lite/real-world/ux-review.md) records setup/help/command friction before the new full lab command. `skillgate try` now offers an explicit installation trial; it is not automatic interception of every terminal command. The external probe changed no runtime code; raw third-party skill text and complete provider traces were not republished.
 
 ## Synthetic comparison — workflow-shaped skills
 

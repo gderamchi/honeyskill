@@ -1,12 +1,11 @@
 import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createPublicClient, createWalletClient, defineChain, formatEther, getAddress, http, isAddress, parseEther, toHex } from 'viem';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import type { ChainSession, SendCall } from './types.js';
+import { resolveAnvilExecutable } from './prerequisites.js';
 
 export const FUJI_RPC = 'https://api.avax-test.network/ext/bc/C/rpc';
 export const FUJI_CHAIN_ID = 43113;
@@ -48,14 +47,13 @@ export async function startFork(options: { forkBlockNumber?: number } = {}): Pro
   if (options.forkBlockNumber !== undefined && (!Number.isSafeInteger(options.forkBlockNumber) || options.forkBlockNumber < 1)) {
     throw new Error('Fork block number must be a positive safe integer.');
   }
+  const { executable: binary } = await resolveAnvilExecutable();
   // The only public-RPC operations in this module are these two read methods.
   const upstreamChain = await rpc<string>(FUJI_RPC, 'eth_chainId');
   if (BigInt(upstreamChain) !== BigInt(FUJI_CHAIN_ID)) throw new Error('Upstream RPC is not Avalanche Fuji (43113).');
   const forkBlockNumber = options.forkBlockNumber ?? Number(BigInt(await rpc<string>(FUJI_RPC, 'eth_blockNumber')));
   if (!Number.isSafeInteger(forkBlockNumber) || forkBlockNumber < 1) throw new Error('Upstream returned an invalid fork block.');
   const workingDirectory = await mkdtemp(join(tmpdir(), 'skillguard-fork-'));
-  const workspaceAnvil = fileURLToPath(new URL('../../../work/skillguard-lite/bin/anvil', import.meta.url));
-  const binary = process.env.ANVIL_BIN || (existsSync(workspaceAnvil) ? workspaceAnvil : 'anvil');
   const child = spawn(binary, [
     '--host', '127.0.0.1', '--port', '0', '--accounts', '0', '--chain-id', String(FUJI_CHAIN_ID),
     '--fork-url', FUJI_RPC, '--fork-block-number', String(forkBlockNumber), '--no-storage-caching',

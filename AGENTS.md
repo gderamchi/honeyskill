@@ -1,4 +1,8 @@
-# Active scope: SkillGuard-Lite
+# Active scope: SkillGate full laboratory pipeline
+
+The latest user request adds a simple installation trial command: `skillgate try <source>`. Run native regex checks, a GPT-6 Luna financial review and the existing SkillGuard-Lite behavioral audit on the exact quarantined snapshot, then save one report before activation. Full-profile activation is restricted to an explicitly marked dedicated local lab, never this repository or a real agent profile. Incomplete analysis, missing coverage or changed bytes cannot be overridden. Complete risky analyses may be installed in the lab through an explicit interactive exception. Preserve all frozen benchmark protocols and historical results. See `docs/SKILLGATE_LAB.md`.
+
+# Preserved experiment: SkillGuard-Lite
 
 The latest user specification replaces the static SkillGate installation product with a behavioral TypeScript experiment. The primary benchmark now compares a text-only GPT-6 Luna security review with SkillGuard-Lite on the same frozen corpus. Read `packages/skillguard-lite/AGENTS.md`, `docs/SKILLGUARD_LITE.md` and `docs/SKILLGUARD_COMPARISON.md`. Active entry scripts: `pnpm run audit <folder>`, `pnpm benchmark` (paired comparison), `pnpm benchmark:behavioral` (historical behavioral-only protocol), `pnpm check:fork`, `pnpm test:behavioral`.
 
