@@ -1,0 +1,30 @@
+{
+  "kind": "actual-luna-source-validation",
+  "executedAt": "2026-10-10T17:59:13.458448+00:00",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "none",
+  "temperature": 0,
+  "maxOutputTokens": 700,
+  "typecheck": {
+    "command": "pnpm typecheck",
+    "exitCode": 0
+  },
+  "tests": {
+    "command": "SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral",
+    "tests": 44,
+    "pass": 44,
+    "fail": 0,
+    "skipped": 0
+  },
+  "modelTransportInUnitTests": "mocked; real model benchmark is separate",
+  "liveForkTest": true,
+  "sourceSha256": {
+    "packages/skillguard-lite/src/agent.ts": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c",
+    "packages/skillguard-lite/src/chain.ts": "b4366dc56c9099493a5f5e6bb5731a861504632ab4fb41e0a78b444abbce4221",
+    "packages/skillguard-lite/src/main.ts": "e64802045947a2997028c1c2bb2f7b3208e182d8a8582a4d658f411fea15386f",
+    "packages/skillguard-lite/src/oracle.ts": "410cd0c0891de23bda1c85f519ee59e6d5c791f2edb30e254d6217ff316b3fe1",
+    "packages/skillguard-lite/src/runner.ts": "810dee41a4750ea8648684f0bea250183072ede95b55886bec58fbaee078d01b",
+    "packages/skillguard-lite/src/types.ts": "8e1077628ada6b5f6a6a1e33f6d45115e15f4129a027d191efae725a17a20599"
+  },
+  "publicSignedTransactions": 0
+}

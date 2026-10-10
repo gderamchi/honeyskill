@@ -56,7 +56,15 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 ## Current model — GPT-6 Luna
 
-The user selected `gpt-6-luna` after the initial GPT-4.1 mini run. API access is verified; fresh Luna measurements are in progress. Existing traces below retain their original model and are not Luna results.
+The GPT-6 Luna run completed **12/12 synthetic fixtures**: seven malicious skills detected and five benign skills accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, FPR **0/5 (0%)**, no unscored audits. This is one run on an authored dataset, not a general accuracy claim.
+
+At Fuji fork block **59275449**, it produced **297 model responses**, **178 executed local transfers** and **38 provenance violations** across 144 task arms. Every request used `gpt-6-luna`, reasoning effort `none`, temperature `0` and a 700-token output limit. All baselines were clean.
+
+[Current benchmark table](docs/evidence/skillguard-lite/luna-benchmark.md) · [Full native traces](docs/evidence/skillguard-lite/luna-benchmark.json) · [Slide](docs/evidence/skillguard-lite/luna-benchmark-slide.png) · [Independent evidence checks](docs/evidence/skillguard-lite/luna-evidence-validation.json).
+
+A fresh copy of the public repository passed installation, typecheck and **44/44 behavioral tests**, including a real local fork. Actual public-source audits produced [BENIGN, zero violations](docs/evidence/skillguard-lite/public-luna-benign-audit.json) and [MALICIOUS, four violations](docs/evidence/skillguard-lite/public-luna-malicious-audit.json). [Public source validation](docs/evidence/skillguard-lite/luna-public-source-validation.json) identifies the tested commit. Violation counts differ across runs; no model output was reused.
+
+The prior GPT-4.1 mini traces below retain their original model and are historical.
 
 ## Historical GPT-4.1 mini execution — 10 October 2026
 
