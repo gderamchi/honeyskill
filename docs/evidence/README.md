@@ -1,6 +1,7 @@
 # Public execution evidence
 
 - `local-validation-0.3.0.json`: current local validation of the shorter install/activation commands, including a real protected Bash session.
+- `public-short-install.json`: current 0.3.0 anonymous GitHub shorthand installation, ten real protected-session checks, a fresh public source clone with 45 passing tests and a byte-identical rebuilt CLI. The verification harness uses a short temporary path for macOS IPC sockets.
 - `local-validation.json`: historical 0.2.1 validation before publication of the compiled release.
 - `benchmark.json`: actual local run against the frozen internal synthetic evaluation corpus; includes failures and false negatives.
 

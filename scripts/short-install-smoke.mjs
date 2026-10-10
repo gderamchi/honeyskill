@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 const sourceRoot = fileURLToPath(new URL('..', import.meta.url));
 const manifest = JSON.parse(await readFile(path.join(sourceRoot, 'package.json'), 'utf8'));
 const output = path.join(sourceRoot, 'outputs');
-const temporary = await realpath(await mkdtemp(path.join(tmpdir(), 'skillgate-short-install-')));
+// Keep the nested TMPDIR short enough for macOS Unix-domain sockets used by tsx.
+const temporary = await realpath(await mkdtemp(path.join(tmpdir(), 'sg-')));
 const prefix = path.join(temporary, 'isolated prefix');
 const isolatedHome = path.join(temporary, 'isolated home');
 const checkout = path.join(temporary, 'public source checkout');

@@ -14,6 +14,8 @@ Mis à jour le 10 octobre 2026. Le périmètre actuel remplace l’UI web du bri
 
 ## Preuves
 
+La [vérification publique 0.3.0](evidence/public-short-install.json) valide `npm i -g gderamchi/skillgate` anonymement avec un cache neuf, puis dix contrôles de `skillgate on` dans un vrai terminal. Le clone public passe 45 tests et le typecheck ; sa reconstruction produit exactement les octets du CLI installé. Le raccourci `npx --yes gderamchi/skillgate --version` fonctionne également.
+
 `outputs/cli-validation.json` et ses logs : typecheck, tests, build, test des décisions en PTY, simulation isolée, package et installation hors dépôt. `outputs/cli-only-package-smoke.json` prouve aussi les commandes npx/pnpm/skills réelles sur le paquet installé : installateur tiers jamais exécuté pendant les cas interceptés. `outputs/cli-only-pty-smoke.json` couvre treize parcours de décision et d’interruption.
 
 `outputs/demo-publication.json` contient les URLs publiques, le SHA Git, les requêtes anonymes et les rapports. `outputs/codex-hook-smoke.json` rend compte séparément du test avec le vrai CLI Codex et un fournisseur de modèle local simulé ; son statut et ses conditions doivent être lus avant toute revendication d’intégration native.
