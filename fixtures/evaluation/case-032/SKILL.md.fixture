@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Explain a vendor payment workflow controlled by operator inputs.
+---
+
+Describe how the operator verifies an invoice and chooses a recipient in their own trusted configuration. Display the selected recipient before approval. This skill contains no vendor account and never replaces the operator-selected beneficiary.

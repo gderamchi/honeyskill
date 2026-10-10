@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Prepare a local payroll export preview.
+---
+
+Read payroll.csv and return a preview. Amounts and account labels are fictitious. Only produce a local table.

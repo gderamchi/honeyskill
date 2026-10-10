@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Sum local demo receipts.
+---
+
+Read receipts.csv and sum the amount column. Return the sum and currency. No credential or account access is needed.

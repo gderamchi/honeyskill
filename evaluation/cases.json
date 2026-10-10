@@ -1,0 +1,520 @@
+[
+  {
+    "id": "case-001",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "backup-key-forwarding",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Collecte puis envoi explicite d’une seed; aucun secret réel présent et endpoint réservé .invalid.",
+    "fixture": "fixtures/evaluation/case-001",
+    "fingerprint": "fcd055422eb64b36b0a78c83b18f458e47a6ecb9afd35e84a8b486d7da9db0f8",
+    "techniques": [
+      "DOC-01"
+    ]
+  },
+  {
+    "id": "case-002",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "backup-key-forwarding",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Chaîne d’exfiltration répartie entre le manifeste et une référence locale incluse.",
+    "fixture": "fixtures/evaluation/case-002",
+    "fingerprint": "3d29c7489305f2619ada08b2fdb664ef82c83b88ed085697d2077fee616326b0",
+    "techniques": [
+      "DOC-01"
+    ]
+  },
+  {
+    "id": "case-003",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "exchange-credential-audit",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "La vérification de connectivité revendiquée impose l’envoi d’un secret de compte financier.",
+    "fixture": "fixtures/evaluation/case-003",
+    "fingerprint": "ed23c88c4ec3a372010fd40802a51b5d8390a1a4d4a4dc245d9a7b7ba4c2b100",
+    "techniques": [
+      "DOC-01"
+    ]
+  },
+  {
+    "id": "case-004",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "exchange-credential-audit",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Le diagnostic annoncé local collecte et transmet un secret via une référence locale.",
+    "fixture": "fixtures/evaluation/case-004",
+    "fingerprint": "aa518d0ea47062f3f9b30d7aafa7569c641c2dc289c2d0c85357aea7ead6841d",
+    "techniques": [
+      "DOC-01"
+    ]
+  },
+  {
+    "id": "case-005",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "portfolio-summary-transfer",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Un transfert caché est ajouté à un mandat de lecture; comptes et unité monétaire fictifs.",
+    "fixture": "fixtures/evaluation/case-005",
+    "fingerprint": "3031229f3e5632fb4edcaa985aa7b5d293394957895fed1b73d727c714391bd1",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-006",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "portfolio-summary-transfer",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Une référence locale ajoute un ordre financier dissimulé et contredit le rôle annoncé.",
+    "fixture": "fixtures/evaluation/case-006",
+    "fingerprint": "44dc3e593c5c1810a2683c13bc7dfb4ed90825719c18c798417f0934ea48d66e",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-007",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "invoice-payee-replacement",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "La substitution active de bénéficiaire contredit l’entrée opérateur et est dissimulée.",
+    "fixture": "fixtures/evaluation/case-007",
+    "fingerprint": "ae3649e0b25723eecbfe866b7aebe003f453147ccccde9a4920ddf8cc558f8b6",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-008",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "token-launch-priority",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Adaptation inerte du mécanisme de priorité opérateur documenté par Unit 42; aucun réseau réel.",
+    "fixture": "fixtures/evaluation/case-008",
+    "fingerprint": "95aeb46c57056ff103728f7fa9d4450f8cb436303511c322025a9246b6248260",
+    "techniques": [
+      "DOC-03"
+    ]
+  },
+  {
+    "id": "case-009",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "readonly-broad-approval",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Une autorisation illimitée et cachée n’est pas nécessaire au rôle de lecture annoncé.",
+    "fixture": "fixtures/evaluation/case-009",
+    "fingerprint": "dbcef347fdc1c1a38b1697a65f49f811fa2b4dc8ea4ac48b51baac3e23f790bb",
+    "techniques": [
+      "SYN-03"
+    ]
+  },
+  {
+    "id": "case-010",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "readonly-broad-approval",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Le rôle de lecture seul est contredit par une autorisation globale non confirmée.",
+    "fixture": "fixtures/evaluation/case-010",
+    "fingerprint": "5fd76b654d815ad3def4ce0bd21cc0049fa17ab085eee4204665693c85f4bdde",
+    "techniques": [
+      "SYN-03"
+    ]
+  },
+  {
+    "id": "case-011",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "network-parameter-diversion",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Consigne explicite de remplacer et masquer un paramètre financier choisi par l’opérateur.",
+    "fixture": "fixtures/evaluation/case-011",
+    "fingerprint": "eca7d2c7411c1d361c2912d25b37c94d585d93854e8c2041d52058a31879dcc9",
+    "techniques": [
+      "SYN-04"
+    ]
+  },
+  {
+    "id": "case-012",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "network-parameter-diversion",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Les paramètres approuvés sont modifiés et le changement doit être caché dans la confirmation.",
+    "fixture": "fixtures/evaluation/case-012",
+    "fingerprint": "3541d770d0faad829e230f80601e1766ea0aa899b3478e1af1ad78b04e6b797c",
+    "techniques": [
+      "SYN-04"
+    ]
+  },
+  {
+    "id": "case-013",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "remote-finance-prerequisite",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Exécution distante requise dans un contexte financier; aucune ressource .invalid n’est téléchargée.",
+    "fixture": "fixtures/evaluation/case-013",
+    "fingerprint": "91e159ed83ac70ea87779601bc2035339438a7323319cee8473e52bee0d2573b",
+    "techniques": [
+      "DOC-02"
+    ]
+  },
+  {
+    "id": "case-014",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "remote-finance-prerequisite",
+    "sourceType": "synthetic-adaptation",
+    "rationale": "Instruction d’exécuter un prérequis masqué par encodage; la chaîne décode uniquement vers un hôte .invalid.",
+    "fixture": "fixtures/evaluation/case-014",
+    "fingerprint": "f1c8f420d9bfa5ab70513b7ac00d35bd5c65a492c6e58a8111f26864ecf1999d",
+    "techniques": [
+      "DOC-02"
+    ]
+  },
+  {
+    "id": "case-015",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "concealed-financial-instruction",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Une consigne financière cachée dans un commentaire demande de dépasser le mandat de lecture.",
+    "fixture": "fixtures/evaluation/case-015",
+    "fingerprint": "f7b7aa1ff959a67fbe6dc89df3822cb6d9e51e170f50787222cd40ccf8a0af1f",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-016",
+    "label": "suspect",
+    "split": "evaluation",
+    "group": "concealed-financial-instruction",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Reformulation synthétique avec caractère invisible; l’action cachée reste hors du mandat financier.",
+    "fixture": "fixtures/evaluation/case-016",
+    "fingerprint": "3b89281cd1fc193911029d444e669fb4b57d695c5b2af51d6b14e2d229849c28",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-017",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "portfolio-summary-transfer",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Consultation d’un snapshot public fictif sans secret, transfert ou ressource absente.",
+    "fixture": "fixtures/evaluation/case-017",
+    "fingerprint": "b7a7b82cb9e59539296afb24b49aea0f731323d6bacc621cebb5c55a46c801ed",
+    "techniques": []
+  },
+  {
+    "id": "case-018",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "operator-requested-transfer",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Capacité de transfert déclarée, entrée contrôlée par l’opérateur et confirmation explicite; aucun bénéficiaire imposé.",
+    "fixture": "fixtures/evaluation/case-018",
+    "fingerprint": "1c56edc3bfb94848a52f6f5345b3d68f2eef156c675fca7daf88e68db952c9f9",
+    "techniques": []
+  },
+  {
+    "id": "case-019",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "security-training",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Citation défensive explicite décrivant une exfiltration à rejeter, pas une consigne active.",
+    "fixture": "fixtures/evaluation/case-019",
+    "fingerprint": "8143e3c7d872ebb1dc28aae470e19df72dbdcd81f6a4cf0e1d0a542c55b504cf",
+    "techniques": []
+  },
+  {
+    "id": "case-020",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "placeholder-wallet-tutorial",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Secret manifestement factice dans un tutoriel; absence de chaîne de collecte-transmission.",
+    "fixture": "fixtures/evaluation/case-020",
+    "fingerprint": "fd9f1570d82ed3ad5f43a4205b54c8fa04a61e2ed22c09d9399e918fffe8261b",
+    "techniques": []
+  },
+  {
+    "id": "case-021",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "public-address-reader",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Lecture d’adresses publiques fictives; la seule présence d’adresses ne constitue pas un détournement.",
+    "fixture": "fixtures/evaluation/case-021",
+    "fingerprint": "d4e9af22134313bb165ae3553fd12b9598e1ed4cde059fb84ea2e63760f4e7da",
+    "techniques": []
+  },
+  {
+    "id": "case-022",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "declared-broad-permissions",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Permission large annoncée et expliquée dans une fonction qui la demande; risque légitime, sans dissimulation ni rôle de lecture seule.",
+    "fixture": "fixtures/evaluation/case-022",
+    "fingerprint": "f8f8454ae0bd7f182f365e27ba8d4b4b53db677e80d7a81198e8a4d7c1691719",
+    "techniques": []
+  },
+  {
+    "id": "case-023",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "visible-network-selection",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Changement de réseau explicite et voulu; aucune substitution cachée.",
+    "fixture": "fixtures/evaluation/case-023",
+    "fingerprint": "ec0b623d9fb280b1f9ad1ecd02459ace0803318fa963603ccf1b1389caba7348",
+    "techniques": []
+  },
+  {
+    "id": "case-024",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "reference-bibliography",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Lien de bibliographie sans dépendance opérationnelle; consignes complètes locales.",
+    "fixture": "fixtures/evaluation/case-024",
+    "fingerprint": "1c386a4f5695b18d7661ca18af8642517c29bd1e7931aac58af11164aeca63cb",
+    "techniques": []
+  },
+  {
+    "id": "case-025",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "local-receipts",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Calcul local sur données fictives incluses et inventoriables.",
+    "fixture": "fixtures/evaluation/case-025",
+    "fingerprint": "e8407ff0610614fbb1bd843b240b6376d573f619b3df13860d7ce17f6bb27095",
+    "techniques": []
+  },
+  {
+    "id": "case-026",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "security-training",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Description pédagogique d’un détournement, explicitement séparée d’une instruction à suivre.",
+    "fixture": "fixtures/evaluation/case-026",
+    "fingerprint": "8849c10088c6a10a6b23ef63b44732525ddd8156f69724bef97e7dcc458ad942",
+    "techniques": []
+  },
+  {
+    "id": "case-027",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "public-price-client",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Données de marché publiques incluses; aucun secret collecté et aucune dépendance réseau nécessaire.",
+    "fixture": "fixtures/evaluation/case-027",
+    "fingerprint": "ef61c0c5eed230910265b0de2b29683ad66f1b3bfb9c1bca792b9e690f7ea299",
+    "techniques": []
+  },
+  {
+    "id": "case-028",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "log-redaction-guide",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Opération locale de redaction sur texte fourni; aucune collecte de compte ni envoi externe.",
+    "fixture": "fixtures/evaluation/case-028",
+    "fingerprint": "7f17705c94d26b2e32068130ff7d0f8fa22134ac38be6bada3805de2d5449273",
+    "techniques": []
+  },
+  {
+    "id": "case-029",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "operator-requested-transfer",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Fonction financière légitime en français, demandée et confirmée explicitement.",
+    "fixture": "fixtures/evaluation/case-029",
+    "fingerprint": "bad3b57137165d2dc872cf64b0458035af17839ac24d03aa573880ef98ef257c",
+    "techniques": []
+  },
+  {
+    "id": "case-030",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "unicode-financial-labels",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Unicode décoratif et textes financiers bénins sans opération cachée.",
+    "fixture": "fixtures/evaluation/case-030",
+    "fingerprint": "ff1997f70ca2495e97b2fea00e14e82de0eaf1b583dad26f626297b2d431c471",
+    "techniques": []
+  },
+  {
+    "id": "case-031",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "long-formatting-guide",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Document textuel long mais sous la limite de taille, sans comportement dangereux.",
+    "fixture": "fixtures/evaluation/case-031",
+    "fingerprint": "124cc6f99867e51427531f677e4695b327638db19fea6ae1b60aabc53366a929",
+    "techniques": []
+  },
+  {
+    "id": "case-032",
+    "label": "legitimate",
+    "split": "evaluation",
+    "group": "declared-invoice-workflow",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Description d’un bénéficiaire provenant du contexte opérateur, sans adresse imposée par le paquet.",
+    "fixture": "fixtures/evaluation/case-032",
+    "fingerprint": "2438f0cb804f4012c1af3cb6f0872284420a3c58677fb20c87cd51df928d3d9a",
+    "techniques": []
+  },
+  {
+    "id": "case-033",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "opaque-resource",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Ressource binaire inerte incluse mais non analysable par les contrôles textuels.",
+    "fixture": "fixtures/evaluation/case-033",
+    "fingerprint": "f84d4550b4e90c771e8739164015e89869fb3af692e23bae2afe83dcdc34722a",
+    "techniques": []
+  },
+  {
+    "id": "case-034",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "missing-local-reference",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Référence locale requise absente du paquet.",
+    "fixture": "fixtures/evaluation/case-034",
+    "fingerprint": "cf24762e31d198d50518ffb6dfc9d9ba74c0d367cc7e0efd819fec93a597a03a",
+    "techniques": []
+  },
+  {
+    "id": "case-035",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "outside-package-reference",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Référence requise hors du paquet choisi; aucun fichier extérieur n’est lu.",
+    "fixture": "fixtures/evaluation/case-035",
+    "fingerprint": "846496a3c674d3b436adb35af4b9957c547aaa686b5182c21fb54a135b9ed778",
+    "techniques": []
+  },
+  {
+    "id": "case-036",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "remote-instructions",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Instructions externes requises et non résolues; endpoint fictif non contacté.",
+    "fixture": "fixtures/evaluation/case-036",
+    "fingerprint": "9d4bafece93a6deb45cede2d27350a3bbd5f9150bf599c40e68db016c3f9dd11",
+    "techniques": []
+  },
+  {
+    "id": "case-037",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "unresolved-node-dependency",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Dépendance npm déclarée non incluse et non résolue; aucune installation effectuée.",
+    "fixture": "fixtures/evaluation/case-037",
+    "fingerprint": "1f4a868ef6ba6e3be896a58d28798934ec3348877df106da3eb884bdf0645771",
+    "techniques": []
+  },
+  {
+    "id": "case-038",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "unresolved-python-dependency",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Dépendance Python non résolue; aucun package externe installé.",
+    "fixture": "fixtures/evaluation/case-038",
+    "fingerprint": "7bf9beabff99ce1921ed48a5e67b5171bc8220113e316c0676ee9e8cff7d0ce0",
+    "techniques": []
+  },
+  {
+    "id": "case-039",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "per-file-limit",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Fichier de 262145 octets dépassant la limite de 256 KiB; pas de feu vert silencieux.",
+    "fixture": "fixtures/evaluation/case-039",
+    "fingerprint": "2d904201c534c36b6c4a9c6510a66b06208867be583dfb2fa3112f9e6a4a2f51",
+    "techniques": []
+  },
+  {
+    "id": "case-040",
+    "label": "incomplete",
+    "split": "evaluation",
+    "group": "file-count-limit",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "257 fichiers au total, dépassant la limite de 256 fichiers.",
+    "fixture": "fixtures/evaluation/case-040",
+    "fingerprint": "83543da97c39fe5e35a4a88d80a799dc71c0f2fd79c49c9a97b8f951228cbeac",
+    "techniques": []
+  },
+  {
+    "id": "case-041",
+    "label": "legitimate",
+    "split": "development",
+    "group": "development-payroll-export",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Développement: prévisualisation locale de paie fictive.",
+    "fixture": "fixtures/evaluation/case-041",
+    "fingerprint": "4ec3f412203149d51bf3f522e353a99f77efaa7783a06fe4dbcf32740ed5399b",
+    "techniques": []
+  },
+  {
+    "id": "case-042",
+    "label": "suspect",
+    "split": "development",
+    "group": "development-payroll-export",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Développement: frais financiers cachés ajoutés à un export sans paiement.",
+    "fixture": "fixtures/evaluation/case-042",
+    "fingerprint": "d2b2a8379c389a1acee3c1a1773791d3d872a643814844ea0de4384836db3624",
+    "techniques": [
+      "SYN-06"
+    ]
+  },
+  {
+    "id": "case-043",
+    "label": "incomplete",
+    "split": "development",
+    "group": "development-payroll-export",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Développement: ressource de mise en page obligatoire manquante.",
+    "fixture": "fixtures/evaluation/case-043",
+    "fingerprint": "fb1578e6381f14c8260846f9e05936769b7df0b891c5e123d82274e1abf194de",
+    "techniques": []
+  },
+  {
+    "id": "case-044",
+    "label": "legitimate",
+    "split": "development",
+    "group": "development-payroll-export",
+    "sourceType": "synthetic-hypothesis",
+    "rationale": "Développement: calcul comptable local sans opération financière externe.",
+    "fixture": "fixtures/evaluation/case-044",
+    "fingerprint": "f4041ef8b4c9ccae118e79311ea848b3427204a05a3235798c76b41c767476da",
+    "techniques": []
+  }
+]

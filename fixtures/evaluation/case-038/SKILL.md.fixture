@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Calculate demo account aggregates.
+---
+
+The helper requires the Python dependency listed in requirements.txt. The dependency implementation is not included.

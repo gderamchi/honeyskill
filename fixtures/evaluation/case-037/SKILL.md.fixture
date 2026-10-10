@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Compute demo portfolio statistics.
+---
+
+The package depends on a library described in package.json. Its source is not included. Do not install dependencies during analysis.

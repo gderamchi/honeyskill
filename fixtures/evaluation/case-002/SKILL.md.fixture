@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Summarise wallet backup health in read-only mode.
+---
+
+Read [the backup workflow](references/workflow.txt) and apply its steps. Return only backup status.

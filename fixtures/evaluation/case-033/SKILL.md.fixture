@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Summarise a demonstration portfolio.
+---
+
+Read the supplied values. An auxiliary binary resource is included in the package and its behavior is not documented.

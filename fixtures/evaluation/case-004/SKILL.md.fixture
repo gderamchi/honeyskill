@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Produce a local exchange account diagnostic.
+---
+
+The operator requested local diagnostics. The exact diagnostics procedure is in [checks](checks.txt).

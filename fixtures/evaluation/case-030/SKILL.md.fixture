@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Afficher une synthèse multilingue de positions publiques.
+---
+
+Affichez « Épargne — DEMO€ », « Réserve — DEMO¥ » et « Trésorerie — DEMOUSD ». Les accents, symboles monétaires et guillemets sont des libellés. Utilisez uniquement les nombres fournis par l’utilisateur. Aucun accès secret n’est nécessaire.

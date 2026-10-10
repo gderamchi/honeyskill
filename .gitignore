@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.skillgate/
+.agents/
+work/
+outputs/
+test-results/
+playwright-report/
+.env
+.DS_Store

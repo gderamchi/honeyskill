@@ -1,0 +1,24 @@
+{
+  "version": "1",
+  "frozenAt": "2026-10-10T15:00:04.099603Z",
+  "methodology": "Benchmark interne synthétique rédigé par le même assistant que le projet; non indépendant, non aveugle. Groupes de variantes maintenus dans un seul split. Gel avant toute exécution du scanner sur ces cas; échecs conservés sans retouche après le run final.",
+  "casesHash": "a75fff4675bf8020c603dc8ab6a1307f2dc63d700f8f27e939490f868a036446",
+  "fingerprintAlgorithm": "SHA-256 of JSON.stringify(sorted [{path,size,sha256,executable}]); UTF-8; SKILL.md.fixture materialized as SKILL.md; executable=false; paths sorted ascending.",
+  "counts": {
+    "evaluation": {
+      "suspect": 16,
+      "legitimate": 16,
+      "incomplete": 8
+    },
+    "development": {
+      "suspect": 1,
+      "legitimate": 2,
+      "incomplete": 1
+    }
+  },
+  "totalCases": 44,
+  "evaluatedAtFreeze": false,
+  "originalMalwareIncluded": false,
+  "realSecretsIncluded": false,
+  "attackEndpointsContacted": false
+}

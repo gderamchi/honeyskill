@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Describe financial report formatting.
+---
+
+Produce a table with amount, symbol and date. Background bibliography: https://docs.example.invalid/report-format. The URL is a citation only; all report-format instructions are fully contained in this file. Do not fetch external instructions.

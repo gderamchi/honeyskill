@@ -1,0 +1,49 @@
+{
+  "kind": "actual-local-execution-before-publication",
+  "version": "0.2.1",
+  "completedAt": "2026-10-10T15:37:58.704Z",
+  "node": "v25.6.1",
+  "testCount": 43,
+  "ptyScenarioCount": 13,
+  "packageTerminalScenarios": 7,
+  "status": "passed",
+  "paidProviderCalls": 0,
+  "productIncludesWebUi": false,
+  "upstreamInstallerExecuted": false,
+  "artifactSha256": "8de6e8a1056bb24e0d5b66f55a6050c48c23003c1c947855e25773b5be6aad12",
+  "commands": [
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm test",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm build",
+      "exitCode": 0
+    },
+    {
+      "command": "python3 scripts/cli-pty-smoke.py",
+      "exitCode": 0
+    },
+    {
+      "command": "node dist/cli.js demo --json",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm pack:local",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm smoke:package",
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "Static financial rules are heuristic, not a safety certification.",
+    "Native hook proof is documented separately with a local simulated model.",
+    "Raw workstation paths and transcripts are intentionally excluded."
+  ]
+}

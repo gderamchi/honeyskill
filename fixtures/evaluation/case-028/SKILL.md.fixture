@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Redact financial credentials from diagnostic text.
+---
+
+Detect obvious placeholders such as DEMO_API_SECRET and replace them with [REDACTED] before displaying diagnostics. Do not read files from the operator account. Explain that a text filter cannot guarantee removal of every secret.

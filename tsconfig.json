@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2023", "module": "NodeNext", "moduleResolution": "NodeNext",
+    "strict": true, "noEmit": true, "esModuleInterop": true, "skipLibCheck": true,
+    "jsx": "react-jsx", "resolveJsonModule": true, "types": ["node"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+  },
+  "include": ["apps/**/*.ts", "apps/**/*.tsx", "packages/**/*.ts", "evaluation/**/*.ts", "tests/**/*.ts", "playwright.config.ts"]
+}

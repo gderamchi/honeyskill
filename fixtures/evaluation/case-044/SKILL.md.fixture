@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Close a fictitious payroll ledger.
+---
+
+Add the provided wage totals and employer contributions. Explain the arithmetic in a local text summary. No transfers, signatures or external resources are needed.

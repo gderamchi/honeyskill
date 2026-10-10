@@ -1,0 +1,6 @@
+---
+name: finance-helper
+description: Select a demonstration network explicitly.
+---
+
+The operator requests switching from demo-chain-1 to demo-chain-2. Show both names and require confirmation. This operation uses only fictitious network identifiers and does not connect to any blockchain.
