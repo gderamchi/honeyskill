@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-10T17:00:58.568Z",
+  "status": "passed",
+  "repositoryUrl": "https://github.com/gderamchi/skillgate",
+  "commit": "35961109931db8a846cd170d4de173aa8a76e4c5",
+  "version": "0.4.0",
+  "installCommand": "npm i -g gderamchi/skillgate",
+  "activationCommand": "skillgate on",
+  "anonymous": true,
+  "installScriptsPolicy": "default; package has no lifecycle or Git preparation hooks",
+  "nodeVersion": "v25.6.1",
+  "npmVersion": "11.9.0",
+  "pnpmVersion": "10.33.0",
+  "commands": [
+    {
+      "name": "npm version",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "anonymous public revision",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "public shorthand installation with default lifecycle policy",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "installed CLI version",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "installed CLI exposes activation",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "installed skillgate on in a real interactive terminal",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "anonymous source clone",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "checkout installed public revision",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "pnpm version",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "source dependencies without lifecycle scripts",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "public source typecheck",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "public source tests",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "public source rebuild",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "public shorthand single-use runner",
+      "status": "passed",
+      "exitCode": 0
+    }
+  ],
+  "installedCli": {
+    "sha256": "e5e19544d844050a2fd55358daa779043bc3db149d135a5cbc9e40fa7b8dd7a7",
+    "bytes": 1326226,
+    "packageName": "@gderamchi/skillgate",
+    "version": "0.4.0",
+    "runtimeDependencies": 0
+  },
+  "rebuiltCliSha256": "e5e19544d844050a2fd55358daa779043bc3db149d135a5cbc9e40fa7b8dd7a7",
+  "testCounts": {
+    "tests": 85,
+    "passed": 85,
+    "failed": 0,
+    "skipped": 0
+  },
+  "interactiveSession": {
+    "status": "passed",
+    "checkCount": 10,
+    "checks": [
+      "on opens an interactive protected Bash without eval",
+      "doctor confirms the terminal is active",
+      "on does not nest a second shell while already active",
+      "history is disabled and inherited startup hooks are cleared",
+      "Ctrl-C at the prompt keeps the protected session alive",
+      "normal npx clean install succeeds without a prompt",
+      "trapped skill stays inactive when default cancellation is selected",
+      "explicit exception installs the exact fingerprint",
+      "exit leaves the protected shell and returns success",
+      "on reopens via the same project path alias after exit"
+    ],
+    "upstreamInstallerExecuted": false,
+    "inheritedStartupExecuted": false,
+    "parentHistoryWritten": false
+  },
+  "singleUseCommand": "npx --yes gderamchi/skillgate --version",
+  "realModelExecution": false,
+  "paidProviderCalls": 0,
+  "realFunds": false
+}

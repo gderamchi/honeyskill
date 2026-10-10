@@ -1,5 +1,8 @@
 # Public execution evidence
 
+- `public-short-install-0.4.0.json`: anonymous public installation, ten real terminal checks, 85/85 fresh public-source tests and a byte-identical rebuild.
+- `english-terminal-video-0.4.0.json`: 51.1-second English video from an actual terminal session using the exact public GitHub safe/trap commands; no clone fallback.
+
 - `local-validation-0.4.0.json`: 85 tests, 13 terminal decision flows, ten protected-session checks and seven packaged interception cases.
 - `github-acquisition-0.4.0.json`: actual anonymous Git/codeload downloads of known public fixtures, strict bounds and process-group cleanup tests. No GitHub REST API calls.
 - `detection-comparison-0.4.0.json` and `benchmark-0.4.0.json`: unchanged original 40-case regression measurement, with baseline and remaining coverage/error cases.

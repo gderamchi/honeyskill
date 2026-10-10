@@ -1,6 +1,6 @@
 # Terminal demonstration
 
-This is the **English-language script for SkillGate 0.4.0**. The recording must use the public commands below, with real GitHub acquisition and no local-clone substitution. See versioned evidence for completed runs; the older 0.3.1 video used local clones after a REST quota failure.
+This is the **English-language script for SkillGate 0.4.0**. The completed 51.1-second recording uses the public commands below, with real GitHub acquisition and no local-clone substitution. [Recording evidence](evidence/english-terminal-video-0.4.0.json) verifies the public CLI, actual decisions, exact revisions and file hashes. The older 0.3.1 video used local clones after a REST quota failure.
 Use the two public repositories with one skill each: [skill-safe](https://github.com/gderamchi/skill-safe) and [skill-trap](https://github.com/gderamchi/skill-trap). Their files are unchanged synthetic fixtures from the [original demonstration corpus](https://github.com/gderamchi/skillgate-demo-skills). No skill-selection flag is needed.
 
 ## Before recording

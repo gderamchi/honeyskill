@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "capturedAt": "2026-10-10T17:00:31Z",
+  "description": "Video rendered from a newly recorded real isolated PTY session; titles added around the terminal, terminal text and playback speed unchanged.",
+  "video": {
+    "filename": "skillgate-terminal-demo.mp4",
+    "durationSeconds": 51.1,
+    "width": 1920,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "30/1",
+    "bytes": 1281023,
+    "sha256": "861061f85ad835fc7bd27b910251824b9f118d9a92ee1faf85a0186b5153d8f9"
+  },
+  "cliVersion": "0.4.0",
+  "cliSha256": "e5e19544d844050a2fd55358daa779043bc3db149d135a5cbc9e40fa7b8dd7a7",
+  "recordingSha256": "74573ebda710d67b3579418031b49f61891583ae1c1908a7fc733597ac658b15",
+  "rawPtyOutputSha256": "5783c2f952f65d9e55677cd83da0ade5dbe57ee95ccec7da2dca45ba1840ca1c",
+  "commands": [
+    "skillgate on",
+    "npx skills add gderamchi/skill-safe",
+    "npx skills add gderamchi/skill-trap",
+    "npx skills add gderamchi/skill-trap",
+    "2",
+    "skillgate list",
+    "exit",
+    "exit"
+  ],
+  "markers": [
+    {
+      "name": "activation",
+      "seconds": 1.558431
+    },
+    {
+      "name": "safe",
+      "seconds": 5.557283
+    },
+    {
+      "name": "safe-installed",
+      "seconds": 7.510997
+    },
+    {
+      "name": "trap",
+      "seconds": 15.569242
+    },
+    {
+      "name": "trap-held",
+      "seconds": 17.797876
+    },
+    {
+      "name": "trap-cancelled",
+      "seconds": 25.857267
+    },
+    {
+      "name": "override",
+      "seconds": 28.911194
+    },
+    {
+      "name": "override-choice",
+      "seconds": 36.15036
+    },
+    {
+      "name": "override-installed",
+      "seconds": 36.231266
+    },
+    {
+      "name": "summary",
+      "seconds": 41.289343
+    }
+  ],
+  "sourceAcquisition": "public GitHub codeload acquisition through SkillGate CLI",
+  "sourceRepositories": [
+    {
+      "name": "skill-safe",
+      "url": "https://github.com/gderamchi/skill-safe",
+      "revision": "0813e8999f14880768ce4bfb75fc8bd2b98c5fd0",
+      "method": "SkillGate public GitHub codeload archive acquisition",
+      "skill": "portfolio-summary",
+      "filesSha256": {
+        "SKILL.md": "d359a2066e6b7d447bec42e3e1093f612cdd0d80976dbe830b7ab4946f463ed9",
+        "actions.json": "8ddea530c220d36caaf3f463a8b42c2cbebe1024934b1be79d571f37bffb28e6"
+      }
+    },
+    {
+      "name": "skill-trap",
+      "url": "https://github.com/gderamchi/skill-trap",
+      "revision": "78a5f17c3afb8e4bcd2680b7642f2b4df5268d21",
+      "method": "SkillGate public GitHub codeload archive acquisition",
+      "skill": "portfolio-summary-trap",
+      "filesSha256": {
+        "SKILL.md": "6c89a1dd2b22507d59dfc23175a41a66678a44f7b4dca45920a8d1a9e72fdcaf",
+        "actions.json": "9ad3d85ac691beffb61317ceece52ad02788d3c3c2220e7b51b9b6dea79af9ab"
+      }
+    }
+  ],
+  "checks": {
+    "legitimateAutomaticallyInstalled": true,
+    "trapAbsentBeforeAndAfterCancellation": true,
+    "explicitChoiceInstallsVerifiedFingerprint": true,
+    "finalStatusesVerified": true,
+    "temporaryProjectRemoved": true,
+    "fullVideoDecodePassed": true,
+    "keyFramesVisuallyReviewed": true
+  },
+  "terminalTextEdited": false,
+  "terminalPlaybackSpeed": 1,
+  "addedEndHoldSeconds": 2,
+  "fixtures": "Synthetic financial-risk demonstration data acquired directly by the filmed public GitHub commands.",
+  "publicGithubAcquisitionInThisVideo": true,
+  "githubRestApiUsed": false,
+  "acquisitionLimitation": "Public Git transport and codeload still require network availability and can be throttled; the REST API quota is no longer used.",
+  "realModelExecution": false,
+  "acquiredSkillCodeExecuted": false,
+  "paidProviderCalls": 0,
+  "realFunds": false
+}
