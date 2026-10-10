@@ -269,10 +269,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path6) {
-  if (!path6)
+function getElementAtPath(obj, path7) {
+  if (!path7)
     return obj;
-  return path6.reduce((acc, key) => acc?.[key], obj);
+  return path7.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -531,11 +531,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path6, issues) {
+function prefixIssues(path7, issues) {
   return issues.map((iss) => {
     var _a3;
     (_a3 = iss).path ?? (_a3.path = []);
-    iss.path.unshift(path6);
+    iss.path.unshift(path7);
     return iss;
   });
 }
@@ -1056,16 +1056,16 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
 }
 function formatError(error62, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path6 = []) => {
+  const processError = (error63, path7 = []) => {
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path6, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path7, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path6, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path6, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else {
-        const fullpath = [...path6, ...issue2.path];
+        const fullpath = [...path7, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -1104,17 +1104,17 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error62, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error63, path6 = []) => {
+  const processError = (error63, path7 = []) => {
     var _a3;
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path6, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path7, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path6, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path6, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else {
-        const fullpath = [...path6, ...issue2.path];
+        const fullpath = [...path7, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -1153,8 +1153,8 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path6 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path6) {
+  const path7 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path7) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -19150,13 +19150,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path6 = ref.slice(1).split("/").filter(Boolean);
-  if (path6.length === 0) {
+  const path7 = ref.slice(1).split("/").filter(Boolean);
+  if (path7.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path6[0] === defsKey) {
-    const key = path6[1] === void 0 ? void 0 : decodeJSONPointerSegment(path6[1]);
+  if (path7[0] === defsKey) {
+    const key = path7[1] === void 0 ? void 0 : decodeJSONPointerSegment(path7[1]);
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -20618,17 +20618,17 @@ var require_visit = __commonJS({
     visit2.BREAK = BREAK;
     visit2.SKIP = SKIP;
     visit2.REMOVE = REMOVE;
-    function visit_(key, node2, visitor, path6) {
-      const ctrl = callVisitor(key, node2, visitor, path6);
+    function visit_(key, node2, visitor, path7) {
+      const ctrl = callVisitor(key, node2, visitor, path7);
       if (identity.isNode(ctrl) || identity.isPair(ctrl)) {
-        replaceNode(key, path6, ctrl);
-        return visit_(key, ctrl, visitor, path6);
+        replaceNode(key, path7, ctrl);
+        return visit_(key, ctrl, visitor, path7);
       }
       if (typeof ctrl !== "symbol") {
         if (identity.isCollection(node2)) {
-          path6 = Object.freeze(path6.concat(node2));
+          path7 = Object.freeze(path7.concat(node2));
           for (let i = 0; i < node2.items.length; ++i) {
-            const ci = visit_(i, node2.items[i], visitor, path6);
+            const ci = visit_(i, node2.items[i], visitor, path7);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -20639,13 +20639,13 @@ var require_visit = __commonJS({
             }
           }
         } else if (identity.isPair(node2)) {
-          path6 = Object.freeze(path6.concat(node2));
-          const ck = visit_("key", node2.key, visitor, path6);
+          path7 = Object.freeze(path7.concat(node2));
+          const ck = visit_("key", node2.key, visitor, path7);
           if (ck === BREAK)
             return BREAK;
           else if (ck === REMOVE)
             node2.key = null;
-          const cv = visit_("value", node2.value, visitor, path6);
+          const cv = visit_("value", node2.value, visitor, path7);
           if (cv === BREAK)
             return BREAK;
           else if (cv === REMOVE)
@@ -20666,17 +20666,17 @@ var require_visit = __commonJS({
     visitAsync.BREAK = BREAK;
     visitAsync.SKIP = SKIP;
     visitAsync.REMOVE = REMOVE;
-    async function visitAsync_(key, node2, visitor, path6) {
-      const ctrl = await callVisitor(key, node2, visitor, path6);
+    async function visitAsync_(key, node2, visitor, path7) {
+      const ctrl = await callVisitor(key, node2, visitor, path7);
       if (identity.isNode(ctrl) || identity.isPair(ctrl)) {
-        replaceNode(key, path6, ctrl);
-        return visitAsync_(key, ctrl, visitor, path6);
+        replaceNode(key, path7, ctrl);
+        return visitAsync_(key, ctrl, visitor, path7);
       }
       if (typeof ctrl !== "symbol") {
         if (identity.isCollection(node2)) {
-          path6 = Object.freeze(path6.concat(node2));
+          path7 = Object.freeze(path7.concat(node2));
           for (let i = 0; i < node2.items.length; ++i) {
-            const ci = await visitAsync_(i, node2.items[i], visitor, path6);
+            const ci = await visitAsync_(i, node2.items[i], visitor, path7);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -20687,13 +20687,13 @@ var require_visit = __commonJS({
             }
           }
         } else if (identity.isPair(node2)) {
-          path6 = Object.freeze(path6.concat(node2));
-          const ck = await visitAsync_("key", node2.key, visitor, path6);
+          path7 = Object.freeze(path7.concat(node2));
+          const ck = await visitAsync_("key", node2.key, visitor, path7);
           if (ck === BREAK)
             return BREAK;
           else if (ck === REMOVE)
             node2.key = null;
-          const cv = await visitAsync_("value", node2.value, visitor, path6);
+          const cv = await visitAsync_("value", node2.value, visitor, path7);
           if (cv === BREAK)
             return BREAK;
           else if (cv === REMOVE)
@@ -20720,23 +20720,23 @@ var require_visit = __commonJS({
       }
       return visitor;
     }
-    function callVisitor(key, node2, visitor, path6) {
+    function callVisitor(key, node2, visitor, path7) {
       if (typeof visitor === "function")
-        return visitor(key, node2, path6);
+        return visitor(key, node2, path7);
       if (identity.isMap(node2))
-        return visitor.Map?.(key, node2, path6);
+        return visitor.Map?.(key, node2, path7);
       if (identity.isSeq(node2))
-        return visitor.Seq?.(key, node2, path6);
+        return visitor.Seq?.(key, node2, path7);
       if (identity.isPair(node2))
-        return visitor.Pair?.(key, node2, path6);
+        return visitor.Pair?.(key, node2, path7);
       if (identity.isScalar(node2))
-        return visitor.Scalar?.(key, node2, path6);
+        return visitor.Scalar?.(key, node2, path7);
       if (identity.isAlias(node2))
-        return visitor.Alias?.(key, node2, path6);
+        return visitor.Alias?.(key, node2, path7);
       return void 0;
     }
-    function replaceNode(key, path6, node2) {
-      const parent = path6[path6.length - 1];
+    function replaceNode(key, path7, node2) {
+      const parent = path7[path7.length - 1];
       if (identity.isCollection(parent)) {
         parent.items[key] = node2;
       } else if (identity.isPair(parent)) {
@@ -21348,10 +21348,10 @@ var require_Collection = __commonJS({
     var createNode = require_createNode();
     var identity = require_identity();
     var Node = require_Node();
-    function collectionFromPath(schema, path6, value) {
+    function collectionFromPath(schema, path7, value) {
       let v = value;
-      for (let i = path6.length - 1; i >= 0; --i) {
-        const k = path6[i];
+      for (let i = path7.length - 1; i >= 0; --i) {
+        const k = path7[i];
         if (typeof k === "number" && Number.isInteger(k) && k >= 0) {
           const a = [];
           a[k] = v;
@@ -21370,7 +21370,7 @@ var require_Collection = __commonJS({
         sourceObjects: /* @__PURE__ */ new Map()
       });
     }
-    var isEmptyPath = (path6) => path6 == null || typeof path6 === "object" && !!path6[Symbol.iterator]().next().done;
+    var isEmptyPath = (path7) => path7 == null || typeof path7 === "object" && !!path7[Symbol.iterator]().next().done;
     var Collection = class extends Node.NodeBase {
       constructor(type, schema) {
         super(type);
@@ -21400,11 +21400,11 @@ var require_Collection = __commonJS({
        * be a Pair instance or a `{ key, value }` object, which may not have a key
        * that already exists in the map.
        */
-      addIn(path6, value) {
-        if (isEmptyPath(path6))
+      addIn(path7, value) {
+        if (isEmptyPath(path7))
           this.add(value);
         else {
-          const [key, ...rest] = path6;
+          const [key, ...rest] = path7;
           const node2 = this.get(key, true);
           if (identity.isCollection(node2))
             node2.addIn(rest, value);
@@ -21418,8 +21418,8 @@ var require_Collection = __commonJS({
        * Removes a value from the collection.
        * @returns `true` if the item was found and removed.
        */
-      deleteIn(path6) {
-        const [key, ...rest] = path6;
+      deleteIn(path7) {
+        const [key, ...rest] = path7;
         if (rest.length === 0)
           return this.delete(key);
         const node2 = this.get(key, true);
@@ -21433,8 +21433,8 @@ var require_Collection = __commonJS({
        * scalar values from their surrounding node; to disable set `keepScalar` to
        * `true` (collections are always returned intact).
        */
-      getIn(path6, keepScalar) {
-        const [key, ...rest] = path6;
+      getIn(path7, keepScalar) {
+        const [key, ...rest] = path7;
         const node2 = this.get(key, true);
         if (rest.length === 0)
           return !keepScalar && identity.isScalar(node2) ? node2.value : node2;
@@ -21452,8 +21452,8 @@ var require_Collection = __commonJS({
       /**
        * Checks if the collection includes a value with the key `key`.
        */
-      hasIn(path6) {
-        const [key, ...rest] = path6;
+      hasIn(path7) {
+        const [key, ...rest] = path7;
         if (rest.length === 0)
           return this.has(key);
         const node2 = this.get(key, true);
@@ -21463,8 +21463,8 @@ var require_Collection = __commonJS({
        * Sets a value in this collection. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path6, value) {
-        const [key, ...rest] = path6;
+      setIn(path7, value) {
+        const [key, ...rest] = path7;
         if (rest.length === 0) {
           this.set(key, value);
         } else {
@@ -23979,9 +23979,9 @@ var require_Document = __commonJS({
           this.contents.add(value);
       }
       /** Adds a value to the document. */
-      addIn(path6, value) {
+      addIn(path7, value) {
         if (assertCollection(this.contents))
-          this.contents.addIn(path6, value);
+          this.contents.addIn(path7, value);
       }
       /**
        * Create a new `Alias` node, ensuring that the target `node` has the required anchor.
@@ -24056,14 +24056,14 @@ var require_Document = __commonJS({
        * Removes a value from the document.
        * @returns `true` if the item was found and removed.
        */
-      deleteIn(path6) {
-        if (Collection.isEmptyPath(path6)) {
+      deleteIn(path7) {
+        if (Collection.isEmptyPath(path7)) {
           if (this.contents == null)
             return false;
           this.contents = null;
           return true;
         }
-        return assertCollection(this.contents) ? this.contents.deleteIn(path6) : false;
+        return assertCollection(this.contents) ? this.contents.deleteIn(path7) : false;
       }
       /**
        * Returns item at `key`, or `undefined` if not found. By default unwraps
@@ -24078,10 +24078,10 @@ var require_Document = __commonJS({
        * scalar values from their surrounding node; to disable set `keepScalar` to
        * `true` (collections are always returned intact).
        */
-      getIn(path6, keepScalar) {
-        if (Collection.isEmptyPath(path6))
+      getIn(path7, keepScalar) {
+        if (Collection.isEmptyPath(path7))
           return !keepScalar && identity.isScalar(this.contents) ? this.contents.value : this.contents;
-        return identity.isCollection(this.contents) ? this.contents.getIn(path6, keepScalar) : void 0;
+        return identity.isCollection(this.contents) ? this.contents.getIn(path7, keepScalar) : void 0;
       }
       /**
        * Checks if the document includes a value with the key `key`.
@@ -24092,10 +24092,10 @@ var require_Document = __commonJS({
       /**
        * Checks if the document includes a value at `path`.
        */
-      hasIn(path6) {
-        if (Collection.isEmptyPath(path6))
+      hasIn(path7) {
+        if (Collection.isEmptyPath(path7))
           return this.contents !== void 0;
-        return identity.isCollection(this.contents) ? this.contents.hasIn(path6) : false;
+        return identity.isCollection(this.contents) ? this.contents.hasIn(path7) : false;
       }
       /**
        * Sets a value in this document. For `!!set`, `value` needs to be a
@@ -24112,13 +24112,13 @@ var require_Document = __commonJS({
        * Sets a value in this document. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path6, value) {
-        if (Collection.isEmptyPath(path6)) {
+      setIn(path7, value) {
+        if (Collection.isEmptyPath(path7)) {
           this.contents = value;
         } else if (this.contents == null) {
-          this.contents = Collection.collectionFromPath(this.schema, Array.from(path6), value);
+          this.contents = Collection.collectionFromPath(this.schema, Array.from(path7), value);
         } else if (assertCollection(this.contents)) {
-          this.contents.setIn(path6, value);
+          this.contents.setIn(path7, value);
         }
       }
       /**
@@ -26079,9 +26079,9 @@ var require_cst_visit = __commonJS({
     visit2.BREAK = BREAK;
     visit2.SKIP = SKIP;
     visit2.REMOVE = REMOVE;
-    visit2.itemAtPath = (cst, path6) => {
+    visit2.itemAtPath = (cst, path7) => {
       let item = cst;
-      for (const [field, index] of path6) {
+      for (const [field, index] of path7) {
         const tok = item?.[field];
         if (tok && "items" in tok) {
           item = tok.items[index];
@@ -26090,23 +26090,23 @@ var require_cst_visit = __commonJS({
       }
       return item;
     };
-    visit2.parentCollection = (cst, path6) => {
-      const parent = visit2.itemAtPath(cst, path6.slice(0, -1));
-      const field = path6[path6.length - 1][0];
+    visit2.parentCollection = (cst, path7) => {
+      const parent = visit2.itemAtPath(cst, path7.slice(0, -1));
+      const field = path7[path7.length - 1][0];
       const coll = parent?.[field];
       if (coll && "items" in coll)
         return coll;
       throw new Error("Parent collection not found");
     };
-    function _visit(path6, item, visitor) {
-      let ctrl = visitor(item, path6);
+    function _visit(path7, item, visitor) {
+      let ctrl = visitor(item, path7);
       if (typeof ctrl === "symbol")
         return ctrl;
       for (const field of ["key", "value"]) {
         const token = item[field];
         if (token && "items" in token) {
           for (let i = 0; i < token.items.length; ++i) {
-            const ci = _visit(Object.freeze(path6.concat([[field, i]])), token.items[i], visitor);
+            const ci = _visit(Object.freeze(path7.concat([[field, i]])), token.items[i], visitor);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -26117,10 +26117,10 @@ var require_cst_visit = __commonJS({
             }
           }
           if (typeof ctrl === "function" && field === "key")
-            ctrl = ctrl(item, path6);
+            ctrl = ctrl(item, path7);
         }
       }
-      return typeof ctrl === "function" ? ctrl(item, path6) : ctrl;
+      return typeof ctrl === "function" ? ctrl(item, path7) : ctrl;
     }
     exports.visit = visit2;
   }
@@ -31219,9 +31219,9 @@ Expecting one of '${allowedValues.join("', '")}'`);
    * @param {string} [path]
    * @return {(string|null|Command)}
    */
-  executableDir(path6) {
-    if (path6 === void 0) return this._executableDir;
-    this._executableDir = path6;
+  executableDir(path7) {
+    if (path7 === void 0) return this._executableDir;
+    this._executableDir = path7;
     return this;
   }
   /**
@@ -31486,42 +31486,244 @@ import { fileURLToPath as fileURLToPath2 } from "node:url";
 init_src();
 import { randomUUID as randomUUID2 } from "node:crypto";
 import * as fs4 from "node:fs/promises";
-import path5 from "node:path";
+import path6 from "node:path";
 
 // packages/core/src/acquisition.ts
 var import_yaml = __toESM(require_dist(), 1);
 init_storage();
 import { constants as constants2 } from "node:fs";
 import * as fs3 from "node:fs/promises";
+import path4 from "node:path";
+
+// packages/core/src/github-archive.ts
+init_storage();
+import { spawn } from "node:child_process";
+import { mkdtemp, realpath as realpath2, rm as rm2 } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path3 from "node:path";
+import { gunzipSync } from "node:zlib";
+var GITHUB_LIMITS = { compressedBytes: 8 * 1024 * 1024, archiveBytes: 32 * 1024 * 1024, entries: 4096 };
+function remainingTime(deadline) {
+  const remaining = Math.ceil(deadline - performance.now());
+  if (remaining <= 0) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub collection timed out.");
+  return remaining;
+}
+async function resolveGithubRevision(owner, repo, reference, deadline) {
+  remainingTime(deadline);
+  if (/^[a-f0-9]{40}$/.test(reference)) return reference;
+  const directory = await realpath2(await mkdtemp(path3.join(tmpdir(), "skillgate-git-")));
+  try {
+    const refs = reference === "HEAD" ? ["HEAD"] : [`refs/heads/${reference}`, `refs/tags/${reference}`, `refs/tags/${reference}^{}`];
+    const stdout = await new Promise((resolve6, reject) => {
+      let child, settled = false, bytes = 0, output2 = "";
+      const stopGroup = () => {
+        if (child?.pid) {
+          try {
+            process.kill(-child.pid, "SIGKILL");
+          } catch {
+            child.kill("SIGKILL");
+          }
+        }
+      };
+      const finish = (error62, output3 = "") => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (error62) {
+          stopGroup();
+          reject(error62);
+        } else resolve6(output3);
+      };
+      const timer = setTimeout(() => finish(new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub reference resolution timed out.")), remainingTime(deadline));
+      try {
+        child = spawn("/usr/bin/git", ["-c", "credential.helper=", "-c", "core.askPass=", "-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", "-c", "http.extraHeader=", "-c", "http.proxy=", "-c", "http.followRedirects=false", "-c", "http.sslVerify=true", "-c", "protocol.allow=never", "-c", "protocol.https.allow=always", "ls-remote", "--exit-code", `https://github.com/${owner}/${repo}.git`, ...refs], {
+          cwd: directory,
+          detached: true,
+          stdio: ["ignore", "pipe", "pipe"],
+          env: { PATH: "/usr/bin:/bin", HOME: directory, XDG_CONFIG_HOME: directory, GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_SYSTEM: "/dev/null", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CEILING_DIRECTORIES: path3.dirname(directory), GIT_TERMINAL_PROMPT: "0", GIT_ASKPASS: "/usr/bin/false", LC_ALL: "C" }
+        });
+      } catch {
+        finish(new SkillGateError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used."));
+        return;
+      }
+      const countOutput = (chunk) => {
+        bytes += Buffer.byteLength(chunk);
+        if (bytes > 64 * 1024) finish(new SkillGateError("GITHUB_REVISION", "GitHub reference response exceeds the size limit."));
+      };
+      child.stdout?.on("data", (chunk) => {
+        countOutput(chunk);
+        if (!settled) output2 += chunk.toString("utf8");
+      });
+      child.stderr?.on("data", countOutput);
+      child.once("error", () => finish(new SkillGateError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used.")));
+      child.once("exit", (code, signal) => {
+        if (code !== 0 || signal) finish(new SkillGateError("GITHUB_REVISION", "GitHub reference process failed."));
+      });
+      child.once("close", (code, signal) => finish(code === 0 && !signal ? void 0 : new SkillGateError("GITHUB_REVISION", "GitHub reference process failed."), output2));
+    });
+    remainingTime(deadline);
+    const matches = /* @__PURE__ */ new Map();
+    for (const line of stdout.trim().split("\n")) {
+      const match = /^([a-f0-9]{40})\t(.+)$/.exec(line);
+      if (!match || !refs.includes(match[2]) || matches.has(match[2])) throw new SkillGateError("GITHUB_REVISION", "Unexpected GitHub reference response.");
+      matches.set(match[2], match[1]);
+    }
+    const branch = matches.get(refs[0]), tag = matches.get(refs[2]) ?? matches.get(refs[1]);
+    if (branch && tag && branch !== tag) throw new SkillGateError("GITHUB_REVISION", "Branch and tag are ambiguous. Use a full commit SHA.");
+    const revision = branch ?? tag;
+    if (!revision) throw new SkillGateError("GITHUB_REVISION", "GitHub revision could not be resolved.");
+    return revision;
+  } finally {
+    await rm2(directory, { recursive: true, force: true });
+  }
+}
+async function downloadGithubArchive(owner, repo, revision, deadline) {
+  const signal = AbortSignal.timeout(remainingTime(deadline));
+  try {
+    const response = await fetch(`https://codeload.github.com/${owner}/${repo}/tar.gz/${revision}`, { redirect: "error", signal, headers: { Accept: "application/x-gzip", "User-Agent": "skillgate-finance-local" } });
+    if (!response.ok) throw new SkillGateError("GITHUB_ERROR", `GitHub archive HTTP ${response.status}. Check the public repository and revision, or retry later.`);
+    if (!["application/x-gzip", "application/gzip", "application/octet-stream"].includes(response.headers.get("content-type")?.split(";")[0]?.trim() ?? "")) throw new SkillGateError("GITHUB_TYPE", "Unexpected GitHub archive response.");
+    const length = response.headers.get("content-length");
+    if (length && (!/^\d+$/.test(length) || Number(length) > GITHUB_LIMITS.compressedBytes)) {
+      await response.body?.cancel();
+      throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
+    }
+    const reader = response.body?.getReader();
+    if (!reader) throw new SkillGateError("GITHUB_ERROR", "Empty GitHub archive response.");
+    const chunks = [];
+    let bytes = 0;
+    try {
+      while (true) {
+        remainingTime(deadline);
+        const chunk = await reader.read();
+        if (chunk.done) break;
+        bytes += chunk.value.length;
+        if (bytes > GITHUB_LIMITS.compressedBytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
+        chunks.push(chunk.value);
+      }
+    } catch (error62) {
+      await reader.cancel().catch(() => {
+      });
+      throw error62;
+    }
+    remainingTime(deadline);
+    let archive;
+    try {
+      archive = gunzipSync(Buffer.concat(chunks), { maxOutputLength: GITHUB_LIMITS.archiveBytes });
+    } catch (error62) {
+      throw new SkillGateError(error62.code === "ERR_BUFFER_TOO_LARGE" ? "DOWNLOAD_LIMIT" : "INVALID_ARCHIVE", "GitHub archive is invalid, truncated, or exceeds the decompressed size limit.");
+    }
+    remainingTime(deadline);
+    return archive;
+  } catch (error62) {
+    if (signal.aborted) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub archive download timed out.");
+    if (error62 instanceof SkillGateError) throw error62;
+    throw new SkillGateError("GITHUB_ERROR", "GitHub archive download failed. No credentials were used.");
+  }
+}
+function parseGithubArchive(archive, repo, revision, deadline) {
+  const invalid = (message) => {
+    throw new SkillGateError("INVALID_ARCHIVE", message);
+  };
+  const text = (bytes) => {
+    const nul = bytes.indexOf(0);
+    if (nul >= 0 && bytes.subarray(nul).some((byte) => byte !== 0)) invalid("Ambiguous archive text field.");
+    try {
+      return new TextDecoder("utf-8", { fatal: true }).decode(nul < 0 ? bytes : bytes.subarray(0, nul));
+    } catch {
+      return invalid("Invalid UTF-8 in archive metadata.");
+    }
+  };
+  const octal = (bytes) => {
+    if (bytes.some((byte) => byte > 127)) invalid("Unsupported archive numeric encoding.");
+    const value = bytes.toString("ascii").replace(/[\0 ]+$/, "").replace(/^ +/, "");
+    if (!/^[0-7]+$/.test(value)) invalid("Invalid archive numeric field.");
+    const number4 = Number.parseInt(value, 8);
+    if (!Number.isSafeInteger(number4)) invalid("Archive numeric field exceeds the supported range.");
+    return number4;
+  };
+  const root2 = `${repo}-${revision}`, files = [], seen = /* @__PURE__ */ new Map();
+  let archiveRoot;
+  let offset = 0, entries = 0, commitSeen = false, rootSeen = false, ended = false;
+  if (archive.length > GITHUB_LIMITS.archiveBytes || archive.length < 1024 || archive.length % 512) invalid("Invalid archive size or truncated record.");
+  while (offset < archive.length) {
+    remainingTime(deadline);
+    const header = archive.subarray(offset, offset + 512);
+    if (header.every((byte) => byte === 0)) {
+      if (archive.length - offset < 1024 || archive.subarray(offset).some((byte) => byte !== 0)) invalid("Missing archive end blocks or unexpected trailing data.");
+      ended = true;
+      break;
+    }
+    const checksum = header.reduce((sum, byte, index) => sum + (index >= 148 && index < 156 ? 32 : byte), 0);
+    if (octal(header.subarray(148, 156)) !== checksum || !header.subarray(257, 265).equals(Buffer.from("ustar\x0000"))) invalid("Invalid archive checksum or unsupported format.");
+    const name = text(header.subarray(0, 100)), prefix = text(header.subarray(345, 500));
+    const file2 = prefix ? `${prefix}/${name}` : name, type = String.fromCharCode(header[156]), size = octal(header.subarray(124, 136)), mode = octal(header.subarray(100, 108));
+    const start = offset + 512, next = start + Math.ceil(size / 512) * 512;
+    if (next > archive.length || !Number.isSafeInteger(next)) invalid("Truncated archive entry.");
+    if (archive.subarray(start + size, next).some((byte) => byte !== 0)) invalid("Nonzero archive entry padding.");
+    if (++entries > GITHUB_LIMITS.entries) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub archive contains too many entries.");
+    if (type === "g") {
+      if (offset !== 0 || file2 !== "pax_global_header" || !archive.subarray(start, start + size).equals(Buffer.from(`52 comment=${revision}
+`))) invalid("Unsupported archive metadata or mismatched commit SHA.");
+      commitSeen = true;
+      offset = next;
+      continue;
+    }
+    if (!["0", "\0", "5"].includes(type) || text(header.subarray(157, 257)) || mode & ~511) throw new SkillGateError("UNSAFE_ENTRY", "Archive links, special entries, extended path overrides, and special permissions are refused.");
+    const directory = type === "5", canonical2 = directory && file2.endsWith("/") ? file2.slice(0, -1) : file2;
+    if (!canonical2 || canonical2.length > 1024 || canonical2.normalize("NFC") !== canonical2 || /[\x00-\x1f\x7f:\\]/.test(canonical2) || canonical2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Unsafe or ambiguous archive path refused.");
+    const component = canonical2.split("/")[0];
+    if (!component.endsWith(`-${revision}`) || component.slice(0, -41).toLowerCase() !== repo.toLowerCase() || archiveRoot !== void 0 && component !== archiveRoot) invalid("Archive root does not match the repository and commit SHA.");
+    archiveRoot = component;
+    const identity = canonical2.toLowerCase();
+    if (seen.has(identity)) invalid("Duplicate or case-ambiguous archive path.");
+    for (let parent = path3.posix.dirname(identity); parent !== "."; parent = path3.posix.dirname(parent)) if (seen.get(parent) === "file") invalid("Archive file conflicts with a parent directory.");
+    if (!directory && [...seen.keys()].some((existing) => existing.startsWith(`${identity}/`))) invalid("Archive file conflicts with a child path.");
+    seen.set(identity, directory ? "directory" : "file");
+    if (canonical2 === archiveRoot) {
+      if (!directory) invalid("Archive root must be a directory.");
+      rootSeen = true;
+    }
+    if (directory) {
+      if (size) invalid("Archive directory has unexpected content.");
+    } else {
+      if (path3.posix.basename(canonical2) === ".gitmodules") throw new SkillGateError("UNSAFE_ENTRY", "Archives declaring Git submodules are unsupported.");
+      files.push({ path: canonical2.slice(root2.length + 1), content: archive.subarray(start, start + size), executable: !!(mode & 73) });
+    }
+    offset = next;
+  }
+  if (!commitSeen || !rootSeen || !ended) invalid("Missing commit metadata, repository root, or archive end blocks.");
+  return files;
+}
+
+// packages/core/src/acquisition.ts
 var LIMITS = { files: 256, bytes: 2 * 1024 * 1024, fileBytes: 256 * 1024, depth: 12, durationMs: 2e4 };
 var textExtensions = /* @__PURE__ */ new Set([".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".py", ".sh", ".bash", ".zsh", ".ps1", ".csv", ".xml", ".html", ".css", ".sql", ".env", ".ini", ".cfg"]);
 function safeRelative(input2) {
-  if (!input2 || path3.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Absolute, ambiguous, or traversal path refused.");
+  if (!input2 || path4.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Absolute, ambiguous, or traversal path refused.");
   return input2;
 }
 var freshCoverage = () => ({ status: "complete_for_supported_checks", inventoried: 0, read: 0, supported: 0, bytes: 0, ignored: [], unresolved: [], limitsReached: [], errors: [] });
 function finalizeCoverage(coverage) {
   if (coverage.errors.length || coverage.ignored.length || coverage.unresolved.length || coverage.limitsReached.length) coverage.status = coverage.read ? "partial" : "failed";
 }
-async function inventory(directory, copyTo) {
+async function inventory(directory, copyTo, deadline = performance.now() + LIMITS.durationMs) {
   const manifest = [], texts = /* @__PURE__ */ new Map(), coverage = freshCoverage();
-  const started = performance.now();
   const walk = async (relative2, depth) => {
     if (depth > LIMITS.depth) {
       coverage.limitsReached.push(`Maximum depth: ${LIMITS.depth}`);
       return;
     }
-    const dir = path3.join(directory, relative2);
+    const dir = path4.join(directory, relative2);
     const entries = await fs3.readdir(dir, { withFileTypes: true });
     entries.sort((a, b) => a.name.localeCompare(b.name, "en"));
     for (const entry of entries) {
-      if (performance.now() - started > LIMITS.durationMs) {
+      if (performance.now() > deadline) {
         coverage.limitsReached.push("Inventory time limit reached.");
         return;
       }
       const file2 = safeRelative(relative2 ? `${relative2}/${entry.name}` : entry.name);
-      const full = path3.join(directory, file2), stat2 = await fs3.lstat(full);
+      const full = path4.join(directory, file2), stat2 = await fs3.lstat(full);
       if (stat2.isSymbolicLink() || !stat2.isDirectory() && !stat2.isFile() || stat2.isFile() && stat2.nlink !== 1) throw new SkillGateError("UNSAFE_ENTRY", `Link or special file refused: ${file2}`);
       if (stat2.isDirectory()) {
         await walk(file2, depth + 1);
@@ -31555,8 +31757,8 @@ async function inventory(directory, copyTo) {
       coverage.bytes += content.length;
       coverage.read++;
       if (copyTo) {
-        const destination = path3.join(copyTo, file2);
-        await ensureDirectory(path3.dirname(destination));
+        const destination = path4.join(copyTo, file2);
+        await ensureDirectory(path4.dirname(destination));
         await fs3.writeFile(destination, content, { flag: "wx", mode: executable2 ? 448 : 384 });
       }
       let decoded;
@@ -31564,7 +31766,7 @@ async function inventory(directory, copyTo) {
         decoded = new TextDecoder("utf-8", { fatal: true }).decode(content);
       } catch {
       }
-      if (decoded !== void 0 && !decoded.includes("\0") && (textExtensions.has(path3.extname(file2).toLowerCase()) || file2 === "LICENSE" || file2 === "Dockerfile")) {
+      if (decoded !== void 0 && !decoded.includes("\0") && (textExtensions.has(path4.extname(file2).toLowerCase()) || file2 === "LICENSE" || file2 === "Dockerfile")) {
         texts.set(file2, decoded);
         coverage.supported++;
       } else coverage.ignored.push({ file: file2, reason: "Binary format or file extension is unsupported by static analysis." });
@@ -31590,95 +31792,73 @@ function skillMetadata(text) {
   return { name: safeName(value.name), description: value.description };
 }
 async function chooseLocal(source, requested) {
-  const absolute = path3.resolve(source);
+  const absolute = path4.resolve(source);
   if (/\.(?:zip|tar|tgz|gz|7z|rar)$/i.test(source)) throw new SkillGateError("ARCHIVE_UNSUPPORTED", "Archives are unsupported. Use a verified extracted directory or a public GitHub repository.");
   if (!await exists(absolute)) throw new SkillGateError("SOURCE_NOT_FOUND", "Source directory not found.");
   const rootStat = await fs3.lstat(absolute);
   if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "The source must be a regular directory.");
-  if (await exists(path3.join(absolute, "SKILL.md"))) return absolute;
+  if (await exists(path4.join(absolute, "SKILL.md"))) return absolute;
   const choices = [];
   const search = async (directory, depth) => {
     if (depth > 3 || choices.length > 50) return;
     for (const entry of await fs3.readdir(directory, { withFileTypes: true })) {
       if (entry.name.startsWith(".") || !entry.isDirectory() || entry.isSymbolicLink()) continue;
-      const nested = path3.join(directory, entry.name);
-      if (await exists(path3.join(nested, "SKILL.md"))) choices.push(nested);
+      const nested = path4.join(directory, entry.name);
+      if (await exists(path4.join(nested, "SKILL.md"))) choices.push(nested);
       else await search(nested, depth + 1);
     }
   };
   await search(absolute, 0);
   if (requested) {
     safeName(requested);
-    const matches = choices.filter((item) => path3.basename(item) === requested);
+    const matches = choices.filter((item) => path4.basename(item) === requested);
     if (matches.length === 1) return matches[0];
   }
   if (choices.length === 1 && !requested) return choices[0];
-  throw new SkillGateError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Multiple skills found. Specify --skill: ${choices.map((item) => path3.basename(item)).join(", ")}` : "No SKILL.md found in the source.");
-}
-async function githubJson(endpoint, started) {
-  const remaining = LIMITS.durationMs - (performance.now() - started);
-  if (remaining <= 0) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub collection timed out.");
-  const response = await fetch(`https://api.github.com${endpoint}`, { redirect: "error", signal: AbortSignal.timeout(Math.min(remaining, 8e3)), headers: { Accept: "application/vnd.github+json", "User-Agent": "skillgate-finance-local" } });
-  if (!response.ok) throw new SkillGateError("GITHUB_ERROR", `GitHub HTTP ${response.status}. Check the public repository, revision, and API rate limit.`);
-  if (!response.headers.get("content-type")?.includes("application/json")) throw new SkillGateError("GITHUB_TYPE", "Unexpected GitHub response.");
-  const reader = response.body?.getReader();
-  if (!reader) throw new SkillGateError("GITHUB_ERROR", "Empty GitHub response.");
-  let length = 0;
-  const chunks = [];
-  while (true) {
-    const result = await reader.read();
-    if (result.done) break;
-    length += result.value.length;
-    if (length > 4 * 1024 * 1024) {
-      await reader.cancel();
-      throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub response exceeds the size limit.");
-    }
-    chunks.push(result.value);
-  }
-  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  throw new SkillGateError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Multiple skills found. Specify --skill: ${choices.map((item) => path4.basename(item)).join(", ")}` : "No SKILL.md found in the source.");
 }
 async function acquireGithub(input2, destination, requested) {
-  let url2;
+  const match = /^https:\/\/github\.com\/([^/?#]+)\/([^/?#]+)(?:\/tree\/([^/?#]+)(?:\/([^?#]*))?)?\/?$/i.exec(input2);
+  if (!match || input2.length > 2048 || /[\x00-\x20\x7f]/.test(input2)) throw new SkillGateError("SOURCE_FORBIDDEN", "Use a public https://github.com/owner/repo URL, optionally with /tree/revision/subdirectory.");
+  let owner, repo, reference, folder;
   try {
-    url2 = new URL(input2);
+    owner = decodeURIComponent(match[1]);
+    repo = decodeURIComponent(match[2]).replace(/\.git$/, "");
+    reference = decodeURIComponent(match[3] ?? "HEAD");
+    folder = decodeURIComponent(match[4] ?? "").replace(/\/$/, "");
   } catch {
-    throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid source URL.");
+    throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid encoding in the GitHub source URL.");
   }
-  if (url2.protocol !== "https:" || url2.hostname !== "github.com" || url2.port || url2.username || url2.password || url2.search || url2.hash) throw new SkillGateError("SOURCE_FORBIDDEN", "Only public https://github.com/owner/repo repositories are supported.");
-  const segments = url2.pathname.split("/").filter(Boolean).map(decodeURIComponent);
-  const owner = segments[0], repo = segments[1]?.replace(/\.git$/, "");
-  if (!owner || !repo || [".", ".."].includes(owner) || [".", ".."].includes(repo) || !/^[a-zA-Z0-9_.-]+$/.test(owner) || !/^[a-zA-Z0-9_.-]+$/.test(repo) || segments.length > 2 && segments[2] !== "tree") throw new SkillGateError("SOURCE_FORBIDDEN", "Use /owner/repo or /owner/repo/tree/revision/subdirectory.");
-  const reference = segments[3] || "HEAD";
-  let folder = segments.slice(4).join("/");
+  if (![owner, repo].every((value) => /^[a-zA-Z0-9_.-]{1,100}$/.test(value) && ![".", ".."].includes(value)) || !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,199}$/.test(reference) || reference.includes("..") || reference.split("/").some((part) => !part || part.endsWith(".") || part.endsWith(".lock"))) throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid GitHub repository or revision. Use a branch, tag, or full commit SHA.");
   if (folder) safeRelative(folder);
-  const started = performance.now(), api = `/repos/${owner}/${repo}`;
-  const commit = await githubJson(`${api}/commits/${encodeURIComponent(reference)}`, started);
-  if (!commit.sha || !/^[a-f0-9]{40}$/.test(commit.sha)) throw new SkillGateError("GITHUB_REVISION", "GitHub revision could not be resolved.");
-  const tree = await githubJson(`${api}/git/trees/${commit.sha}?recursive=1`, started);
-  if (tree.truncated || !Array.isArray(tree.tree)) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub tree is incomplete or too large.");
-  const skillPaths = tree.tree.filter((item) => item.path === "SKILL.md" || item.path.endsWith("/SKILL.md")).map((item) => path3.posix.dirname(item.path)).filter((item) => !folder || item === folder || item.startsWith(`${folder}/`));
+  if (requested) safeName(requested);
+  const deadline = performance.now() + LIMITS.durationMs;
+  const revision = await resolveGithubRevision(owner, repo, reference, deadline);
+  const archive = await downloadGithubArchive(owner, repo, revision, deadline);
+  const entries = parseGithubArchive(archive, repo, revision, deadline);
+  const skillPaths = entries.filter((file2) => file2.path === "SKILL.md" || file2.path.endsWith("/SKILL.md")).map((file2) => path4.posix.dirname(file2.path)).filter((file2) => !folder || file2 === folder || file2.startsWith(`${folder}/`));
   if (!skillPaths.includes(folder || ".")) {
-    const matches = requested ? skillPaths.filter((item) => path3.posix.basename(item) === requested) : skillPaths;
+    const matches = requested ? skillPaths.filter((file2) => path4.posix.basename(file2) === requested) : skillPaths;
     if (matches.length !== 1) throw new SkillGateError("AMBIGUOUS_SKILL", "Select a GitHub subdirectory containing SKILL.md or use --skill.");
     folder = matches[0] === "." ? "" : matches[0];
   }
-  const files = tree.tree.filter((item) => item.type !== "tree" && (!folder || item.path.startsWith(`${folder}/`)));
+  const files = entries.filter((file2) => !folder || file2.path.startsWith(`${folder}/`));
   let bytes = 0;
   if (files.length > LIMITS.files) throw new SkillGateError("DOWNLOAD_LIMIT", "Too many files in the GitHub package.");
-  for (const file2 of files) {
+  const selected = files.map((file2) => {
     const relative2 = safeRelative(folder ? file2.path.slice(folder.length + 1) : file2.path);
-    if (file2.type !== "blob" || !["100644", "100755"].includes(file2.mode)) throw new SkillGateError("UNSAFE_ENTRY", "GitHub links and submodules are refused.");
-    if (relative2.split("/").length > LIMITS.depth || !Number.isInteger(file2.size) || file2.size > LIMITS.fileBytes || (bytes += file2.size) > LIMITS.bytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
-    if (!/^[a-f0-9]{40}$/.test(file2.sha)) throw new SkillGateError("GITHUB_ERROR", "Invalid blob hash.");
-    const blob = await githubJson(`${api}/git/blobs/${file2.sha}`, started);
-    if (blob.encoding !== "base64" || typeof blob.content !== "string") throw new SkillGateError("GITHUB_ERROR", "Blob content unavailable.");
-    const content = Buffer.from(blob.content, "base64");
-    if (content.length !== file2.size) throw new SkillGateError("GITHUB_ERROR", "Blob size mismatch.");
-    const target = path3.join(destination, relative2);
-    await ensureDirectory(path3.dirname(target));
-    await fs3.writeFile(target, content, { flag: "wx", mode: file2.mode === "100755" ? 448 : 384 });
+    if (relative2.split("/").length > LIMITS.depth || file2.content.length > LIMITS.fileBytes || (bytes += file2.content.length) > LIMITS.bytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
+    return { ...file2, relative: relative2 };
+  });
+  for (const file2 of selected) {
+    remainingTime(deadline);
+    const target = path4.join(destination, file2.relative);
+    await ensureDirectory(path4.dirname(target));
+    await fs3.writeFile(target, file2.content, { flag: "wx", mode: file2.executable ? 448 : 384 });
   }
-  return { source: { kind: "github", locator: `https://github.com/${owner}/${repo}/tree/${reference}${folder ? `/${folder}` : ""}`, revision: commit.sha, ...folder ? { subdirectory: folder } : {} }, inventory: await inventory(destination) };
+  const collected = await inventory(destination, void 0, deadline);
+  remainingTime(deadline);
+  return { source: { kind: "github", locator: `https://github.com/${owner}/${repo}/tree/${encodeURIComponent(reference)}${folder ? `/${folder.split("/").map(encodeURIComponent).join("/")}` : ""}`, revision, ...folder ? { subdirectory: folder } : {} }, inventory: collected };
 }
 async function acquire(source, destination, requested) {
   await ensureDirectory(destination);
@@ -31688,61 +31868,149 @@ async function acquire(source, destination, requested) {
 }
 
 // packages/core/src/analysis.ts
-import path4 from "node:path";
+import path5 from "node:path";
 init_storage();
 init_semantic();
-var ENGINE_VERSION = "0.1.0";
-var RULES_VERSION = "finance-native-3";
+var ENGINE_VERSION = "0.2.0";
+var RULES_VERSION = "finance-native-4";
 var CORPUS_VERSION = "2026-10-10";
 var POLICY_VERSION = "finance-policy-1";
+var normalize = (text) => text.normalize("NFKC").replace(/[\u00ad\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/g, "").replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+var rejection = /(?:do not|don't|never) (?:execute|follow|obey)|\b(?:reject|refuse) (?:to (?:execute|follow|obey)\b|(?:(?:this|that|the|these|those) )?(?:instruction|command|request|attack|example|quotation|quoted|sentence)\b)|\b(?:what|instructions?) to reject\b|inert example|non-executable|for illustration only|ne pas exécuter|n.exécutez pas/i;
+var attackExample = /(?:attack(?:er)?|malicious|harmful|unsafe|historical).{0,90}(?:example|quote|write|say|told|instruction)|(?:example|quot(?:e|ation)).{0,90}(?:attack|malicious|harmful|unsafe)/i;
+function executesExample(text) {
+  const active = text.replace(/\b(?:do not|don't|never|refuse to)\s+(?:execute|run|follow|obey|perform|apply|carry out)\b/gi, "[prohibited action]");
+  return /\b(?:execute|run|follow|obey|perform|apply|carry out)\s+(?:it|them|this|that|the\s+(?:example|instruction|command|quotation))\b/i.test(active);
+}
+function negated(text) {
+  if (/\b(?:unless|except|until|then|instead|but|however|nevertheless)\b/i.test(text)) return false;
+  const action = "(?:(?:send|transmit|upload|share|execute|approve|sign|transfer|collect|read|load|obtain|request|switch|change|replace|override|overwrite|substitute|redirect|force|reroute|retry|grant|store|expose)(?:s|d|ed|ing)?|top\\s+up)\\b";
+  return new RegExp(`^(?:[-*>#\\d.)]\\s*)*(?:(?:never|do not|don't|must not)\\s+${action}|(?:this (?:skill|tool|package)|it|we)\\s+(?:does not|will not|never|cannot)\\s+${action}|no\\s+(?:signing|transfers?|payments?|approvals?|secret collection)\\b.{0,160}\\b(?:required|performed|allowed|needed|supported))`, "i").test(text.trim());
+}
 function activeLines(texts) {
   const lines = [];
   for (const [file2, content] of texts) {
-    const defensive = /(?:security|safety|defensive|sécurité).{0,35}(?:tutorial|guide|training|lesson)|(?:tutorial|training).{0,35}(?:security|attack)|attack examples|exemples d.attaques/i.test(content.slice(0, 1200));
+    const prose = [".md", ".txt"].includes(path5.extname(file2).toLowerCase());
+    const rawLines = content.split(/\r?\n/);
     let codeFence = false, inertFence = false;
     const previous = [];
-    for (const [index, text] of content.split(/\r?\n/).entries()) {
-      if (/^\s*```/.test(text)) {
+    for (const [index, original] of rawLines.entries()) {
+      let text = normalize(original);
+      if (prose && /^\s*(?:```|~~~)/.test(text)) {
         codeFence = !codeFence;
-        inertFence = codeFence && defensive && /do not execute|never execute|inert example|non-executable example|for illustration only|ne pas exécuter|n.exécutez pas/i.test(previous.slice(-3).join("\n"));
+        const introduction = previous.slice(-2).join("\n").slice(-800);
+        inertFence = codeFence && rejection.test(introduction) && !executesExample(introduction) && /example|attack|illustration|exemple/i.test(introduction);
         continue;
       }
+      if (prose && !codeFence) {
+        const before = previous.slice(-1).join(" ").slice(-400), after = normalize(rawLines[index + 1] || "").slice(0, 400);
+        text = text.replace(/"[^"\n]+"/g, (quoted, offset, whole) => {
+          const introduction = `${before} ${whole.slice(Math.max(0, offset - 400), offset)}`.slice(-400);
+          const instruction = `${whole.slice(offset + quoted.length, offset + quoted.length + 400)} ${after}`.slice(0, 400);
+          return attackExample.test(introduction) && rejection.test(instruction) && !executesExample(instruction) ? " [rejected quotation] " : quoted;
+        });
+        if (/^\s*>/.test(text) && attackExample.test(before) && rejection.test(`${before} ${after}`) && !executesExample(`${before} ${after}`)) continue;
+      }
       if (text.trim()) previous.push(text);
-      if (defensive && (codeFence && inertFence || /^\s*(?:never|do not|don't)\s+(?:send|transmit|upload|share|execute|approve|sign|transfer)\b/i.test(text) || /^\s*>/.test(text) && /quoted (?:attack|example)|inert example|do not (?:execute|follow)/i.test(previous.slice(-3, -1).join("\n")))) continue;
-      if (/^\s*(?:#|\/\/)/.test(text) && !file2.endsWith(".md")) continue;
-      lines.push({ file: file2, line: index + 1, text });
+      if (codeFence && inertFence) continue;
+      if (/^\s*(?:#|\/\/)/.test(text) && !prose) continue;
+      const clauses = prose && !codeFence ? text.split(/;\s*|(?<=[.!?])\s+|\s+\b(?:but|however|nevertheless)\b[,;:]?\s*|\s+and\s+(?=(?:never|do not|don't|must not)\b)/i) : [text];
+      for (const clause of clauses) if (clause.trim() && !(prose && !codeFence && negated(clause))) lines.push({ file: file2, line: index + 1, endLine: index + 1, text: clause.trim(), original });
     }
   }
   return lines;
 }
 function evidence(line) {
-  const original = line.text.trim().slice(0, 600) || " ", excerpt = redactApparentSecrets(original);
-  return { file: line.file, line: line.line, endLine: line.line, excerpt, ...excerpt !== original ? { redacted: true } : {} };
+  let start = 0;
+  if (line.original.length > 600 && line.focus) {
+    const position = normalize(line.original).indexOf(line.focus);
+    if (position > 80) {
+      let normalizedOffset = 0;
+      for (const character of line.original) {
+        if (normalizedOffset >= position - 80) break;
+        start += character.length;
+        normalizedOffset += normalize(character).length;
+      }
+    }
+  }
+  const original = line.original.slice(start, start + 600).trim() || " ", excerpt = redactApparentSecrets(original);
+  return { file: line.file, line: line.line, endLine: line.endLine, excerpt, ...excerpt !== original ? { redacted: true } : {} };
 }
 function analyzeNative(input2) {
   const lines = activeLines(input2.texts), all = lines.map((line) => line.text).join("\n");
   const findings = [];
-  const first = (pattern) => lines.find((line) => pattern.test(line.text));
-  const finance = /wallet|portfolio|payment|trading|token|crypto|DEMOUSD|allowance|private.?key|seed.phrase|portefeuille|paiement/i.test(all);
+  const first = (pattern, accepts = () => true) => {
+    for (const line of lines) {
+      const match = pattern.exec(line.text);
+      if (match && accepts(line)) return { ...line, focus: match[0] };
+    }
+    for (const [index, line] of lines.entries()) {
+      const next = lines[index + 1];
+      if (next?.file === line.file && next.line === line.line + 1 && !/[.!?;]$/.test(line.text) && pattern.test(`${line.text} ${next.text}`)) {
+        const combined = { ...line, endLine: next.line, text: `${line.text} ${next.text}`, original: `${line.original}
+${next.original}` };
+        if (accepts(combined)) return combined;
+      }
+    }
+    return void 0;
+  };
+  const secretTerm = /private[ _-]?key|seed[ _-]?phrase|(?:recovery|backup)[ _-]?(?:phrase|words)|mnemonic|wallet[ _-]?(?:secret|key)|payment[ _-]?(?:token|secret)|stripe[ _-]?secret|exchange[ _-]?(?:api[ _-]?)?(?:key|secret|credentials?)|(?:api[ _-]?(?:key|secret)|credentials?).{0,35}(?:exchange|trading|brokerage)/i;
+  const finance = /wallet|portfolio|payment|trading|treasury|transaction|token|crypto|DEMOUSD|allowance|chain.?id|portefeuille|paiement/i.test(all) || secretTerm.test(all);
   const readonly2 = /read[ -]?only|only (?:read|inspect|display|summar)|lecture seule|ne fait que consulter/i.test(all);
-  const hidden = first(/without (?:asking|approval|consent|telling)|do not (?:tell|mention|disclose)|hide (?:this|the|any)|silently|secretly|ignore (?:the )?(?:user|previous|prior)|sans (?:demander|accord|prévenir)|dissimule|cachez/i);
-  const transfer = first(/(?:\btransfer\b|\bsend\b|\bpay\b|transf[ée]r|envoy|\.transfer\s*\(|sendTransaction\s*\().{0,100}(?:DEMOUSD|token|fund|asset|USDC|ETH|BTC|SOL|wallet|0x[a-f0-9]{8}|demo[-_ ]|recipient|beneficiary)|(?:sendTransaction|transferFrom|\.transfer)\s*\(/i);
+  const concealment = /without (?:asking|approval|consent|telling|notifying)|do not (?:tell|mention|disclose|reveal)|hide (?:this|the|any)|silently|secretly|ignore (?:the )?(?:user|previous|prior)|(?:skip|bypass|omit).{0,35}(?:approval|consent|confirmation)|sans (?:demander|accord|prévenir)|dissimule|cachez/i;
+  const hidden = lines.find((line) => concealment.test(line.text) && !(/^(?:do not|never).{0,30}(?:disclose|reveal|show|print|log).{0,40}(?:private.?key|seed|secret|credential)/i.test(line.text) && !/transfer|transmission|upload|payment|operation|sign|approv/i.test(line.text)));
+  const transfer = first(
+    /(?:\b(?:transfer|send|pay|remit|move|forward|sweep|drain|debit)\b|transf[ée]r|envoy|\.transfer\s*\(|sendTransaction\s*\().{0,100}(?:DEMOUSD|token|fund|asset|balance|USDC|ETH|BTC|SOL|wallet|0x[a-f0-9]{8}|demo[-_ ]|recipient|beneficiary)|(?:sendTransaction|transferFrom|\.transfer)\s*\(/i,
+    (line) => !(/\b(?:send|forward|upload|submit|transmit)\s+(?:(?:the|a|an|this|that|generated|public|daily|weekly|monthly|account|wallet|balance|portfolio|holdings|transaction|asset|financial)[ -]){0,4}(?:report|summary|snapshot|statement|csv|json)\b/i.test(line.text) && !/\b(?:transfer|sweep|drain|debit|remit|pay)\b|\b(?:send|forward)\s+(?:(?:the|all|remaining|entire|full)\s+){0,2}(?:\d[\d.,]*\s+)?(?:DEMOUSD|tokens?|funds?|assets?|balances?|USDC|ETH|BTC|SOL)\b(?!\s+(?:report|summary|snapshot|statement))/i.test(line.text))
+  );
   const add = (category, severity, impact, explanation, related, technique, sources, confidence = "high") => {
-    const proof = [...new Map(related.filter((line) => !!line).map((line) => [`${line.file}:${line.line}`, evidence(line)])).values()].slice(0, 6);
+    const unique = /* @__PURE__ */ new Map();
+    for (const line of related) if (line) {
+      const key = `${line.file}:${line.line}`;
+      if (!unique.has(key) || !unique.get(key).focus && line.focus) unique.set(key, line);
+    }
+    const proof = [...unique.values()].map(evidence).slice(0, 6);
     if (!proof.length) return;
     findings.push({ id: `${category}-${sha256(JSON.stringify(proof)).slice(0, 12)}`, category, severity, confidence, financialConsequence: impact, explanation, evidence: proof, engine: "native", technique, sources, supported: true });
   };
-  const secret = first(/(?:process\.env|os\.(?:getenv|environ)|readFile|read_text|input\(|prompt|ask|collect|read|load|export|obtain|saisir|demande|lire).{0,100}(?:PRIVATE_KEY|private.?key|seed.phrase|mnemonic|wallet.?secret|payment.?token|STRIPE_SECRET|exchange.?api.?key)|(?:PRIVATE_KEY|seed.phrase|mnemonic).{0,60}(?:process\.env|os\.(?:getenv|environ)|readFile)/i);
-  const transmission = first(/(?:fetch|requests?\.post|axios\.post|curl|POST|upload|transmit|send|submit|envoy).{0,160}(?:https?:|secret|private.?key|seed|mnemonic|payload|body|data)|(?:body|data).{0,80}(?:private.?key|seed|mnemonic|secret)/i);
-  if (secret && transmission && secret !== transmission || secret && transmission && /(?:https?:|upload|transmit|post)/i.test(secret.text)) add("FIN-01", "critical", "A financial key or secret could be sent to a third party, allowing access to funds if the secret is real.", "The package contains financial secret collection and transmission. The destination was not contacted; its owner has not been established.", [secret, transmission], "DOC-01", ["SRC-01", "SRC-02"]);
-  const replacement = first(/(?:replace|override|overwrite|substitute|redirect|set|forcer|remplac).{0,70}(?:recipient|beneficiary|destination|payout|bénéficiaire)|(?:recipient|beneficiary|destination|payout).{0,45}=.{0,15}(?:["'](?:0x[a-f0-9]{8}|demo[-_]|external))/i);
-  if (transfer && (readonly2 || hidden || replacement)) add("FIN-02", "high", "Assets could be sent to a recipient outside the stated scope if the agent has transfer access.", "The package combines a financial operation with a claimed read-only function, concealment, or an explicit recipient replacement. The stated scope cannot be verified from the skill description alone.", [transfer, replacement, readonly2 ? first(/read[ -]?only|only (?:read|inspect|display|summar)|lecture seule/i) : void 0, hidden], "DOC-03", ["SRC-03"]);
-  const approval = first(/(?:approve|allowance|setApprovalForAll|autorisation).{0,100}(?:unlimited|infinite|MaxUint256|2\s*\*\*\s*256|true|illimit)|(?:unlimited|infinite|MaxUint256|illimit).{0,80}(?:approve|allowance|spend)/i);
-  if (approval && (readonly2 || hidden || !/explicit(?:ly)? (?:user|operator).{0,30}(?:approv|request|cho)|user.{0,30}(?:chooses|selects|requests).{0,50}unlimited|documented unlimited.{0,60}(?:requires|confirmation)/i.test(all))) add("FIN-03", readonly2 || hidden ? "high" : "medium", "A broad spending approval could allow more than the intended amount to be spent if it is signed.", "The package contains a very broad spending approval. This is a risk to review, but does not by itself prove malicious intent.", [approval, hidden, readonly2 ? first(/read[ -]?only|lecture seule/i) : void 0], "SYN-03", [], readonly2 || hidden ? "high" : "medium");
+  const acquisition = new RegExp(`(?:process\\.env|os\\.(?:getenv|environ)|readFile|read_text|input\\(|prompt|ask|collect|read|load|export|obtain|retrieve|include|bundle|saisir|demande|lire).{0,110}(?:${secretTerm.source})|(?:${secretTerm.source}).{0,60}(?:process\\.env|os\\.(?:getenv|environ)|readFile)`, "i");
+  const secret = first(acquisition);
+  let transmission = first(/(?:fetch|requests?\.post|axios\.post|curl|\bPOST\b|upload|transmit|send|submit|forward|envoy).{0,160}(?:secret|private.?key|seed|mnemonic|recovery words|credential|collected (?:value|token))|(?:body|data)\s*[:=].{0,80}(?:private.?key|seed|mnemonic|secret|credential)/i);
+  let transmissionProof = [];
+  if (secret && !transmission) {
+    const aliases = /* @__PURE__ */ new Map(), flows = /* @__PURE__ */ new Map();
+    const sink = /\b(?:fetch|post|upload|transmit|send|submit|forward|curl)\b/i;
+    for (let pass = 0; pass < 2 && !transmission; pass++) for (const [index, line] of lines.entries()) {
+      const linked = [...aliases.values()].find((alias) => alias.pattern.test(line.text));
+      const previous = lines[index - 1], priorFlow = flows.get(index - 1);
+      const pronoun = previous?.file === line.file && line.line - previous.line <= 2 && /\b(?:it|them|words|collected values?)\b/i.test(line.text);
+      const origin = acquisition.test(line.text) ? [line] : linked ? [...linked.proof, line] : pronoun && priorFlow ? [...priorFlow, line] : void 0;
+      if (!origin) continue;
+      flows.set(index, origin.slice(-5));
+      const assigned = /(?:^|[;{]\s*)(?:(?:const|let|var)\s+)?([a-z_$][\w$]*)\s*(?::[^=;]{1,80})?=\s*[^=]/i.exec(line.text)?.[1];
+      const container = /\b(?:in|into|as)\s+(?:(?:the|a|an)\s+)?([a-z][\w-]*(?:[ -](?:form|bundle|payload|body|packet|archive))|(?:form|bundle|payload|body|packet|archive))\b/i.exec(line.text)?.[1];
+      for (const name of [assigned, container]) if (name && aliases.size < 64 && !aliases.has(name)) {
+        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const noun = container === name ? /\b(form|bundle|payload|body|packet|archive)$/.exec(name)?.[1] : void 0;
+        aliases.set(name, { pattern: new RegExp(`\\b(?:${escaped}${noun ? `|(?:that|this) ${noun}` : ""})\\b`, "i"), proof: origin.slice(-4) });
+      }
+      if (sink.test(line.text) && (linked || pronoun || container)) {
+        transmission = line;
+        transmissionProof = origin;
+        break;
+      }
+    }
+  }
+  if (secret && transmission) add("FIN-01", "critical", "A financial key or secret could be sent to a third party, allowing access to funds if the secret is real.", "The package contains financial secret collection and transmission, including any shown intermediate container or variable. The destination was not contacted; its owner has not been established.", [secret, ...transmissionProof, transmission], "DOC-01", ["SRC-01", "SRC-02"]);
+  const replacement = first(/(?:replace|override|overwrite|substitute|redirect|reroute|force|forcer|remplac).{0,70}(?:recipient|beneficiary|destination|payout|bénéficiaire)|(?:recipient|beneficiary|destination|payout).{0,45}=.{0,15}(?:["'](?:0x[a-f0-9]{8}|demo[-_]|external))/i);
+  if (transfer && (readonly2 || hidden || replacement) || finance && replacement) add("FIN-02", "high", "Assets could be sent to a recipient outside the stated scope if the agent has transfer access.", "The package combines a financial operation with a claimed read-only function or concealment, or explicitly replaces a financial recipient. A replacement in a payment preview can affect a later approval; no transfer was executed or recipient ownership established.", [transfer, replacement, readonly2 ? first(/read[ -]?only|only (?:read|inspect|display|summar)|lecture seule/i) : void 0, hidden], "DOC-03", ["SRC-03"]);
+  const approval = first(/(?:approve|allowance|setApprovalForAll|autorisation).{0,100}(?:unlimited|unbounded|infinite|MaxUint256|type\(uint256\)\.max|2\s*\*\*\s*256|true|illimit)|(?:unlimited|unbounded|infinite|MaxUint256|illimit).{0,80}(?:approve|allowance|spend)/i);
+  const guardedPreparation = !!approval && /\b(?:prepare|review|preview|explain|describe|simulate)\b/i.test(approval.text) && /(?:show|display).{0,60}(?:selected|chosen|spender|recipient)/i.test(all) && /(?:explain|warn).{0,100}(?:full balance|unlimited|unbounded|spend all)/i.test(all) && /(?:require|wait for).{0,40}(?:explicit|user|operator).{0,25}confirmation.{0,60}(?:before|prior to).{0,40}(?:sign|grant|approv)/i.test(all) && !first(/(?:\bapprove\s*\(|setApprovalForAll\s*\(|\b(?:grant|execute|submit)\b.{0,50}(?:unlimited|unbounded|approval|allowance))/i);
+  if (approval && (readonly2 || hidden || !guardedPreparation)) add("FIN-03", readonly2 || hidden ? "high" : "medium", "A broad spending approval could allow more than the intended amount to be spent if it is signed.", "The package contains a very broad spending approval. This is a risk to review, but does not by itself prove malicious intent.", [approval, hidden, readonly2 ? first(/read[ -]?only|lecture seule/i) : void 0], "SYN-03", [], readonly2 || hidden ? "high" : "medium");
   const networkChange = first(/(?:replace|override|switch|change|rewrite|set|remplac|modifi).{0,70}(?:chain.?id|network|token.?address|rpc.?url|slippage|réseau)|(?:chain.?id|token.?address|slippage|rpc.?url)\s*[:=].{0,100}/i);
   if (finance && networkChange && (hidden || /ignore.{0,50}(?:network|token|chain|user)|(?:regardless|instead).{0,50}(?:user|approved)|approved.{0,50}(?:replace|override)/i.test(all))) add("FIN-04", "high", "Financial parameters could be changed against the approved context, altering the asset or network used.", "A parameter change is associated with an instruction to conceal behavior or exceed the stated scope. No external financial context was consulted; an actual mismatch remains unconfirmed.", [networkChange, hidden], "SYN-04", [], "medium");
-  const remote = first(/(?:curl|wget).{0,160}(?:\|\s*(?:sh|bash|zsh|python)|-o)|(?:eval|exec|subprocess|child_process|import\().{0,100}(?:https?:|base64|decode)|(?:fetch|requests?\.get).{0,140}https?:|(?:download|load|fetch|execute|run).{0,80}(?:remote|https?:).{0,80}(?:script|code|instructions|payload)|(?:run|execute).{0,60}(?:base64|encoded|hidden).{0,40}(?:payload|code|command)/i);
-  const execution = first(/\beval\s*\(|\bexec\s*\(|execSync|subprocess\.|\|\s*(?:sh|bash|zsh|python)|chmod\s+\+x|(?:execute|run|load).{0,70}(?:downloaded|remote|payload|script|encoded)/i);
+  const remote = first(/(?:curl|wget).{0,160}(?:\|\s*(?:sh|bash|zsh|python)|-o)|(?:eval|exec|subprocess|child_process|import\().{0,100}(?:https?:|base64|decode)|(?:fetch|requests?\.get).{0,140}https?:|(?:download|load|fetch|execute|run).{0,80}(?:remote|https?:).{0,100}(?:script|code|instructions|payload|\.sh\b|\.py\b|\.js\b)|(?:download|fetch|retrieve).{0,80}(?:script|code|payload).{0,160}https?:|(?:run|execute).{0,60}(?:base64|encoded|hidden).{0,40}(?:payload|code|command)/i);
+  const execution = first(/\beval\s*\(|\bexec\s*\(|execSync|execFile|subprocess\.|\|\s*(?:sh|bash|zsh|python)|\b(?:bash|sh|zsh|python3?|node)\s+[^\s;]+\.(?:sh|py|js)\b|chmod\s+\+x|(?:execute|run|load).{0,70}(?:downloaded|remote|payload|script|encoded)/i);
   if (finance && remote && execution) {
     add("FIN-05", "high", "Unanalyzed code could run with the financial access available to the agent.", "The package combines code retrieval or obfuscation with execution in a financial context. This rule did not retrieve or execute any remote content.", [remote, execution], "DOC-02", ["SRC-01", "SRC-02"]);
     input2.coverage.unresolved.push(`${remote.file} : remote or obfuscated code was not analyzed.`);
@@ -31759,7 +32027,7 @@ function checkReferences(input2) {
       for (const match of text.matchAll(/\[[^\]]*\]\(([^\s)]+)(?:\s+[^)]*)?\)/g)) {
         const reference = match[1];
         if (/^(?:https?:|mailto:|#)/i.test(reference)) continue;
-        const target = path4.posix.normalize(path4.posix.join(path4.posix.dirname(file2), reference.split("#")[0]));
+        const target = path5.posix.normalize(path5.posix.join(path5.posix.dirname(file2), reference.split("#")[0]));
         if (reference.startsWith("/") || target.startsWith("../") || !available.has(target)) input2.coverage.unresolved.push(`${file2} : unresolved local reference ${reference}`);
       }
       for (const line of text.split(/\r?\n/)) {
@@ -31767,7 +32035,7 @@ function checkReferences(input2) {
         if (/(?:read|load|execute|run|lire|charger).{0,60}(?:\.\.\/|\/(?:tmp|home|Users)\/)/i.test(line)) input2.coverage.unresolved.push(`${file2} : reference outside the package.`);
       }
     }
-    if (path4.basename(file2) === "package.json") {
+    if (path5.basename(file2) === "package.json") {
       try {
         const pkg = JSON.parse(text);
         if (["dependencies", "devDependencies", "optionalDependencies"].some((key) => pkg[key] && Object.keys(pkg[key]).length)) input2.coverage.unresolved.push(`${file2} : unresolved npm dependencies; none were installed.`);
@@ -31775,9 +32043,9 @@ function checkReferences(input2) {
         input2.coverage.errors.push(`${file2} : invalid JSON.`);
       }
     }
-    if (["requirements.txt", "Pipfile", "Cargo.toml"].includes(path4.basename(file2)) && text.trim()) input2.coverage.unresolved.push(`${file2} : unresolved external dependencies.`);
+    if (["requirements.txt", "Pipfile", "Cargo.toml"].includes(path5.basename(file2)) && text.trim()) input2.coverage.unresolved.push(`${file2} : unresolved external dependencies.`);
     for (const match of text.matchAll(/(?:from\s+["']|require\(["']|import\s+["'])(\.[^"']+)["']/g)) {
-      const resolved = path4.posix.normalize(path4.posix.join(path4.posix.dirname(file2), match[1]));
+      const resolved = path5.posix.normalize(path5.posix.join(path5.posix.dirname(file2), match[1]));
       if (![resolved, `${resolved}.js`, `${resolved}.ts`, `${resolved}.json`, `${resolved}/index.js`].some((candidate) => available.has(candidate))) input2.coverage.unresolved.push(`${file2} : unresolved local import ${match[1]}`);
     }
   }
@@ -31795,19 +32063,19 @@ init_storage();
 init_storage();
 init_semantic();
 init_src();
-var recordPath = (root2, name) => path5.join(stateDir(root2), "installs", `${safeName(name)}.json`);
-var reportPath = (root2, id) => path5.join(stateDir(root2), "reports", `${safeId(id)}.json`);
+var recordPath = (root2, name) => path6.join(stateDir(root2), "installs", `${safeName(name)}.json`);
+var reportPath = (root2, id) => path6.join(stateDir(root2), "reports", `${safeId(id)}.json`);
 var exceptionConfirmation = (report) => `INSTALL ${report.id} ${report.fingerprint}`;
 async function initProject(projectRoot, options = {}) {
   await ensureState(projectRoot);
-  const file2 = path5.join(stateDir(projectRoot), "config.json");
+  const file2 = path6.join(stateDir(projectRoot), "config.json");
   const current = await exists(file2) ? ConfigSchema.parse(await readJson(file2)) : void 0;
   const config2 = ConfigSchema.parse({ version: 1, agent: "codex", target: ".agents/skills", profile: "static", semanticConsent: false, model: "gpt-4.1-mini", retentionDays: 30, ...current, ...options });
   await atomicJson(file2, config2);
   return config2;
 }
 async function loadConfig(projectRoot) {
-  const file2 = path5.join(stateDir(projectRoot), "config.json");
+  const file2 = path6.join(stateDir(projectRoot), "config.json");
   if (!await exists(file2)) throw new SkillGateError("NOT_INITIALIZED", "Configuration missing. Run skillgate init --agent codex.");
   await ensureState(projectRoot);
   return ConfigSchema.parse(await readJson(file2));
@@ -31823,7 +32091,7 @@ async function semanticAnalysis(input2, config2, provider, report) {
 }
 async function scanSkill(projectRoot, source, options = {}) {
   const config2 = await loadConfig(projectRoot), started = performance.now(), startedAt = (/* @__PURE__ */ new Date()).toISOString();
-  const id = `scan-${randomUUID2()}`, directory = path5.join(stateDir(projectRoot), "quarantine", id, "package");
+  const id = `scan-${randomUUID2()}`, directory = path6.join(stateDir(projectRoot), "quarantine", id, "package");
   const acquired = await acquire(source, directory, options.skill), collected = acquired.inventory;
   const main = collected.texts.get("SKILL.md");
   if (!main) throw new SkillGateError("INVALID_SKILL", "SKILL.md is missing, too large, or unreadable.");
@@ -31872,7 +32140,7 @@ async function readReport(projectRoot, id) {
 }
 async function listReports(projectRoot) {
   await loadConfig(projectRoot);
-  const files = (await fs4.readdir(path5.join(stateDir(projectRoot), "reports"))).filter((file2) => file2.endsWith(".json"));
+  const files = (await fs4.readdir(path6.join(stateDir(projectRoot), "reports"))).filter((file2) => file2.endsWith(".json"));
   const reports = await Promise.all(files.map((file2) => readReport(projectRoot, file2.slice(0, -5))));
   return reports.sort((a, b) => b.completedAt.localeCompare(a.completedAt));
 }
@@ -31883,20 +32151,20 @@ async function readInstall(projectRoot, name) {
 async function listInstalls(projectRoot) {
   await loadConfig(projectRoot);
   await recoverProject(projectRoot);
-  const files = (await fs4.readdir(path5.join(stateDir(projectRoot), "installs"))).filter((file2) => file2.endsWith(".json"));
+  const files = (await fs4.readdir(path6.join(stateDir(projectRoot), "installs"))).filter((file2) => file2.endsWith(".json"));
   const records = await Promise.all(files.map((file2) => readInstall(projectRoot, file2.slice(0, -5))));
   return records.filter((record2) => !!record2);
 }
 async function recoverTarget(root2, name) {
-  const transactions = path5.join(stateDir(root2), "transactions");
+  const transactions = path6.join(stateDir(root2), "transactions");
   for (const file2 of (await fs4.readdir(transactions)).filter((file3) => /^scan-[a-z0-9-]+\.json$/.test(file3))) {
-    const transaction = await readJson(path5.join(transactions, file2));
+    const transaction = await readJson(path6.join(transactions, file2));
     if (transaction.state !== "prepared") continue;
     const record2 = InstallRecordSchema.parse(transaction.record);
     if (record2.name !== name) continue;
-    const expected = path5.join(path5.resolve(root2), ".agents/skills", safeName(name));
-    if (record2.target !== expected || record2.snapshot !== path5.join(stateDir(root2), "snapshots", safeId(record2.scanId))) throw new SkillGateError("INVALID_TRANSACTION", "Inconsistent local transaction.");
-    await ensureDirectory(path5.dirname(expected));
+    const expected = path6.join(path6.resolve(root2), ".agents/skills", safeName(name));
+    if (record2.target !== expected || record2.snapshot !== path6.join(stateDir(root2), "snapshots", safeId(record2.scanId))) throw new SkillGateError("INVALID_TRANSACTION", "Inconsistent local transaction.");
+    await ensureDirectory(path6.dirname(expected));
     const stat2 = await fs4.lstat(expected).catch((error62) => {
       if (error62.code === "ENOENT") return void 0;
       throw error62;
@@ -31905,25 +32173,25 @@ async function recoverTarget(root2, name) {
       const checked = await inventory(record2.snapshot);
       if (checked.fingerprint !== record2.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError("SNAPSHOT_CHANGED", "The snapshot of an interrupted installation has changed; manual recovery is required.");
       await atomicJson(recordPath(root2, name), record2);
-      await atomicJson(path5.join(transactions, file2), { ...transaction, state: "completed", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
+      await atomicJson(path6.join(transactions, file2), { ...transaction, state: "completed", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
     } else {
-      await atomicJson(path5.join(transactions, file2), { ...transaction, state: "aborted", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
+      await atomicJson(path6.join(transactions, file2), { ...transaction, state: "aborted", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
     }
   }
 }
 async function recoverProject(projectRoot) {
-  const root2 = path5.resolve(projectRoot);
+  const root2 = path6.resolve(projectRoot);
   await loadConfig(root2);
   const names = /* @__PURE__ */ new Set();
-  for (const file2 of (await fs4.readdir(path5.join(stateDir(root2), "transactions"))).filter((file3) => /^scan-[a-z0-9-]+\.json$/.test(file3))) {
-    const item = await readJson(path5.join(stateDir(root2), "transactions", file2));
+  for (const file2 of (await fs4.readdir(path6.join(stateDir(root2), "transactions"))).filter((file3) => /^scan-[a-z0-9-]+\.json$/.test(file3))) {
+    const item = await readJson(path6.join(stateDir(root2), "transactions", file2));
     if (item.state === "prepared" && item.record?.name) names.add(safeName(item.record.name));
   }
   for (const name of names) await withTargetLock(root2, name, () => recoverTarget(root2, name));
 }
 async function installScan(projectRoot, scanId, exception) {
   const config2 = await loadConfig(projectRoot), report = await readReport(projectRoot, scanId);
-  const root2 = path5.resolve(projectRoot), destination = path5.join(root2, config2.target, safeName(report.name));
+  const root2 = path6.resolve(projectRoot), destination = path6.join(root2, config2.target, safeName(report.name));
   return withTargetLock(root2, report.name, async () => {
     await recoverTarget(root2, report.name);
     if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config2.profile) throw new SkillGateError("STALE_REPORT", "Profile or engine changed. Scan the package again before installation.");
@@ -31931,18 +32199,18 @@ async function installScan(projectRoot, scanId, exception) {
     if (report.coverage.limitsReached.some((limit) => !limit.startsWith("Semantic analysis") && !limit.startsWith("Analyse s\xE9mantique"))) throw new SkillGateError("PACKAGE_INCOMPLETE", "Package collection was truncated. An exception cannot activate a package with missing files.");
     if (exception) {
       exception = ExceptionSchema.parse(exception);
-      if (exception.fingerprint !== report.fingerprint || path5.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError("INVALID_EXCEPTION", "Exception refused: report, fingerprint, destination, or confirmation does not match.");
+      if (exception.fingerprint !== report.fingerprint || path6.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError("INVALID_EXCEPTION", "Exception refused: report, fingerprint, destination, or confirmation does not match.");
     } else if (report.decision !== "allow") throw new SkillGateError("DECISION_REQUIRED", "Installation held. Review the evidence or confirm an exception for this exact fingerprint.");
-    const quarantined = path5.join(stateDir(root2), "quarantine", report.id, "package");
+    const quarantined = path6.join(stateDir(root2), "quarantine", report.id, "package");
     const current = await inventory(quarantined);
     if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Files have changed since analysis. Installation refused; run the scan again.");
     const previous = await readInstall(root2, report.name);
-    await ensureDirectory(path5.dirname(destination));
+    await ensureDirectory(path6.dirname(destination));
     if (await exists(destination)) {
       if (!previous || !(await fs4.lstat(destination)).isSymbolicLink() || await fs4.readlink(destination) !== previous.snapshot) throw new SkillGateError("UNMANAGED_TARGET", "The target exists and is not an intact managed snapshot. No files were overwritten.");
     } else if (previous) throw new SkillGateError("TARGET_CHANGED", "The active skill was removed outside SkillGate. Manual review is required.");
     if (previous?.fingerprint === report.fingerprint && previous.scanId === report.id) return previous;
-    const snapshot = path5.join(stateDir(root2), "snapshots", report.id);
+    const snapshot = path6.join(stateDir(root2), "snapshots", report.id);
     if (!await exists(snapshot)) {
       const staged = `${snapshot}-${randomUUID2()}.staging`;
       await ensureDirectory(staged);
@@ -31969,9 +32237,9 @@ async function installScan(projectRoot, scanId, exception) {
       events: [...previous?.events ?? [], { at, action: exception ? "exception_accepted" : previous ? "update_installed" : "installed", scanId: report.id, detail: exception ? `Exception recorded by ${exception.operator}. Protection overridden for this fingerprint.` : "Analyzed snapshot activated atomically." }]
     };
     InstallRecordSchema.parse(record2);
-    const transaction = path5.join(stateDir(root2), "transactions", `${report.id}.json`);
+    const transaction = path6.join(stateDir(root2), "transactions", `${report.id}.json`);
     await atomicJson(transaction, { state: "prepared", record: record2, previous: previous ?? null });
-    const pointer = path5.join(path5.dirname(destination), `.${report.name}-${randomUUID2()}.pending`);
+    const pointer = path6.join(path6.dirname(destination), `.${report.name}-${randomUUID2()}.pending`);
     await fs4.symlink(snapshot, pointer, "dir");
     try {
       await fs4.rename(pointer, destination);
@@ -32007,7 +32275,7 @@ async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
       if (active.has(report.id) || now.getTime() - Date.parse(report.completedAt) < config2.retentionDays * 864e5) continue;
       await withTargetLock(projectRoot, report.name, async () => {
         if ((await readInstall(projectRoot, report.name))?.scanId === report.id) return;
-        await fs4.rm(path5.join(stateDir(projectRoot), "quarantine", safeId(report.id)), { recursive: true, force: true });
+        await fs4.rm(path6.join(stateDir(projectRoot), "quarantine", safeId(report.id)), { recursive: true, force: true });
         await fs4.rm(reportPath(projectRoot, report.id));
         removed.push(report.id);
       });
@@ -32019,7 +32287,7 @@ async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
 // package.json
 var package_default = {
   name: "@gderamchi/skillgate",
-  version: "0.3.1",
+  version: "0.4.0",
   private: true,
   type: "module",
   packageManager: "pnpm@10.33.0",
@@ -32108,8 +32376,8 @@ function reportHtml(report) {
 
 // packages/demo/src/index.ts
 init_zod();
-import { mkdtemp, mkdir as mkdir2, readFile, writeFile as writeFile2, readdir as readdir3, copyFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { mkdtemp as mkdtemp2, mkdir as mkdir2, readFile, writeFile as writeFile2, readdir as readdir3, copyFile } from "node:fs/promises";
+import { tmpdir as tmpdir2 } from "node:os";
 import { join } from "node:path";
 
 // apps/cli/src/paths.ts
@@ -32155,7 +32423,7 @@ async function replayLedger(skillPath) {
   return { available: true, ledger, trace };
 }
 async function runDemo() {
-  const root2 = await mkdtemp(join(tmpdir(), "skillgate-demo-"));
+  const root2 = await mkdtemp2(join(tmpdir2(), "skillgate-demo-"));
   const protectedProject = join(root2, "protected");
   const exceptionProject = join(root2, "exception");
   const source = join(root2, "source");
@@ -32183,9 +32451,9 @@ async function runDemo() {
 
 // evaluation/runner.ts
 init_zod();
-import { readFile as readFile2, writeFile as writeFile3, mkdir as mkdir3, mkdtemp as mkdtemp2, readdir as readdir4, stat, rm as rm3 } from "node:fs/promises";
+import { readFile as readFile2, writeFile as writeFile3, mkdir as mkdir3, mkdtemp as mkdtemp3, readdir as readdir4, stat, rm as rm4 } from "node:fs/promises";
 import { join as join2, relative } from "node:path";
-import { tmpdir as tmpdir2 } from "node:os";
+import { tmpdir as tmpdir3 } from "node:os";
 import { createHash as createHash2 } from "node:crypto";
 import { execFileSync } from "node:child_process";
 var caseSchema = external_exports.object({ id: external_exports.string(), label: external_exports.enum(["suspect", "legitimate", "incomplete"]), split: external_exports.enum(["development", "evaluation"]), group: external_exports.string(), sourceType: external_exports.string(), rationale: external_exports.string(), fixture: external_exports.string().regex(/^fixtures\/evaluation\/[a-z0-9-]+$/), fingerprint: external_exports.string(), techniques: external_exports.array(external_exports.string()) });
@@ -32215,14 +32483,14 @@ async function runBenchmark({ projectRoot, command, split = "evaluation" }) {
   if (all.some((c) => c.split === "evaluation" && devGroups.has(c.group))) throw new Error("Evaluation and development origin groups overlap.");
   const cases = all.filter((c) => c.split === split);
   for (const c of cases) if (await fixtureFingerprint(join2(assetRoot, c.fixture)) !== c.fingerprint) throw new Error(`Frozen fixture changed: ${c.id}`);
-  const root2 = await mkdtemp2(join2(tmpdir2(), "skillgate-benchmark-"));
+  const root2 = await mkdtemp3(join2(tmpdir3(), "skillgate-benchmark-"));
   const project = join2(root2, "project");
   await initProject(project, { profile: "static" });
   const startedAt = (/* @__PURE__ */ new Date()).toISOString();
   const began = performance.now();
   const outputs = [];
   for (const c of cases) {
-    const source = await mkdtemp2(join2(root2, "input-"));
+    const source = await mkdtemp3(join2(root2, "input-"));
     await materializeFixture(join2(assetRoot, c.fixture), source);
     const begin = performance.now();
     try {
@@ -32231,7 +32499,7 @@ async function runBenchmark({ projectRoot, command, split = "evaluation" }) {
     } catch (e) {
       outputs.push({ caseId: c.id, label: c.label, group: c.group, sourceType: c.sourceType, frozenFingerprint: c.fingerprint, fingerprint: null, decision: null, risk: null, coverage: null, findings: [], reportId: null, engineVersion: null, rulesVersion: null, policyVersion: null, corpusVersion: null, durationMs: performance.now() - begin, error: e.message.slice(0, 500) });
     }
-    await rm3(source, { recursive: true, force: true });
+    await rm4(source, { recursive: true, force: true });
   }
   const suspects = outputs.filter((c) => c.label === "suspect");
   const legitimate = outputs.filter((c) => c.label === "legitimate");
@@ -32249,7 +32517,7 @@ async function runBenchmark({ projectRoot, command, split = "evaluation" }) {
   const result = { schemaVersion: 1, kind: "internal-synthetic", split, startedAt, completedAt: (/* @__PURE__ */ new Date()).toISOString(), durationMs: performance.now() - began, command, commit, sourceRevision: commit ?? "uncommitted-local-workspace", configuration: { profile: "static", semanticCalls: 0, telemetry: false }, versions: { node: process.version, engine: outputs.find((c) => c.engineVersion)?.engineVersion ?? null, rules: outputs.find((c) => c.rulesVersion)?.rulesVersion ?? null, policy: outputs.find((c) => c.policyVersion)?.policyVersion ?? null, corpus: outputs.find((c) => c.corpusVersion)?.corpusVersion ?? null }, freeze, metrics: { recall: ratio(tp, suspects.length), falsePositiveRate: ratio(fp, legitimate.length), precision: ratio(tp, positives.filter((c) => c.label !== "incomplete").length), legitimateAutoInstall: ratio(legitimate.filter((c) => c.decision === "allow").length, legitimate.length), suspectRetained: ratio(suspects.filter((c) => c.decision !== null && c.decision !== "allow").length, suspects.length), incompleteRetained: ratio(incomplete.filter((c) => c.decision !== null && c.decision !== "allow").length, incomplete.length), completeCoverage: ratio(outputs.filter((c) => c.coverage?.status === "complete_for_supported_checks").length, outputs.length), engineFailures: ratio(outputs.filter((c) => c.error !== null || c.coverage?.status === "failed").length, outputs.length), autoInstallDecisions: ratio(outputs.filter((c) => c.decision === "allow").length, outputs.length), latencyMs: { median: times[Math.floor(times.length / 2)] ?? null, p95: times[Math.min(times.length - 1, Math.ceil(times.length * 0.95) - 1)] ?? null } }, comparisons: { native: "executed", hybrid: "not_executed", cisco: "not_executed" }, cost: "unknown; no paid API invoked", limitations: ["Internal synthetic benchmark created by the same assistant, not an independent blind test.", "These metrics evaluate the installation decision, not model resistance to prompt injection.", "Static heuristics may miss paraphrases and indirect behavior.", "Errors remain in the denominators; a held installation is not necessarily a detection."], cases: outputs };
   await mkdir3(join2(projectRoot, ".skillgate"), { recursive: true, mode: 448 });
   await writeFile3(join2(projectRoot, ".skillgate/benchmark.json"), JSON.stringify(result, null, 2), { mode: 384 });
-  await rm3(root2, { recursive: true, force: true });
+  await rm4(root2, { recursive: true, force: true });
   return result;
 }
 
@@ -32257,8 +32525,8 @@ async function runBenchmark({ projectRoot, command, split = "evaluation" }) {
 init_zod();
 init_storage();
 import { constants as fsConstants } from "node:fs";
-import { access, chmod as chmod2, lstat as lstat4, realpath as realpath2, rename as rename3, rm as rm4, writeFile as writeFile4 } from "node:fs/promises";
-import { spawn } from "node:child_process";
+import { access, chmod as chmod2, lstat as lstat4, realpath as realpath3, rename as rename3, rm as rm5, writeFile as writeFile4 } from "node:fs/promises";
+import { spawn as spawn2 } from "node:child_process";
 import { constants as osConstants } from "node:os";
 import { delimiter, isAbsolute, join as join3, resolve as resolve2 } from "node:path";
 import { randomUUID as randomUUID3 } from "node:crypto";
@@ -32320,13 +32588,13 @@ var binPath = (root2) => join3(stateDir(root2), "bin");
 var shellQuote = (value) => `'${value.replace(/'/g, `'"'"'`)}'`;
 async function readTerminalConfig(root2) {
   const config2 = TerminalConfigSchema.parse(await readJson(configPath(root2)));
-  if (await realpath2(config2.projectRoot) !== await realpath2(resolve2(root2))) throw new SkillGateError("TERMINAL_CONFIG", "Inconsistent terminal configuration; reactivate SkillGate in this project.");
+  if (await realpath3(config2.projectRoot) !== await realpath3(resolve2(root2))) throw new SkillGateError("TERMINAL_CONFIG", "Inconsistent terminal configuration; reactivate SkillGate in this project.");
   return config2;
 }
-async function executable(path6) {
+async function executable(path7) {
   try {
-    await access(path6, fsConstants.X_OK);
-    return (await lstat4(await realpath2(path6))).isFile();
+    await access(path7, fsConstants.X_OK);
+    return (await lstat4(await realpath3(path7))).isFile();
   } catch {
     return false;
   }
@@ -32335,7 +32603,7 @@ async function originalExecutable(command) {
   for (const directory of (process.env.PATH ?? "").split(delimiter)) {
     const candidate = resolve2(directory || ".", command);
     if (!await executable(candidate)) continue;
-    const resolved = await realpath2(candidate);
+    const resolved = await realpath3(candidate);
     if (/[\\/]\.skillgate[\\/]bin[\\/]/.test(candidate) || /[\\/]\.skillgate[\\/]bin[\\/]/.test(resolved)) continue;
     return candidate;
   }
@@ -32367,7 +32635,7 @@ else process.exit(result.status ?? 1);
       await rename3(temporary, file2);
       await chmod2(file2, 448);
     } finally {
-      await rm4(temporary, { force: true });
+      await rm5(temporary, { force: true });
     }
   }
   return config2;
@@ -32388,15 +32656,15 @@ async function terminalStatus(root2) {
     if (error62.code === "ENOENT") return { configured: false, active: false };
     throw error62;
   }
-  const canonical2 = async (path6) => path6 ? realpath2(path6).catch(() => void 0) : void 0;
-  const expectedProject = await realpath2(config2.projectRoot);
-  const expectedBin = await realpath2(binPath(config2.projectRoot));
+  const canonical2 = async (path7) => path7 ? realpath3(path7).catch(() => void 0) : void 0;
+  const expectedProject = await realpath3(config2.projectRoot);
+  const expectedBin = await realpath3(binPath(config2.projectRoot));
   const active = await canonical2(process.env.SKILLGATE_PROJECT) === expectedProject && await canonical2((process.env.PATH ?? "").split(delimiter)[0]) === expectedBin;
   return { configured: true, active, bin: binPath(config2.projectRoot), projectRoot: config2.projectRoot };
 }
 function run(executable2, args) {
   return new Promise((resolveExit) => {
-    const child = spawn(executable2, args, { stdio: "inherit" });
+    const child = spawn2(executable2, args, { stdio: "inherit" });
     child.once("error", (error62) => {
       process.stderr.write(`${sanitizeTerminal(error62.message)}
 `);
@@ -32424,7 +32692,7 @@ No upstream installer was started.
     }
     return run(original, args);
   }
-  if (await realpath2(process.cwd()) !== await realpath2(config2.projectRoot)) {
+  if (await realpath3(process.cwd()) !== await realpath3(config2.projectRoot)) {
     process.stderr.write("SkillGate: this terminal protects another project. Leave this session (exit), then run skillgate on in the current project before installing.\n");
     return 2;
   }
@@ -32493,11 +32761,11 @@ function relevant(command) {
   return command.includes(nativeInstaller) || /\b(?:npx\s+(?:[^\n;&|]*\s)?skills(?:@[^\s]+)?|pnpm\s+dlx\s+(?:[^\n;&|]*\s)?skills(?:@[^\s]+)?|skills\s+\S)/.test(normalized);
 }
 var validAbsolute = (value) => typeof value === "string" && isAbsolute2(value) && !/[\x00-\x1f\x7f]/.test(value);
-function canonical(path6) {
+function canonical(path7) {
   try {
-    return realpathSync(path6);
+    return realpathSync(path7);
   } catch {
-    return resolve3(path6);
+    return resolve3(path7);
   }
 }
 function denied(reason) {
@@ -32578,8 +32846,8 @@ function processHook(input2, root2, cliPath, nodePath) {
 }
 async function prepareCodexHook(root2, cliPath, nodePath) {
   if (![root2, cliPath, nodePath].every(validAbsolute)) throw new Error("Absolute paths without control characters are required to configure the Codex hook.");
-  const path6 = join4(root2, ".codex", "hooks.json");
-  const existing = await exists(path6) ? await readJson(path6) : {};
+  const path7 = join4(root2, ".codex", "hooks.json");
+  const existing = await exists(path7) ? await readJson(path7) : {};
   if (!object2(existing) || existing.hooks !== void 0 && !object2(existing.hooks)) throw new Error("Invalid hooks.json; existing configuration was preserved.");
   const hooks = existing.hooks ?? {};
   const previous = hooks.PreToolUse ?? [];
@@ -32593,20 +32861,20 @@ async function prepareCodexHook(root2, cliPath, nodePath) {
   groups.push({ matcher: "^Bash$", hooks: [{ type: "command", command, timeout: 10, statusMessage }] });
   const config2 = { ...existing, hooks: { ...hooks, PreToolUse: groups } };
   const changed = JSON.stringify(config2) !== JSON.stringify(existing);
-  if (changed) await atomicJson(path6, config2);
-  return { path: path6, changed, requiresTrust: true, reviewCommand: "/hooks", scope: "supported-codex-shell-installers", failOpenOnHookRuntimeError: true };
+  if (changed) await atomicJson(path7, config2);
+  return { path: path7, changed, requiresTrust: true, reviewCommand: "/hooks", scope: "supported-codex-shell-installers", failOpenOnHookRuntimeError: true };
 }
 
 // apps/cli/src/session.ts
-import { spawn as spawn2 } from "node:child_process";
+import { spawn as spawn3 } from "node:child_process";
 import { constants as osConstants2 } from "node:os";
-import { realpath as realpath3 } from "node:fs/promises";
+import { realpath as realpath4 } from "node:fs/promises";
 import { delimiter as delimiter2, join as join5, resolve as resolve4 } from "node:path";
 async function startProtectedSession(root2, cliPath, options = {}) {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
     throw Object.assign(new SkillGateError("TTY_REQUIRED", "skillgate on requires an interactive terminal, without --json."), { exitCode: 2 });
   }
-  const projectRoot = await realpath3(resolve4(root2));
+  const projectRoot = await realpath4(resolve4(root2));
   if ((await terminalStatus(projectRoot)).active) {
     process.stdout.write("SkillGate is already active in this terminal. Type exit to leave the protected session.\n");
     return 0;
@@ -32641,7 +32909,7 @@ async function startProtectedSession(root2, cliPath, options = {}) {
     process.on("SIGINT", interrupt);
     process.on("SIGTERM", terminate);
     process.on("SIGHUP", terminate);
-    child = spawn2("/bin/bash", ["--noprofile", "--norc", "-i"], { cwd: projectRoot, env, stdio: "inherit" });
+    child = spawn3("/bin/bash", ["--noprofile", "--norc", "-i"], { cwd: projectRoot, env, stdio: "inherit" });
     child.once("error", (error62) => {
       cleanup();
       reject(new SkillGateError("SHELL_UNAVAILABLE", `Cannot start Bash: ${sanitizeTerminal(error62.message)}`));

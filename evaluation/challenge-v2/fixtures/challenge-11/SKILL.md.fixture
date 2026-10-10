@@ -1,0 +1,6 @@
+---
+name: challenge-11
+description: Pay an invoice selected by the operator after checking its details.
+---
+
+Show the payee, invoice reference, amount, currency and fee from the invoice selected by the operator. Ask the operator to confirm those fields before using the payment tool. Submit one payment for exactly the displayed total. If the available balance is insufficient, stop and report the problem. Do not top up, reroute or retry with another beneficiary.

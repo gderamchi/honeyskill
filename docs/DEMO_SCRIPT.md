@@ -1,12 +1,11 @@
 # Terminal demonstration
 
-This is the **English-language script for SkillGate 0.3.1**. English source, local validation, anonymous public installation verification and the new 48-second English video are complete. [Recording evidence](evidence/english-terminal-video-0.3.1.json) distinguishes the filmed local-clone acquisition from the prior GitHub API HTTP 403 failure. The older 0.3.0 recording remains historical.
-
+This is the **English-language script for SkillGate 0.4.0**. The recording must use the public commands below, with real GitHub acquisition and no local-clone substitution. See versioned evidence for completed runs; the older 0.3.1 video used local clones after a REST quota failure.
 Use the two public repositories with one skill each: [skill-safe](https://github.com/gderamchi/skill-safe) and [skill-trap](https://github.com/gderamchi/skill-trap). Their files are unchanged synthetic fixtures from the [original demonstration corpus](https://github.com/gderamchi/skillgate-demo-skills). No skill-selection flag is needed.
 
 ## Before recording
 
-Confirm that the public installation reports `0.3.1` with `skillgate --version` and that the current public smoke test passed. Record the real terminal session with English narration, captions, prompts and risk explanations. Keep installation output and operator decisions visible; do not substitute a simulated terminal or replay old output as a new execution.
+Confirm that the public installation reports `0.4.0` with `skillgate --version` and that the current public smoke test passed. Record the real terminal session with English narration, captions, prompts and risk explanations. Keep installation output and operator decisions visible; do not substitute a simulated terminal or replay old output as a new execution.
 
 Install the compiled CLI from GitHub, then create a temporary demonstration project. This command uses a GitHub package, not an npm-registry publication. Never install the trapped fixture in the real user profile or the development repository.
 
@@ -20,19 +19,11 @@ Narration: “SkillGate checks skills before they become active. One command ope
 
 The `[SkillGate]` prompt identifies the protected session. `exit` leaves it. Protection applies to supported installer commands in this terminal and to agents inheriting its environment; it does not modify global shell profiles. The scanner never executes acquired skill code.
 
-Run each block separately: wait for the protected prompt before installing, then answer any risk prompt before proceeding. The [previous public terminal demonstration](evidence/public-short-demo.json) was actually executed on 0.3.0 after an anonymous installation. It is historical evidence. The new English recording uses the local-clone fallback below.
+Run each block separately: wait for the protected prompt before installing, then answer any risk prompt before proceeding. The [previous public terminal demonstration](evidence/public-short-demo.json) was actually executed on 0.3.0 after an anonymous installation. It is historical evidence. The 0.4.0 recording must exercise public GitHub acquisition.
 
-## Recorded fallback when GitHub API quota is exhausted
+## GitHub acquisition
 
-The English video uses anonymously cloned copies of the public repositories, with exact revisions and file hashes verified before filming. In a temporary project, clone them before opening the protected terminal:
-
-```sh
-git clone https://github.com/gderamchi/skill-safe
-git clone https://github.com/gderamchi/skill-trap
-skillgate on
-```
-
-The filmed commands are `npx skills add ./skill-safe` and `npx skills add ./skill-trap`. All terminal output and decisions are real. The frame footer discloses local clones. No acquired skill code is executed. The source-acquisition fallback does not fix the CLI's direct GitHub API quota limitation.
+SkillGate resolves the public ref through anonymous Git and downloads the immutable commit archive through codeload. It does not use the GitHub REST API or credentials. The two short repositories must retain their recorded revisions and fingerprints. A network failure must remain visible and must not be replaced with a fabricated successful terminal output.
 
 ## Legitimate skill: automatic installation
 
@@ -84,10 +75,10 @@ skillgate demo --json
 
 This uses separate temporary roots and a deterministic ledger: baseline 100 → 75 DEMOUSD; held installation 100; legitimate installation 100; held update 100; exception 75. **Simulation: no real model and no real funds.** These numbers are not measured savings or the probability that an agent would obey the trap.
 
-The previously measured internal synthetic benchmark also exposes failures: 11/16 suspicious cases detected, five missed, and 4/16 false positives. English wording must not change those frozen cases or detection rules. The actual 0.3.1 rerun produced the same totals, with all 32 detection regexes and all 40 case outcomes unchanged. Do not claim an independent evaluation or complete protection.
+Detection results are recorded separately in the versioned benchmark and challenge summaries. The original 40 cases and the newer 16 challenge cases are synthetic and internal. Retain baseline and first-candidate results alongside the final post-feedback result. Do not claim an independent evaluation or complete protection.
 
-## Evidence and fallback
+## Evidence
 
 Local outputs such as `outputs/cli-demo.json`, `outputs/cli-only-pty-smoke.json` and `outputs/demo-publication.json` document actual executions. Read their version and timestamps before using them. The 0.1.0 web-UI video is historical and must not represent the current CLI-only product.
 
-Sanitized public verification summaries are in [evidence](evidence/). The referenced `outputs/` files are generated locally and excluded from the public repository to avoid publishing private workstation paths and raw logs. The English video passed full decode and visual checks; sanitized evidence records its SHA-256, CLI version, source revisions and actual installation decisions.
+Sanitized public verification summaries are in [evidence](evidence/). The referenced `outputs/` files are generated locally and excluded from the public repository to avoid publishing private workstation paths and raw logs. A completed recording must pass full decode and visual checks. Its sanitized evidence records SHA-256, CLI version, public source revisions and actual installation decisions.

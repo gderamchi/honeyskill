@@ -1,38 +1,42 @@
 # Architecture
 
-SkillGate Finance contrôle l’installation de skills destinés à des agents financiers. Il n’intercepte pas leurs transactions à l’exécution.
+SkillGate checks financial-agent skills before installation. It does not control transactions after activation.
 
-Le CLI appelle le moteur partagé : acquisition sans exécution → inventaire et empreinte canonique → règles financières → analyse sémantique si explicitement configurée → politique déterministe → snapshot vérifié et activation. Les adaptateurs terminal remplacent les commandes d’installation prises en charge avant leur exécution ; un hook Codex optionnel ajoute la même réécriture dans les outils shell de l’agent.
+The shared pipeline is: acquire without executing code → inventory and fingerprint → financial rules → optional explicitly configured semantic analysis → deterministic policy → verified snapshot activation.
 
-- `packages/contracts` : schémas Zod des rapports, constats, couverture, configuration, décisions et sources.
-- `packages/core` : collecte locale/GitHub, règles FIN-01 à FIN-06, politique, fournisseur sémantique facultatif, état et installation.
-- `apps/cli` : commandes, rendu terminal/HTML, wrappers PATH et hook Codex. Le fichier server.ts est une archive de la version 0.1.0, non importée dans le produit.
-- `apps/web` : archive React/Vite de la version 0.1.0, conservée pour traçabilité et exclue du produit.
-- `packages/demo` : registre fictif et relecture d’actions bornées, sans shell ni réseau.
-- `evaluation` : étiquettes externes aux paquets, gel des empreintes, runner reproductible.
+## Components
 
-## Frontières
+- `packages/contracts`: validated reports, findings, coverage, installation records and sources.
+- `packages/core`: acquisition, FIN-01…06 checks, policy, optional provider and local persistence.
+- `apps/cli`: English commands, terminal/HTML reports, PATH wrappers and optional Codex hook.
+- `apps/web` and `server.ts`: historical UI code, excluded from the shipped CLI.
+- `packages/demo`: a deterministic fictional ledger, without a live model or real financial operations.
+- `evaluation`: frozen synthetic cases, labels outside scanned packages, runners and measured results.
 
-Les paquets entrants sont des données hostiles. Aucun hook, script ni gestionnaire de dépendances du skill n’est exécuté. Les références distantes incluses dans les paquets ne sont pas téléchargées. Le fournisseur IA ne dispose d’aucun outil et ne peut pas activer un skill ni supprimer un constat natif.
+## Installation boundary
 
-Les octets inventoriés sont copiés en quarantaine privée, hors des emplacements de découverte Codex. Le manifeste trié contient chemins, tailles, SHA-256 et indicateur exécutable. La promotion recontrôle ce manifeste. Le dossier actif est un lien symbolique vers un snapshot ; son remplacement atomique conserve l’ancienne cible jusqu’à validation. Les liens entrants sont refusés, tandis que ce lien de sortie est créé par l’adaptateur.
+`skillgate on` starts Bash without startup files and places wrappers for supported `npx`, `pnpm` and `skills` commands first on PATH. They route installation through the scanner before the upstream installer executes. `exit` returns to the parent shell. Global profiles and user history are not modified.
 
-La découverte `.agents/skills`, les liens symboliques et le chargement des modifications sont documentés dans [Build skills](https://learn.chatgpt.com/docs/build-skills), consulté le 10 octobre 2026. Le build prouve le placement des fichiers ; il ne revendique pas une exécution d’un modèle Codex sur une fixture hostile.
+This covers supported commands in the activated project/session and descendants inheriting its environment. Absolute binaries, manual copies, arbitrary installers and other sessions remain outside the boundary. The optional Codex hook adds rewriting subject to native trust review and host permissions; it is not a security sandbox.
 
-## État local
+## Untrusted bytes
 
-Configuration, rapports, quarantaine, snapshots, installations, verrous et transactions restent dans `.skillgate/`. Les écritures JSON passent par fichier temporaire et renommage ; les opérations sur une cible sont verrouillées. Le journal n’est pas inviolable contre le propriétaire du compte. Aucune télémétrie ni base distante.
+Skill scripts, hooks and dependency installers are never executed. Remote references found inside skills are not fetched. Collected files enter private quarantine outside the agent's discovery directory.
 
-Le serveur historique de 0.1.0, exclu du build CLI actuel, écoutait uniquement sur `127.0.0.1`. Un lien de session initial établit un cookie HttpOnly/SameSite=Strict puis redirige vers une URL sans jeton. Hôte et origine sont vérifiés ; l’UI est entièrement en lecture seule. Les exceptions exigent le CLI, donc aucune route de mutation web n’existe. Les skills sont rendus comme texte échappé, sous CSP restrictive.
+GitHub acquisition in 0.4.0 resolves a public revision using Git and downloads its immutable codeload archive. It uses neither the GitHub REST API nor a token. Resolution, download and parsing are bounded. Invalid paths, links, special files, malformed archives and exceeded limits fail closed. The selected skill is inventoried with the same policy as a local source.
 
-## Politique
+The canonical manifest contains sorted relative paths, sizes, SHA-256 values and executable flags. Before activation, SkillGate inventories the quarantined bytes again and verifies the prepared snapshot. The active directory is a symlink created by SkillGate to that snapshot. Updates replace the pointer atomically only after verification.
 
-Risque et couverture restent séparés. Une analyse statique complète pour les contrôles pris en charge, sans constat financier pertinent, peut auto-installer. Une couverture partielle ou un profil hybride non terminé ne le peut pas. Une exception lie rapport, empreinte, destination, confirmation et opérateur déclaré ; elle n’autorise pas une mise à jour future. Il n’y a aucun cache de verdict partagé entre versions ou profils : chaque nouvelle opération relance l’analyse.
+## Detection and policy
 
-## Preuves de distribution
+The default engine uses local text heuristics and evidence correlation. Matching may normalize concealed characters while evidence retains the original source text. Negated and explicitly rejected examples need local context; an educational label cannot exempt the entire package.
 
-La release publique contient le CLI autonome et ses empreintes. Le dépôt contient les tests et les résumés expurgés dans `docs/evidence/`. Les scans sont réels ; le modèle du smoke Codex et le registre financier de démonstration sont des simulations explicites. La sandbox Codex continue de contrôler l’écriture dans `.agents` : aucune élévation de permission n’est effectuée par SkillGate.
+Risk and coverage remain separate. A complete supported scan with no financial findings may auto-install. Findings or incomplete analysis require review; high/critical supported findings hold the package. Failed acquisition never activates it. Truncated packages cannot be activated through an exception.
 
-## Activation courte (0.3.0)
+An exception binds one report, fingerprint and destination to the operator's recorded choice. It does not authorize future versions. Changes to rules, engine or profile invalidate old reports for activation. A semantic provider cannot remove native findings or grant installation authority.
 
-`skillgate on` initialise le projet et ouvre Bash sans fichiers de démarrage, avec les wrappers en tête de PATH. Le prompt indique la session protégée ; `exit` ferme cette session sans modifier le shell parent ni écrire son historique. Le dépôt distribue `dist/` pour permettre `npm i -g gderamchi/skillgate` sans phase de compilation ni dépendance runtime externe.
+## Local state and distribution
+
+Configuration, quarantine, reports, snapshots, installation records, locks and recovery transactions live in `.skillgate/`. JSON writes use temporary files and rename; activation locks the affected skill. There is no telemetry or remote database. The OS account owner can alter this state.
+
+The public repository commits the compiled CLI and data with no install/build lifecycle hook, enabling `npm i -g gderamchi/skillgate`. Summaries in `docs/evidence/` distinguish actual tests/acquisition/installations, synthetic detection measurements and simulated model/ledger work. Raw workstation logs stay local.

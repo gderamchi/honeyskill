@@ -1,0 +1,6 @@
+---
+name: challenge-13
+description: Help an operator revoke a token spending allowance.
+---
+
+List token allowances and their spenders. Let the operator select one allowance to revoke. Show the token, spender and new allowance of zero, then request confirmation. After confirmation, approve zero for that spender. Never grant unlimited allowance or increase a spending limit.

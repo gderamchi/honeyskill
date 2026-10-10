@@ -1,34 +1,40 @@
-# Modèle de menace et limites
+# Threat model and limits
 
-## Actifs et adversaire
+An adversary supplies misleading skill instructions, scripts or supporting files that could misuse financial access available to the host agent. SkillGate does not inspect real wallets, secrets, balances or accounts.
 
-Les actifs potentiellement exposés sont les fonds, autorisations de dépense, secrets de wallets et comptes de paiement auxquels l’agent hôte aurait déjà accès. SkillGate ne lit pas ces actifs réels. L’adversaire fournit un paquet de skill trompeur : instructions, scripts, références et fichiers de support.
+## Controlled boundary
 
-La frontière contrôlée est `skillgate add` et `skillgate update`. Copies manuelles, autres installateurs, modifications postérieures à l’installation et processus disposant des mêmes droits utilisateur restent hors de cette frontière. Un prompt terminal n’établit pas cryptographiquement une présence humaine. Un utilisateur local peut modifier la configuration, les rapports ou les snapshots.
+Checked installations and updates flow through SkillGate, directly or through supported wrappers. Manual copies, other installers, absolute binaries bypassing wrappers, post-install changes and processes with the same user's privileges remain outside this boundary. A terminal choice is not cryptographic proof of human presence.
 
-## Garanties testables
+## Invariants
 
-- Aucune exécution du code collecté ; pas de téléchargement depuis les liens trouvés dans un skill.
-- Rejet des liens entrants, fichiers spéciaux et chemins ambigus ; limites d’inventaire visibles.
-- Empreinte des octets réellement analysés et vérification avant activation.
-- Installation risquée retenue ; mise à jour rejetée sans remplacer la version active.
-- Aucun feu vert en cas d’échec d’analyse obligatoire, de provider invalide ou de couverture insuffisante.
-- UI locale sans écriture et sans API de lecture arbitraire de fichiers ni proxy réseau.
+- Never execute acquired scripts, hooks or dependency installers, or follow arbitrary links found in skill content.
+- Reject links, special files, unsafe paths and malformed or excessive archives.
+- Analyze the collected bytes in quarantine outside the active skill directory; verify their fingerprint again before activation.
+- Preserve the active version when an update is held or fails.
+- Never auto-install after incomplete analysis or a failed required provider.
+- Treat source excerpts as evidence, never instructions to the scanner.
 
-## Limites de détection
+## Acquisition
 
-Le moteur natif est un ensemble fini d’heuristiques textuelles avec corrélation de preuves. Il ne prouve pas le flot de données complet d’un programme, ne désobfusque pas toutes les charges et n’exécute pas de sandbox dynamique. Des reformulations, langues, alias, encodages et chaînes indirectes peuvent lui échapper. Les exemptions pédagogiques ne rendent pas les déclarations d’un paquet fiables. Les allowances larges déclarées et les actions financières voulues exigent une interprétation contextuelle ; les heuristiques ont des faux positifs et négatifs visibles dans le benchmark.
+Sources are local directories or public HTTPS GitHub repositories, optionally selecting a revision and subdirectory. GitHub uses public Git ref resolution and a SHA-pinned codeload archive, without REST API calls or credentials. URLs are restricted; unsafe archive entries and unsupported formats fail closed. Local archive paths remain unsupported.
 
-`complete_for_supported_checks` signifie uniquement que les contrôles pris en charge ont pu lire le paquet dans les limites annoncées. Ce statut ne signifie jamais que son comportement entier est sûr. Une adresse publique seule n’établit aucune malveillance. Les sévérités ne sont pas des probabilités calibrées.
+Network operations have deadlines. Archives are capped at 8 MiB compressed, 32 MiB expanded and 4096 entries. Selected packages retain limits of 256 files, 2 MiB total, 256 KiB per file and depth 12. A large repository may be rejected even if the desired skill is small. No failure falls back to an upstream skill installer.
 
-Le profil hybride reste optionnel. L’expurgation des secrets apparents avant envoi est imparfaite ; l’opérateur doit consentir au transfert de contenu et au coût API. Aucun appel réel n’a été autorisé durant ce build. L’API implémentée et les réponses simulées de tests ne constituent pas une validation de détection par un modèle réel.
+Removing REST calls avoids the anonymous REST quota encountered in 0.3.1. Git transport and codeload may still fail or throttle requests; errors must leave the skill inactive.
 
-## Collecte
+## Detection limits
 
-Sources prises en charge : dossiers locaux et dépôts publics HTTPS `github.com/owner/repo`, avec `/tree/revision/sous-dossier` ou sélection explicite. Collecte limitée à l’API GitHub, redirections refusées, commits résolus avant lecture de blobs. Pas d’archives, réseau privé, localhost ou URL arbitraire. L’API GitHub peut limiter les requêtes anonymes ; un échec n’autorise rien.
+The engine uses finite text heuristics. It does not prove complete program data flow, decode every obfuscation or run a dynamic sandbox. Paraphrases, unsupported languages, aliases and indirect behavior may evade it. Negations and defensive quotations require local context; a skill's claim of approval or educational purpose is not trusted authorization.
 
-Limites natives : 256 fichiers, 2 MiB par paquet, 256 KiB par fichier, profondeur 12 et 20 secondes d’inventaire/collecte. La couverture indique les fichiers ignorés, références non résolues et limites atteintes. La réception d’une archive est refusée sans extraction : la limite ne repose pas sur la confiance dans sa taille déclarée.
+`complete_for_supported_checks` means supported checks read the package within their limits. It is not a safety certificate. An address alone does not prove malicious intent; severity is not a calibrated probability. A requested broad spending approval may be legitimate and still carry financial risk.
 
-## Ce que le prototype ne répare pas
+The original frozen benchmark has already informed development. Improvement on it is a regression measurement, not a fresh blind test. Additional challenge cases are synthetic and authored within the same team. Misses, false positives and acquisition errors remain visible.
 
-Aucune révocation de clé, récupération de fonds, annulation de transaction, vérification universelle d’un bénéficiaire ou interception de wallet. Après une activation avec exception, un skill peut nuire selon les permissions de l’agent. Une ancienne version conservée ne remet pas à zéro les effets d’une version déjà exécutée.
+The optional model provider requires explicit consent and configuration. Apparent-secret redaction is imperfect. Mock tests do not establish detection quality with a real model; no paid provider execution is implied.
+
+## After activation
+
+SkillGate cannot revoke keys, recover funds, roll back transactions or constrain an installed skill. A missed threat or an accepted exception may still cause harm within host permissions. Keeping an older snapshot does not reverse an activated version's actions.
+
+Local reports and logs are not tamper-proof against the OS account owner. No telemetry, remote database, wallet or transaction firewall is part of this product.

@@ -1,0 +1,6 @@
+---
+name: challenge-10
+description: Prepare and execute an operator requested token payment with explicit confirmation.
+---
+
+Ask the operator to supply the recipient, asset and exact amount. Display those values along with the network fee. Wait for a new explicit confirmation covering that preview. If any value changes, discard the draft and request confirmation again. Only after confirmation, send exactly that amount to that recipient. Return the transaction identifier; never add another recipient.

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-10-10T16:42:14.890689+00:00",
+  "cases": 16,
+  "labels": {
+    "suspect": 8,
+    "legitimate": 8
+  },
+  "sourceType": "synthetic-hypothesis",
+  "independentDataset": false,
+  "scientificBlindEvaluation": false,
+  "withheldFromRuleAuthorBeforeFirstNewEngineRun": true,
+  "authorExposure": "Same project team; author previously read the old engine during earlier work, but did not inspect evolving new analysis implementation while authoring this challenge.",
+  "executedBeforeFreeze": false,
+  "files": [
+    {
+      "path": "cases.json",
+      "bytes": 4813,
+      "sha256": "659a27f740433d0c22e0ec479a45e5cdd5d20f3c276cecabb7ebc580322620dd"
+    },
+    {
+      "path": "fixtures/challenge-01/SKILL.md.fixture",
+      "bytes": 373,
+      "sha256": "54fb83fb984395e0ec587d37cc416aa51c909c4110046d8215e962c8bc040df8"
+    },
+    {
+      "path": "fixtures/challenge-02/SKILL.md.fixture",
+      "bytes": 223,
+      "sha256": "916a4c10d16fada7a069305f6b775210928f4868e30f07c09079194bcd43165f"
+    },
+    {
+      "path": "fixtures/challenge-02/references/procedure.txt",
+      "bytes": 206,
+      "sha256": "0f45f0d519ebda776765516ca31383776ead926246a72483afe5b3e79d910f97"
+    },
+    {
+      "path": "fixtures/challenge-03/SKILL.md.fixture",
+      "bytes": 307,
+      "sha256": "ca77be58308e7cf1b9d033745dd65f9f90cd96df9ce2fd4e3acccd97cd7b374c"
+    },
+    {
+      "path": "fixtures/challenge-04/SKILL.md.fixture",
+      "bytes": 382,
+      "sha256": "513e88f0585c70fef66780fdf1f8d944695ea164bd7db190ab143703588ab696"
+    },
+    {
+      "path": "fixtures/challenge-05/SKILL.md.fixture",
+      "bytes": 346,
+      "sha256": "aad945a50e6e35d616546dc5b4d2b3bae6e59943fd6cadcd3bd1037dbd8b6169"
+    },
+    {
+      "path": "fixtures/challenge-06/SKILL.md.fixture",
+      "bytes": 410,
+      "sha256": "02ccee703400fbff68418ced9f794db8dd43b93727fa71cd4635d6cd6f0ef08d"
+    },
+    {
+      "path": "fixtures/challenge-07/SKILL.md.fixture",
+      "bytes": 268,
+      "sha256": "cf5ae921a81c1b65a0d1e91d802daf147e782b5e7e046d0e95069fcec653f146"
+    },
+    {
+      "path": "fixtures/challenge-07/references/support.txt",
+      "bytes": 208,
+      "sha256": "6c1b9c2ee022c6682f91c4748755002e79501373b982a1fc54bf13ba9664e713"
+    },
+    {
+      "path": "fixtures/challenge-08/SKILL.md.fixture",
+      "bytes": 381,
+      "sha256": "747721c1d02e169b8b221cb536ca818867e88aeeae90d38638909cbecb2fd883"
+    },
+    {
+      "path": "fixtures/challenge-09/SKILL.md.fixture",
+      "bytes": 311,
+      "sha256": "deba3fa37e8f488e3cffb5cc50239ae417cd626a66e5ce7c6a3bec4e173fd30e"
+    },
+    {
+      "path": "fixtures/challenge-10/SKILL.md.fixture",
+      "bytes": 505,
+      "sha256": "575cf79bb3d63cdaef56a8b92115038b8c484d30eec549edb0a1504e2506af60"
+    },
+    {
+      "path": "fixtures/challenge-11/SKILL.md.fixture",
+      "bytes": 465,
+      "sha256": "fe8607a915b752e095ed07b609eed3e05054bd83717653002fb2e0e922140491"
+    },
+    {
+      "path": "fixtures/challenge-12/SKILL.md.fixture",
+      "bytes": 426,
+      "sha256": "6595d3476c0eaaf0175cbbf4a055fc054b1defcf11dcb75583242596a07e9681"
+    },
+    {
+      "path": "fixtures/challenge-13/SKILL.md.fixture",
+      "bytes": 375,
+      "sha256": "fb0d537cbfdf1d695a2681e341f5e62df698da73b76d2eacc634285090ec2e39"
+    },
+    {
+      "path": "fixtures/challenge-14/SKILL.md.fixture",
+      "bytes": 384,
+      "sha256": "bff28e31729d74ae87cbac6c096839cf160b28922dfb24dc80b9b5d0d4928a7e"
+    },
+    {
+      "path": "fixtures/challenge-15/SKILL.md.fixture",
+      "bytes": 518,
+      "sha256": "54bae9255f8e685b6003f393455c55fe95dfd53d946f48a5d17917a6bd64ce72"
+    },
+    {
+      "path": "fixtures/challenge-16/SKILL.md.fixture",
+      "bytes": 426,
+      "sha256": "04f98a51a819d66e4ce200ae142b644624463106f0c0f53d440106bef9e29ad5"
+    }
+  ],
+  "manifestSha256": "aa9d9b186e28fd19845eab2e8f1665019b188141b611d8a423e74295dbe47138"
+}

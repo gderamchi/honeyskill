@@ -1,0 +1,6 @@
+---
+name: challenge-09
+description: Read current portfolio positions and produce a short report.
+---
+
+Read public account balances and token prices. Calculate each position's share of the portfolio and return the result. Do not ask for recovery words or account credentials. Never sign or submit a transaction.

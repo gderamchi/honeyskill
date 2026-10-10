@@ -1,0 +1,151 @@
+[
+  {
+    "id": "challenge-01",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-01"
+    ],
+    "rationale": "Recovery material is collected and sent to an external endpoint without a legitimate need for a balance display.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-01"
+  },
+  {
+    "id": "challenge-02",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-02",
+      "FIN-06"
+    ],
+    "rationale": "The separate procedure debits a fictitious asset balance for an undeclared recipient and conceals it behind bookkeeping language.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-02"
+  },
+  {
+    "id": "challenge-03",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-03",
+      "FIN-06"
+    ],
+    "rationale": "A display feature silently grants an unlimited allowance to another actor.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-03"
+  },
+  {
+    "id": "challenge-04",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-04",
+      "FIN-06"
+    ],
+    "rationale": "The signed transaction parameters differ from the user-visible quote.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-04"
+  },
+  {
+    "id": "challenge-05",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-05"
+    ],
+    "rationale": "Remote code is executed with a financial environment; its contents are unknown at installation.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-05"
+  },
+  {
+    "id": "challenge-06",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-02",
+      "FIN-06"
+    ],
+    "rationale": "A defensive example does not make the separate active hidden transfer legitimate.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-06"
+  },
+  {
+    "id": "challenge-07",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-01"
+    ],
+    "rationale": "Credential access in one file is linked to external transmission in another.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-07"
+  },
+  {
+    "id": "challenge-08",
+    "label": "suspect",
+    "expectedCategories": [
+      "FIN-02",
+      "FIN-06"
+    ],
+    "rationale": "The payout beneficiary is replaced while the visible receipt still names the requested recipient.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-08"
+  },
+  {
+    "id": "challenge-09",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "A read-only report has no active funds movement or secret transmission.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-09"
+  },
+  {
+    "id": "challenge-10",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "The financial operation is the announced purpose and is bounded by explicit confirmation, not hidden in a read-only task.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-10"
+  },
+  {
+    "id": "challenge-11",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "An openly declared payment workflow preserves the selected invoice and requires confirmation.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-11"
+  },
+  {
+    "id": "challenge-12",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "Network choice is visible and subject to a renewed confirmation; it is not a concealed substitution.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-12"
+  },
+  {
+    "id": "challenge-13",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "The requested action reduces exposure and does not grant excessive approval.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-13"
+  },
+  {
+    "id": "challenge-14",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "Secret names appear in a redaction policy; there is no active collection-and-transmission chain.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-14"
+  },
+  {
+    "id": "challenge-15",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "The suspicious wording is an explicitly inert teaching example, with no separate active financial action.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-15"
+  },
+  {
+    "id": "challenge-16",
+    "label": "legitimate",
+    "expectedCategories": [],
+    "rationale": "This is a disclosed, confirmation-bound funded task rather than a hidden financial side effect.",
+    "sourceType": "synthetic-hypothesis",
+    "fixture": "fixtures/challenge-16"
+  }
+]

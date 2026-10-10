@@ -1,5 +1,10 @@
 # Public execution evidence
 
+- `local-validation-0.4.0.json`: 85 tests, 13 terminal decision flows, ten protected-session checks and seven packaged interception cases.
+- `github-acquisition-0.4.0.json`: actual anonymous Git/codeload downloads of known public fixtures, strict bounds and process-group cleanup tests. No GitHub REST API calls.
+- `detection-comparison-0.4.0.json` and `benchmark-0.4.0.json`: unchanged original 40-case regression measurement, with baseline and remaining coverage/error cases.
+- `challenge-comparison-0.4.0.json`: frozen additional synthetic challenge, with baseline, first candidate and post-feedback runs preserved; same-team and non-independent.
+
 - `english-terminal-video-0.3.1.json`: real English CLI session, 48-second video, verified public Git clones, real held/override checks and the separate HTTP 403 acquisition limitation.
 
 - `public-short-install-0.3.1.json`: anonymous English release installation, ten protected-session checks, 47 public-source tests and a byte-identical rebuild.

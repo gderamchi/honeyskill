@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "kind": "actual-synthetic-regression-measurement",
+  "completedAt": "2026-10-10T16:58:19.134537+00:00",
+  "command": "pnpm benchmark",
+  "caseCount": 40,
+  "casesAndFreezeUnchanged": true,
+  "baseline": {
+    "productVersion": "0.3.1",
+    "versions": {
+      "node": "v25.6.1",
+      "engine": "0.1.0",
+      "rules": "finance-native-3",
+      "policy": "finance-policy-1",
+      "corpus": "2026-10-10"
+    },
+    "completedAt": "2026-10-10T16:27:10.135Z",
+    "metrics": {
+      "recall": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "falsePositiveRate": {
+        "numerator": 4,
+        "denominator": 16,
+        "value": 0.25
+      },
+      "precision": {
+        "numerator": 11,
+        "denominator": 15,
+        "value": 0.7333333333333333
+      },
+      "legitimateAutoInstall": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "suspectRetained": {
+        "numerator": 11,
+        "denominator": 16,
+        "value": 0.6875
+      },
+      "incompleteRetained": {
+        "numerator": 7,
+        "denominator": 8,
+        "value": 0.875
+      },
+      "completeCoverage": {
+        "numerator": 29,
+        "denominator": 40,
+        "value": 0.725
+      },
+      "engineFailures": {
+        "numerator": 1,
+        "denominator": 40,
+        "value": 0.025
+      },
+      "autoInstallDecisions": {
+        "numerator": 16,
+        "denominator": 40,
+        "value": 0.4
+      },
+      "latencyMs": {
+        "median": 10.449749999999995,
+        "p95": 16.244583000000006
+      }
+    }
+  },
+  "current": {
+    "productVersion": "0.4.0",
+    "versions": {
+      "node": "v25.6.1",
+      "engine": "0.2.0",
+      "rules": "finance-native-4",
+      "policy": "finance-policy-1",
+      "corpus": "2026-10-10"
+    },
+    "completedAt": "2026-10-10T16:58:19.090Z",
+    "metrics": {
+      "recall": {
+        "numerator": 16,
+        "denominator": 16,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 16,
+        "value": 0
+      },
+      "precision": {
+        "numerator": 16,
+        "denominator": 16,
+        "value": 1
+      },
+      "legitimateAutoInstall": {
+        "numerator": 15,
+        "denominator": 16,
+        "value": 0.9375
+      },
+      "suspectRetained": {
+        "numerator": 16,
+        "denominator": 16,
+        "value": 1
+      },
+      "incompleteRetained": {
+        "numerator": 7,
+        "denominator": 8,
+        "value": 0.875
+      },
+      "completeCoverage": {
+        "numerator": 29,
+        "denominator": 40,
+        "value": 0.725
+      },
+      "engineFailures": {
+        "numerator": 1,
+        "denominator": 40,
+        "value": 0.025
+      },
+      "autoInstallDecisions": {
+        "numerator": 15,
+        "denominator": 40,
+        "value": 0.375
+      },
+      "latencyMs": {
+        "median": 11.478416000000038,
+        "p95": 19.07858300000001
+      }
+    }
+  },
+  "changedOutcomes": [
+    {
+      "caseId": "case-003",
+      "label": "suspect",
+      "before": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      },
+      "after": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-004",
+      "label": "suspect",
+      "before": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      },
+      "after": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-007",
+      "label": "suspect",
+      "before": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      },
+      "after": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-011",
+      "label": "suspect",
+      "before": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      },
+      "after": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-016",
+      "label": "suspect",
+      "before": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      },
+      "after": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-017",
+      "label": "legitimate",
+      "before": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      },
+      "after": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-019",
+      "label": "legitimate",
+      "before": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      },
+      "after": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-022",
+      "label": "legitimate",
+      "before": {
+        "decision": "review",
+        "risk": "detected",
+        "error": null
+      },
+      "after": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      }
+    },
+    {
+      "caseId": "case-026",
+      "label": "legitimate",
+      "before": {
+        "decision": "hold",
+        "risk": "detected",
+        "error": null
+      },
+      "after": {
+        "decision": "allow",
+        "risk": "none",
+        "error": null
+      }
+    }
+  ],
+  "remainingMisses": [],
+  "remainingFalsePositives": [],
+  "errors": [
+    {
+      "caseId": "case-040",
+      "error": "SKILL.md is missing, too large, or unreadable."
+    }
+  ],
+  "limitations": [
+    "The original frozen benchmark was already inspected and informed development; this is not an independent blind evaluation.",
+    "Fixtures and labels were not edited to improve scores.",
+    "Synthetic installation-risk detection does not measure a real model obeying an attack."
+  ],
+  "paidProviderCalls": 0
+}

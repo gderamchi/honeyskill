@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-10-10T16:55:42.934Z",
+  "status": "passed",
+  "acquisition": "public Git reference resolution and immutable codeload tar.gz",
+  "integration": {
+    "actualCodeloadRequests": 8,
+    "gitReferenceResolutionInvocations": 4,
+    "githubRestApiCalls": 0,
+    "authenticationHeaders": false,
+    "credentialsUsed": false,
+    "acquiredCodeExecuted": false,
+    "paidProviderCalls": 0,
+    "modelCalls": 0,
+    "realFunds": false,
+    "temporaryProjectRemoved": true
+  },
+  "results": [
+    {
+      "name": "safe-default-branch",
+      "source": "https://github.com/gderamchi/skillgate-demo-skills",
+      "revision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "db5853ccae037ac6cbd5bb6e348f420fc57815b05e0441f4900bce0a27d409e6",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "allow",
+      "installed": true,
+      "coverage": "complete_for_supported_checks",
+      "findings": [],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "safe-pinned-commit",
+      "source": "https://github.com/gderamchi/skillgate-demo-skills/tree/f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42/skills/portfolio-summary",
+      "revision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "db5853ccae037ac6cbd5bb6e348f420fc57815b05e0441f4900bce0a27d409e6",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "allow",
+      "installed": true,
+      "coverage": "complete_for_supported_checks",
+      "findings": [],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "trap-default-branch",
+      "source": "https://github.com/gderamchi/skillgate-demo-skills",
+      "revision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "8212eace5b08306429a51df67d3bf8b3ffcb7f026c4a9229b0190878bb0d260e",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "hold",
+      "installed": false,
+      "coverage": "complete_for_supported_checks",
+      "findings": [
+        "FIN-02",
+        "FIN-06"
+      ],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "trap-pinned-commit-case-insensitive-repository",
+      "source": "https://github.com/gderamchi/SkillGate-Demo-Skills/tree/f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42/skills/portfolio-summary-trap",
+      "revision": "f8dc9c55d68a7b9e00be5d90646a49cf0c3e7d42",
+      "fingerprint": "8212eace5b08306429a51df67d3bf8b3ffcb7f026c4a9229b0190878bb0d260e",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "hold",
+      "installed": false,
+      "coverage": "complete_for_supported_checks",
+      "findings": [
+        "FIN-02",
+        "FIN-06"
+      ],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "short-safe-default-branch",
+      "source": "https://github.com/gderamchi/skill-safe",
+      "revision": "0813e8999f14880768ce4bfb75fc8bd2b98c5fd0",
+      "fingerprint": "db5853ccae037ac6cbd5bb6e348f420fc57815b05e0441f4900bce0a27d409e6",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "allow",
+      "installed": true,
+      "coverage": "complete_for_supported_checks",
+      "findings": [],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "short-safe-pinned-commit-case-insensitive-repository",
+      "source": "https://github.com/gderamchi/Skill-Safe/tree/0813e8999f14880768ce4bfb75fc8bd2b98c5fd0/skills/portfolio-summary",
+      "revision": "0813e8999f14880768ce4bfb75fc8bd2b98c5fd0",
+      "fingerprint": "db5853ccae037ac6cbd5bb6e348f420fc57815b05e0441f4900bce0a27d409e6",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "allow",
+      "installed": true,
+      "coverage": "complete_for_supported_checks",
+      "findings": [],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "short-trap-default-branch",
+      "source": "https://github.com/gderamchi/skill-trap",
+      "revision": "78a5f17c3afb8e4bcd2680b7642f2b4df5268d21",
+      "fingerprint": "8212eace5b08306429a51df67d3bf8b3ffcb7f026c4a9229b0190878bb0d260e",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "hold",
+      "installed": false,
+      "coverage": "complete_for_supported_checks",
+      "findings": [
+        "FIN-02",
+        "FIN-06"
+      ],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    },
+    {
+      "name": "short-trap-pinned-commit",
+      "source": "https://github.com/gderamchi/skill-trap/tree/78a5f17c3afb8e4bcd2680b7642f2b4df5268d21/skills/portfolio-summary-trap",
+      "revision": "78a5f17c3afb8e4bcd2680b7642f2b4df5268d21",
+      "fingerprint": "8212eace5b08306429a51df67d3bf8b3ffcb7f026c4a9229b0190878bb0d260e",
+      "matchesPreviouslyVerifiedDownloadableFixture": true,
+      "decision": "hold",
+      "installed": false,
+      "coverage": "complete_for_supported_checks",
+      "findings": [
+        "FIN-02",
+        "FIN-06"
+      ],
+      "engineVersion": "0.2.0",
+      "rulesVersion": "finance-native-4"
+    }
+  ],
+  "validation": {
+    "githubAcquisitionTests": {
+      "passed": 15,
+      "failed": 0
+    },
+    "coreRegressionTests": {
+      "passed": 25,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "unitTransport": "mocked Git/fetch responses, real synthetic parent/helper process groups, and a stalled real Git HTTP loopback request; no real skill code executed",
+    "processGroupCleanup": {
+      "timeout": "passed",
+      "outputOverflow": "passed",
+      "processFailure": "passed",
+      "realGitHttpTimeout": "passed",
+      "orphanHelpers": 0,
+      "followupVerifiedAt": "2026-10-10T16:56:07.674Z"
+    }
+  },
+  "limits": {
+    "collectionDeadlineMs": 20000,
+    "compressedArchiveBytes": 8388608,
+    "decompressedArchiveBytes": 33554432,
+    "archiveEntries": 4096,
+    "selectedPackageFiles": 256,
+    "selectedPackageBytes": 2097152,
+    "selectedFileBytes": 262144
+  },
+  "limitations": [
+    "GitHub transport can still fail or throttle requests; this does not remove all service limits.",
+    "Strict Git ustar archives only; extended path overrides, links, special entries and repositories declaring submodules are refused.",
+    "The downloaded archive snapshot is analyzed and activated; no repository scripts are executed."
+  ],
+  "sourceDigests": {
+    "acquisition": "637885fa5665c0f2eb41ea66437021bf0c9cad6e97e10bc4d5d0c972d2e11a2f",
+    "githubArchive": "44207cfba9f109c94c3d4015e66dd711fd5b7a0f78cc48e2e28dc9b9e57da731",
+    "githubAcquisitionTests": "08e4137efae7c25755daa802c20bb904c96b86bcea561e27dc84789f99428d38"
+  }
+}

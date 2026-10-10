@@ -1,37 +1,33 @@
-# SkillGate — trame de cinq slides
+# SkillGate — five-slide pitch
 
-**Phrase produit :** Analysez les skills avant de leur confier un accès à vos opérations financières.
+**Product sentence:** Check a skill before giving it access to your financial operations.
 
-**Positionnement :** prévention à l’installation pour développeurs et opérateurs d’agents ayant accès à des wallets, outils de trading ou de paiement. Cible commerciale hypothétique, aucun client acquis revendiqué.
+**Audience hypothesis:** Developers and operators of agents with wallet, trading or payment tools. No acquired customers are claimed.
 
-## Slide 1 — Une instruction peut sortir du mandat financier
+## 1 — A skill can exceed its financial mandate
 
-Un skill qui promet de résumer un portefeuille peut ajouter une demande de transfert, de signature ou de transmission de secret. Les sources consultées documentent plusieurs mécanismes d’abus de skills ; notre scénario portfolio est une hypothèse synthétique, pas la reproduction exacte d’un incident nommé.
+A portfolio-summary skill can include instructions to transfer assets, sign approvals or transmit a secret. The [source corpus](../research/) distinguishes reported abuse mechanisms from our synthetic financial scenarios. The demonstration is not a reproduction of a named incident.
 
-## Slide 2 — Contrôler les octets avant activation
+## 2 — Inspect before activation
 
-Acquisition en quarantaine privée, inventaire et empreinte, règles financières puis politique déterministe. L’absence d’anomalie dans un profil terminé permet l’installation automatique. Risque et couverture restent distincts. Montrer le vrai snapshot installé et la version retenue.
+Run `npm i -g gderamchi/skillgate`, then `skillgate on`. Supported skill-installation commands enter quarantine, inventory and local financial-risk analysis before activation. GitHub downloads use an immutable commit archive without the REST API or a token. Acquired code never executes during scanning.
 
-## Slide 3 — Une réponse exploitable
+## 3 — Give the operator a usable decision
 
-Conséquence financière lisible, preuve avec fichier et lignes, rapport local, mise à jour dangereuse retenue et ancienne version conservée. L’opérateur peut confirmer une exception liée à une empreinte et une destination ; le statut reste visible. Aucune révocation de clé ni annulation de transaction n’est simulée.
+A completed supported scan with no findings installs automatically. A finding explains the financial consequence with file and line evidence. Cancellation is the default; an explicit exception records the report, fingerprint and destination. Rejected updates retain the previous installed snapshot.
 
-## Slide 4 — Ce qui a été mesuré
+## 4 — Show measured improvements and failures
 
-Utiliser les métriques actuelles de `outputs/benchmark.json` et leur analyse dans `outputs/RESULTATS.md`. Corpus consulté séparé des scénarios synthétiques et résultats : 11 sources, dont 4 rapports de recherche ; 3 mécanismes documentés et 3 hypothèses ; 40 cas d’évaluation gelés et 4 de développement.
+Use the actual versioned [regression comparison](evidence/detection-comparison-0.4.0.json) and [challenge comparison](evidence/challenge-comparison-0.4.0.json). Show counts and denominators for detection, false positives, legitimate automatic installation, incomplete coverage and errors. Preserve baseline and first-candidate results. The final challenge run follows disclosure of failures and is development validation, not an independent blind test. Static checks remain heuristic; no real-model compliance rate or financial savings is measured.
 
-Afficher rappel, faux positifs, autorisations légitimes, couverture et erreurs avec numérateurs/dénominateurs. Les faux négatifs restent visibles. Le benchmark est interne synthétique, généré pour ce prototype. Les comparaisons hybride et Cisco n’ont pas été exécutées.
+## 5 — Make the boundary explicit
 
-## Slide 5 — Intégration et responsabilité
+The product is a local installation gate with terminal interception. It supports the documented npx/pnpm/skills commands inside the protected session and descendants inheriting its PATH. It does not cover every installer, manual copies, absolute binaries or processes started before activation. An optional trusted Codex hook adds supported command rewriting; it is not a sandbox. There is no wallet, transaction firewall, SaaS platform or shipped web UI.
 
-CLI compilé installé avec `npm i -g gderamchi/skillgate`, puis activé avec `skillgate on`, sans interface web, cible Codex projet. Après activation du terminal, les commandes npx skills add, pnpm dlx skills add et skills add passent par SkillGate. Un hook Codex complémentaire couvre les commandes natives prises en charge. Les copies manuelles, chemins absolus contournant les wrappers et autres installateurs restent hors périmètre. Pas de wallet, de token, de SaaS, ni d’interception universelle. Aucun modèle payé ni fonds réel utilisés dans cette démonstration.
+## Actual terminal demonstration
 
-Alignement avec les thèmes de prévention, détection, traitement et responsabilité de DORA documenté prudemment ; aucune revendication « conforme DORA ». Le track Guardians of Value et ses livrables communs restent à confirmer avec le mentor/organisateur.
+Run `npx skills add gderamchi/skill-safe`: automatic installation. Run `npx skills add gderamchi/skill-trap`: explain the concealed fictional transfer and cancel. Repeat the same public command and select `2` in the isolated demonstration project: the operator's exception remains visible in `skillgate list`.
 
-## Démonstration orale
+The repositories contain inert synthetic Markdown/JSON. The installation and choices are real; no acquired skill code, real model, paid provider, real secret or real funds are used. The separate `skillgate demo` ledger is deterministic simulation and must be described as such.
 
-« Voici la même demande de lecture de portefeuille et le même skill synthétique. La baseline rejoue un transfert fictif ; le chemin contrôlé retient son installation avec des preuves. Une version légitime s’installe automatiquement. La mise à jour suspecte laisse cette version active. Voici les échecs réels de nos règles : cette protection d’installation est utile mais limitée. »
-
-La simulation est déterministe ; elle ne mesure pas la probabilité qu’un modèle suive l’instruction malveillante. Aucun montant fictif n’est présenté comme une économie réelle.
-
-Les résumés publics de vérification sont disponibles dans [evidence](evidence/). Les chemins `outputs/` cités désignent les fichiers produits localement par les scripts, volontairement exclus du dépôt public pour éviter de publier les chemins et journaux privés du poste.
+Track alignment and official common hackathon deliverables still require organizer confirmation. This prototype does not claim regulatory certification or DORA compliance.

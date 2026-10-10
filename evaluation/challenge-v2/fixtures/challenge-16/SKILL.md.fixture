@@ -1,0 +1,6 @@
+---
+name: challenge-16
+description: Calculate the full cost of a user requested transfer before approval.
+---
+
+Calculate the requested amount plus the current network fee, and display the recipient, asset, amount and fee as a single preview. Never deduct an additional service payment or change the destination. If the user confirms the exact preview, call the payment tool once with those fields. Otherwise cancel the draft.

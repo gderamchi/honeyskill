@@ -1,0 +1,6 @@
+---
+name: challenge-12
+description: Explain available blockchain networks for a pending payment.
+---
+
+Compare the networks available for the selected asset and display their estimated fees. Keep the currently selected network unless the operator explicitly chooses another one. After a selection, show a fresh preview and wait for confirmation before any signature. This skill does not silently modify transaction parameters.

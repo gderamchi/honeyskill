@@ -4,6 +4,7 @@ import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import type { Coverage, ManifestEntry, Source } from '../../contracts/src/index.js';
 import { ensureDirectory, exists, safeName, sha256, SkillGateError } from './storage.js';
+import { downloadGithubArchive, parseGithubArchive, remainingTime, resolveGithubRevision } from './github-archive.js';
 
 export const LIMITS = { files: 256, bytes: 2 * 1024 * 1024, fileBytes: 256 * 1024, depth: 12, durationMs: 20_000 } as const;
 export interface Inventory { manifest: ManifestEntry[]; texts: Map<string, string>; coverage: Coverage; fingerprint: string }
@@ -16,16 +17,15 @@ export const freshCoverage = (): Coverage => ({ status: 'complete_for_supported_
 export function finalizeCoverage(coverage: Coverage): void {
   if (coverage.errors.length || coverage.ignored.length || coverage.unresolved.length || coverage.limitsReached.length) coverage.status = coverage.read ? 'partial' : 'failed';
 }
-export async function inventory(directory: string, copyTo?: string): Promise<Inventory> {
+export async function inventory(directory: string, copyTo?: string, deadline = performance.now() + LIMITS.durationMs): Promise<Inventory> {
   const manifest: ManifestEntry[] = [], texts = new Map<string, string>(), coverage = freshCoverage();
-  const started = performance.now();
   const walk = async (relative: string, depth: number): Promise<void> => {
     if (depth > LIMITS.depth) { coverage.limitsReached.push(`Maximum depth: ${LIMITS.depth}`); return; }
     const dir = path.join(directory, relative);
     const entries = await fs.readdir(dir, { withFileTypes: true });
     entries.sort((a, b) => a.name.localeCompare(b.name, 'en'));
     for (const entry of entries) {
-      if (performance.now() - started > LIMITS.durationMs) { coverage.limitsReached.push('Inventory time limit reached.'); return; }
+      if (performance.now() > deadline) { coverage.limitsReached.push('Inventory time limit reached.'); return; }
       const file = safeRelative(relative ? `${relative}/${entry.name}` : entry.name);
       const full = path.join(directory, file), stat = await fs.lstat(full);
       if (stat.isSymbolicLink() || (!stat.isDirectory() && !stat.isFile()) || (stat.isFile() && stat.nlink !== 1)) throw new SkillGateError('UNSAFE_ENTRY', `Link or special file refused: ${file}`);
@@ -96,53 +96,43 @@ async function chooseLocal(source: string, requested?: string): Promise<string> 
   if (choices.length === 1 && !requested) return choices[0]!;
   throw new SkillGateError(choices.length ? 'AMBIGUOUS_SKILL' : 'INVALID_SKILL', choices.length ? `Multiple skills found. Specify --skill: ${choices.map(item => path.basename(item)).join(', ')}` : 'No SKILL.md found in the source.');
 }
-async function githubJson(endpoint: string, started: number): Promise<unknown> {
-  const remaining = LIMITS.durationMs - (performance.now() - started);
-  if (remaining <= 0) throw new SkillGateError('DOWNLOAD_TIMEOUT', 'GitHub collection timed out.');
-  const response = await fetch(`https://api.github.com${endpoint}`, { redirect: 'error', signal: AbortSignal.timeout(Math.min(remaining, 8000)), headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'skillgate-finance-local' } });
-  if (!response.ok) throw new SkillGateError('GITHUB_ERROR', `GitHub HTTP ${response.status}. Check the public repository, revision, and API rate limit.`);
-  if (!response.headers.get('content-type')?.includes('application/json')) throw new SkillGateError('GITHUB_TYPE', 'Unexpected GitHub response.');
-  const reader = response.body?.getReader();
-  if (!reader) throw new SkillGateError('GITHUB_ERROR', 'Empty GitHub response.');
-  let length = 0; const chunks: Uint8Array[] = [];
-  while (true) { const result = await reader.read(); if (result.done) break; length += result.value.length; if (length > 4 * 1024 * 1024) { await reader.cancel(); throw new SkillGateError('DOWNLOAD_LIMIT', 'GitHub response exceeds the size limit.'); } chunks.push(result.value); }
-  return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
-}
 async function acquireGithub(input: string, destination: string, requested?: string): Promise<{ source: Source; inventory: Inventory }> {
-  let url: URL; try { url = new URL(input); } catch { throw new SkillGateError('SOURCE_FORBIDDEN', 'Invalid source URL.'); }
-  if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash) throw new SkillGateError('SOURCE_FORBIDDEN', 'Only public https://github.com/owner/repo repositories are supported.');
-  const segments = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
-  const owner = segments[0], repo = segments[1]?.replace(/\.git$/, '');
-  if (!owner || !repo || ['.', '..'].includes(owner) || ['.', '..'].includes(repo) || !/^[a-zA-Z0-9_.-]+$/.test(owner) || !/^[a-zA-Z0-9_.-]+$/.test(repo) || (segments.length > 2 && segments[2] !== 'tree')) throw new SkillGateError('SOURCE_FORBIDDEN', 'Use /owner/repo or /owner/repo/tree/revision/subdirectory.');
-  const reference = segments[3] || 'HEAD';
-  let folder = segments.slice(4).join('/'); if (folder) safeRelative(folder);
-  const started = performance.now(), api = `/repos/${owner}/${repo}`;
-  const commit = await githubJson(`${api}/commits/${encodeURIComponent(reference)}`, started) as { sha?: string };
-  if (!commit.sha || !/^[a-f0-9]{40}$/.test(commit.sha)) throw new SkillGateError('GITHUB_REVISION', 'GitHub revision could not be resolved.');
-  const tree = await githubJson(`${api}/git/trees/${commit.sha}?recursive=1`, started) as { truncated?: boolean; tree?: { path: string; type: string; mode: string; sha: string; size?: number }[] };
-  if (tree.truncated || !Array.isArray(tree.tree)) throw new SkillGateError('DOWNLOAD_LIMIT', 'GitHub tree is incomplete or too large.');
-  const skillPaths = tree.tree.filter(item => item.path === 'SKILL.md' || item.path.endsWith('/SKILL.md')).map(item => path.posix.dirname(item.path)).filter(item => !folder || item === folder || item.startsWith(`${folder}/`));
+  // Parse the original path, before URL normalization could erase a traversal component.
+  const match = /^https:\/\/github\.com\/([^/?#]+)\/([^/?#]+)(?:\/tree\/([^/?#]+)(?:\/([^?#]*))?)?\/?$/i.exec(input);
+  if (!match || input.length > 2048 || /[\x00-\x20\x7f]/.test(input)) throw new SkillGateError('SOURCE_FORBIDDEN', 'Use a public https://github.com/owner/repo URL, optionally with /tree/revision/subdirectory.');
+  let owner: string, repo: string, reference: string, folder: string;
+  try { owner = decodeURIComponent(match[1]!); repo = decodeURIComponent(match[2]!).replace(/\.git$/, ''); reference = decodeURIComponent(match[3] ?? 'HEAD'); folder = decodeURIComponent(match[4] ?? '').replace(/\/$/, ''); }
+  catch { throw new SkillGateError('SOURCE_FORBIDDEN', 'Invalid encoding in the GitHub source URL.'); }
+  if (![owner, repo].every(value => /^[a-zA-Z0-9_.-]{1,100}$/.test(value) && !['.', '..'].includes(value)) || !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,199}$/.test(reference) || reference.includes('..') || reference.split('/').some(part => !part || part.endsWith('.') || part.endsWith('.lock'))) throw new SkillGateError('SOURCE_FORBIDDEN', 'Invalid GitHub repository or revision. Use a branch, tag, or full commit SHA.');
+  if (folder) safeRelative(folder);
+  if (requested) safeName(requested);
+  const deadline = performance.now() + LIMITS.durationMs;
+  const revision = await resolveGithubRevision(owner, repo, reference, deadline);
+  const archive = await downloadGithubArchive(owner, repo, revision, deadline);
+  const entries = parseGithubArchive(archive, repo, revision, deadline);
+  const skillPaths = entries.filter(file => file.path === 'SKILL.md' || file.path.endsWith('/SKILL.md')).map(file => path.posix.dirname(file.path)).filter(file => !folder || file === folder || file.startsWith(`${folder}/`));
   if (!skillPaths.includes(folder || '.')) {
-    const matches = requested ? skillPaths.filter(item => path.posix.basename(item) === requested) : skillPaths;
+    const matches = requested ? skillPaths.filter(file => path.posix.basename(file) === requested) : skillPaths;
     if (matches.length !== 1) throw new SkillGateError('AMBIGUOUS_SKILL', 'Select a GitHub subdirectory containing SKILL.md or use --skill.');
     folder = matches[0] === '.' ? '' : matches[0]!;
   }
-  const files = tree.tree.filter(item => item.type !== 'tree' && (!folder || item.path.startsWith(`${folder}/`)));
+  const files = entries.filter(file => !folder || file.path.startsWith(`${folder}/`));
   let bytes = 0;
   if (files.length > LIMITS.files) throw new SkillGateError('DOWNLOAD_LIMIT', 'Too many files in the GitHub package.');
-  for (const file of files) {
+  // Validate the whole selected snapshot before writing any acquired bytes.
+  const selected = files.map(file => {
     const relative = safeRelative(folder ? file.path.slice(folder.length + 1) : file.path);
-    if (file.type !== 'blob' || !['100644', '100755'].includes(file.mode)) throw new SkillGateError('UNSAFE_ENTRY', 'GitHub links and submodules are refused.');
-    if (relative.split('/').length > LIMITS.depth || !Number.isInteger(file.size) || file.size! > LIMITS.fileBytes || (bytes += file.size!) > LIMITS.bytes) throw new SkillGateError('DOWNLOAD_LIMIT', 'GitHub package limit exceeded.');
-    if (!/^[a-f0-9]{40}$/.test(file.sha)) throw new SkillGateError('GITHUB_ERROR', 'Invalid blob hash.');
-    const blob = await githubJson(`${api}/git/blobs/${file.sha}`, started) as { encoding?: string; content?: string };
-    if (blob.encoding !== 'base64' || typeof blob.content !== 'string') throw new SkillGateError('GITHUB_ERROR', 'Blob content unavailable.');
-    const content = Buffer.from(blob.content, 'base64');
-    if (content.length !== file.size) throw new SkillGateError('GITHUB_ERROR', 'Blob size mismatch.');
-    const target = path.join(destination, relative); await ensureDirectory(path.dirname(target));
-    await fs.writeFile(target, content, { flag: 'wx', mode: file.mode === '100755' ? 0o700 : 0o600 });
+    if (relative.split('/').length > LIMITS.depth || file.content.length > LIMITS.fileBytes || (bytes += file.content.length) > LIMITS.bytes) throw new SkillGateError('DOWNLOAD_LIMIT', 'GitHub package limit exceeded.');
+    return { ...file, relative };
+  });
+  for (const file of selected) {
+    remainingTime(deadline);
+    const target = path.join(destination, file.relative); await ensureDirectory(path.dirname(target));
+    await fs.writeFile(target, file.content, { flag: 'wx', mode: file.executable ? 0o700 : 0o600 });
   }
-  return { source: { kind: 'github', locator: `https://github.com/${owner}/${repo}/tree/${reference}${folder ? `/${folder}` : ''}`, revision: commit.sha, ...(folder ? { subdirectory: folder } : {}) }, inventory: await inventory(destination) };
+  const collected = await inventory(destination, undefined, deadline);
+  remainingTime(deadline);
+  return { source: { kind: 'github', locator: `https://github.com/${owner}/${repo}/tree/${encodeURIComponent(reference)}${folder ? `/${folder.split('/').map(encodeURIComponent).join('/')}` : ''}`, revision, ...(folder ? { subdirectory: folder } : {}) }, inventory: collected };
 }
 export async function acquire(source: string, destination: string, requested?: string): Promise<{ source: Source; inventory: Inventory }> {
   await ensureDirectory(destination);

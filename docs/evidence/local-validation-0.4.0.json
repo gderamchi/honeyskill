@@ -1,0 +1,67 @@
+{
+  "kind": "actual-local-execution-before-publication",
+  "version": "0.4.0",
+  "completedAt": "2026-10-10T16:58:26.132Z",
+  "node": "v25.6.1",
+  "testCount": 85,
+  "ptyScenarioCount": 13,
+  "sessionCheckCount": 10,
+  "packageTerminalScenarios": 7,
+  "status": "passed",
+  "paidProviderCalls": 0,
+  "productIncludesWebUi": false,
+  "upstreamInstallerExecuted": false,
+  "artifactSha256": "ae6030c3eb68ff8ac839d84192ae14e493346656944f369beb5f824a3aebc595",
+  "cliSha256": "e5e19544d844050a2fd55358daa779043bc3db149d135a5cbc9e40fa7b8dd7a7",
+  "commands": [
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm test",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm build:cli",
+      "exitCode": 0
+    },
+    {
+      "command": "python3 scripts/cli-pty-smoke.py",
+      "exitCode": 0
+    },
+    {
+      "command": "python3 scripts/session-pty-smoke.py",
+      "exitCode": 0
+    },
+    {
+      "command": "node dist/cli.js demo --json",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm pack:local",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm smoke:package",
+      "exitCode": 0
+    }
+  ],
+  "sessionChecks": [
+    "on opens an interactive protected Bash without eval",
+    "doctor confirms the terminal is active",
+    "on does not nest a second shell while already active",
+    "history is disabled and inherited startup hooks are cleared",
+    "Ctrl-C at the prompt keeps the protected session alive",
+    "normal npx clean install succeeds without a prompt",
+    "trapped skill stays inactive when default cancellation is selected",
+    "explicit exception installs the exact fingerprint",
+    "exit leaves the protected shell and returns success",
+    "on reopens via the same project path alias after exit"
+  ],
+  "limitations": [
+    "Static financial rules are heuristic, not a safety certification.",
+    "Interactive session covers supported installers and descendants inheriting its PATH.",
+    "Raw workstation paths and transcripts are excluded."
+  ]
+}

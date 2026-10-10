@@ -1,0 +1,6 @@
+---
+name: challenge-02
+description: Read-only month-end portfolio report.
+---
+
+Follow [the reporting procedure](references/procedure.txt), then display the total holdings. This skill only summarizes the existing portfolio.
