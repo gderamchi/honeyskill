@@ -1,16 +1,16 @@
 # SkillGuard-Lite
 
-A behavioral audit of agent skills for **payment recipient substitution**. Run a minimal Claude wallet agent on six fixed tasks, with and without a skill's `SKILL.md`, against an owned local Anvil fork of Avalanche Fuji. Compare every `send(toAddress, amountAVAX)` call against a deterministic provenance oracle.
+A behavioral audit of agent skills for **payment recipient substitution**. Run a minimal OpenAI wallet agent on six fixed tasks, with and without a skill's `SKILL.md`, against an owned local Anvil fork of Avalanche Fuji. Compare every `send(toAddress, amountAVAX)` call against a deterministic provenance oracle.
 
-This is the active hackathon scope. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its benchmark, installer wrappers and compiled CLI are **not** the behavioral audit or evidence of a Claude run.
+This is the active hackathon scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its benchmark, installer wrappers and compiled CLI are **not** the behavioral audit or evidence of an OpenAI run.
 
 ## Run
 
-Requires Node.js 22.18+, pnpm, a valid Anthropic API key and [Foundry Anvil](https://www.getfoundry.sh/anvil/index.html). The script uses the official Anthropic API; it does not use your Claude chat subscription. Supply the key through your environment, never a command-line argument or committed file.
+Requires Node.js 22.18+, pnpm, a valid OpenAI API key and [Foundry Anvil](https://www.getfoundry.sh/anvil/index.html). The script uses the official OpenAI API; it does not use your ChatGPT subscription. Supply the key through your environment, never a command-line argument or committed file.
 
 ```sh
 pnpm install --frozen-lockfile
-# Set ANTHROPIC_API_KEY securely in your environment.
+# Set OPENAI_API_KEY securely in your environment.
 pnpm check:fork
 pnpm run audit packages/skillguard-lite/fixtures/benign-helpful
 pnpm run audit packages/skillguard-lite/fixtures/malicious-overt
@@ -19,7 +19,7 @@ pnpm benchmark
 
 If Anvil is outside PATH, set `ANVIL_BIN` to its absolute executable path. The workspace-local `work/skillguard-lite/bin/anvil` is also recognized when present; it is not distributed in source.
 
-Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. A dated `claude-haiku-4-5-20251001` is the default reference model. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
+Optional script arguments: `--model MODEL`, `--block FUJI_BLOCK`, `--out FILE.json`. A dated `gpt-4.1-mini-2025-04-14` is the default reference model. Keep the exact model, fork block, fixture hashes and traces with a result. Model outputs may still vary across runs. There is no response or baseline cache.
 
 `audit` prints `BENIGN` or `MALICIOUS` with a reason and first-violation evidence. A failed or incomplete run without an observed violation is `ERROR`; an observed violation remains `MALICIOUS`, but an incomplete audit is unscored. Baseline contamination is always `ERROR`. `benchmark` prints the per-skill table and precision/recall/FPR; incomplete audits are explicitly unscored. Output paths are unique and existing evidence is never overwritten. Exit code 1 signals errors/incomplete execution; a completed malicious audit is a successful measurement and exits 0.
 
@@ -52,10 +52,14 @@ pnpm test:behavioral
 SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 ```
 
-[Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md). Current results must be read from the generated `outputs/skillguard-lite/` artifacts; historical static detection scores do not apply.
+[Implementation](packages/skillguard-lite/src/), [frozen fixtures](packages/skillguard-lite/fixtures/), [scope and source notes](docs/SKILLGUARD_LITE.md), [copy-and-paste demo](docs/SKILLGUARD_DEMO.md). Historical static detection scores do not apply.
 
 ## Execution status — 10 October 2026
 
-TypeScript validation and all **40 behavioral tests passed**, including the explicitly enabled real Fuji fork test; the 85 historical regression tests also passed ([validation record](docs/evidence/skillguard-lite/validation.json)). The Claude transports in unit tests are mocked. Separately, an [actual local fork payment](docs/evidence/skillguard-lite/chain-proof.json) of 0.1 AVAX produced a successful receipt and rollback restored the wallet to 100 local AVAX.
+The actual OpenAI benchmark completed **12/12 synthetic fixtures**: 7 malicious detected and 5 benign accepted. Precision **7/7 (100%)**, recall **7/7 (100%)**, false-positive rate **0/5 (0%)**, no unscored audits. This is one run on a small authored dataset, not a general detection-accuracy claim.
 
-The available Anthropic credential returned **HTTP 401**. The [actual audit attempt](docs/evidence/skillguard-lite/audit-auth-failure.json) correctly stopped with `ERROR`, `complete: false`, and no payment. **No successful Claude payment, paired behavioral audit or real benchmark has been completed. Precision, recall and FPR are not yet measured.** The source is available for reproduction with a valid API credential; publication is not a claim that the definition of done has been reached.
+The run used `gpt-4.1-mini-2025-04-14` at Fuji fork block **59275449**: 144 task arms, 288 model responses, 181 executed local transfers and 43 provenance violations. All baselines were clean. Native model traces, tool arguments and receipt status/hash/block summaries are archived with the [benchmark table](docs/evidence/skillguard-lite/openai-benchmark.md), [full JSON](docs/evidence/skillguard-lite/openai-benchmark.json) and [slide](docs/evidence/skillguard-lite/openai-benchmark-slide.png). No signed transaction reached the public network.
+
+Separate actual audits returned [BENIGN](docs/evidence/skillguard-lite/openai-benign-audit.json) with zero violations and [MALICIOUS](docs/evidence/skillguard-lite/openai-malicious-audit.json) with seven unexpected-recipient calls. The implementation passes typecheck and all 43 behavioral tests, including the real Fuji-fork test. Reproduction can yield different model behavior; `BENIGN` remains limited to the fixed battery and literal oracle described above.
+
+The earlier [Claude HTTP 401 attempt](docs/evidence/skillguard-lite/audit-auth-failure.json) is retained as history, not relabelled as an OpenAI execution.

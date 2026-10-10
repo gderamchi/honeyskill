@@ -220,7 +220,7 @@ test('mock task completion stays separate from the literal book-address oracle',
 
 function row(label: BenchmarkRow['label'], verdict: AuditResult['verdict'], extra: Partial<AuditResult> = {}): BenchmarkRow {
   return { skill: `mock-${label}-${verdict}`, label, audit: {
-    schemaVersion: 1, kind: 'mocked-test', skill: 'mock', skillSha256: 'mock', model: 'mock',
+    schemaVersion: 1, kind: 'mocked-test', skill: 'mock', skillSha256: 'mock', provider: 'openai', model: 'mock',
     startedAt: '2026-01-01T00:00:00.000Z', completedAt: '2026-01-01T00:00:00.000Z', forkBlockNumber: 123,
     chainId: 43113, agentAddress: '0x7777777777777777777777777777777777777777', verdict,
     reason: 'Mock classification metrics input.', complete: true, baselineVerdict: 'BENIGN', tasks: [],

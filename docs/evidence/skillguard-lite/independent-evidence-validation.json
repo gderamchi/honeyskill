@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-recorded-evidence-recomputation",
+  "validatedAt": "2026-10-10T17:53:38.710898+00:00",
+  "status": "passed",
+  "scope": "A second implementation recomputed metrics and checked stored request/response/tool evidence. It did not query the model or chain again.",
+  "modelRequestsMadeByValidator": 0,
+  "chainRpcRequestsMadeByValidator": 0,
+  "fullRpcReceiptsArchived": false,
+  "receiptEvidence": "Stored status, transaction hash and block number derived from the chain adapter receipt checks. Full RPC receipts were not re-queried or independently attested.",
+  "benchmark": {
+    "model": "gpt-4.1-mini-2025-04-14",
+    "chainId": 43113,
+    "forkBlockNumber": 59275449,
+    "fixtures": 12,
+    "taskArms": 144,
+    "responses": 288,
+    "sends": 181,
+    "violations": 43,
+    "inputTokens": 96560,
+    "outputTokens": 11813,
+    "metrics": {
+      "total": 12,
+      "scored": 12,
+      "unscored": 0,
+      "truePositives": 7,
+      "falseNegatives": 0,
+      "falsePositives": 0,
+      "trueNegatives": 5,
+      "precision": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "recall": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 5,
+        "value": 0
+      }
+    }
+  },
+  "checkedEvidenceIncludingTwoSeparateAudits": {
+    "audits": 14,
+    "tasks": 84,
+    "taskArms": 168,
+    "responses": 336,
+    "sends": 209,
+    "violations": 50,
+    "inputTokens": 112047,
+    "outputTokens": 13583
+  },
+  "checks": {
+    "frozenFileHash": 15,
+    "datasetDigest": 1,
+    "benchmarkComplete": 1,
+    "fixtureOrder": 1,
+    "fixtureLabel": 12,
+    "auditIdentity": 14,
+    "skillHash": 14,
+    "auditComplete": 14,
+    "chainMetadata": 14,
+    "taskCount": 14,
+    "taskIdentity": 84,
+    "armComplete": 168,
+    "nativeTraceAPI": 840,
+    "requestModelAndStorage": 336,
+    "singleSendTool": 336,
+    "taskPrompt": 336,
+    "skillArmSeparation": 336,
+    "uniqueNativeResponse": 336,
+    "nativeResponseIdentity": 336,
+    "toolCallCount": 168,
+    "sendCallIdentity": 209,
+    "sendArguments": 209,
+    "toolOutputIdentity": 209,
+    "localTransactionSummary": 209,
+    "armUsage": 168,
+    "recomputedViolations": 168,
+    "cleanBaseline": 84,
+    "aggregateViolations": 14,
+    "auditVerdict": 14,
+    "auditUsage": 14,
+    "violationEvidence": 50,
+    "confusionMatrix": 1,
+    "classificationMetric": 3
+  },
+  "totalAssertionsPassed": 4728,
+  "datasetSha256": "7e685d3130121193ea2f15551943b007467242a550a7cc4b9c4a31d51d1d408e",
+  "sources": {
+    "openai-benchmark.json": "ccbc05aaef464b594cf225aee9fe278f0b174f57cc4d47cf4810ecae7e3bd4e1",
+    "openai-benign-audit.json": "1611a2f63017455e8dbb86b1f117c6ba3481c440dc84b93b79250a4dff99618f",
+    "openai-malicious-audit.json": "255ae940649ef9f7af88b6b443cdb88f57496e9dd4bdd92f5a82fc62ef85c2e2"
+  },
+  "outputs": {
+    "openai-benchmark-slide.svg": {
+      "sha256": "f0e444011668b61da39518c302e4bc3007c8fb782999962f6cbb0c34f147b548",
+      "bytes": 11584
+    },
+    "openai-benchmark-slide.png": {
+      "sha256": "c2f6f230808acce9489ec852a4ca0d810b3c64d8568efc4a43ce1c1b8c2885e6",
+      "bytes": 280474
+    }
+  },
+  "visual": {
+    "width": 1920,
+    "height": 1080,
+    "aspectRatio": "16:9",
+    "renderer": "rsvg-convert",
+    "reviewed": true,
+    "review": "Rendered PNG visually inspected: all 12 rows, metrics, model, fork block and disclosures fit without clipping or overlap."
+  },
+  "limitations": [
+    "One run on 12 synthetic fixtures with six fixed tasks.",
+    "Trusted-address-book substitutions are accepted by the literal provenance oracle.",
+    "No observed violation does not establish general safety.",
+    "Snapshot resets can legitimately reproduce transaction hashes across task arms."
+  ]
+}

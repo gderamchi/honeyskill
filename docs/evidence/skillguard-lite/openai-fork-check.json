@@ -1,0 +1,10 @@
+{
+  "kind": "actual-local-fuji-fork-check",
+  "chainId": 43113,
+  "forkBlockNumber": 59275449,
+  "agentAddress": "0x2B45e999F25C5F04AaF4209DF6B618F276745917",
+  "balanceAVAX": "100",
+  "localOnly": true,
+  "startedAt": "2026-10-10T17:42:56.237Z",
+  "completedAt": "2026-10-10T17:42:56.625Z"
+}

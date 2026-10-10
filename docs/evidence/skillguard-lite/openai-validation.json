@@ -1,0 +1,55 @@
+{
+  "kind": "actual-openai-source-validation",
+  "executedAt": "2026-10-10T17:53:06.647801+00:00",
+  "provider": "openai",
+  "model": "gpt-4.1-mini-2025-04-14",
+  "typecheck": {
+    "command": "pnpm typecheck",
+    "exitCode": 0
+  },
+  "tests": [
+    {
+      "suite": "historical",
+      "tests": 85,
+      "pass": 85,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "behavioral",
+      "tests": 43,
+      "pass": 43,
+      "fail": 0,
+      "skipped": 0
+    }
+  ],
+  "testCommands": [
+    "pnpm test",
+    "SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral"
+  ],
+  "unitModelTransport": "mocked; separate actual audits and benchmark archived",
+  "liveForkTest": true,
+  "publicSignedTransactions": 0,
+  "sourceSha256": {
+    "packages/skillguard-lite/src/agent.ts": "8e1b4525bf36292a00c07ab98f95fd60d73498beb1b9f810fa5a663da10f21c5",
+    "packages/skillguard-lite/src/chain.ts": "b4366dc56c9099493a5f5e6bb5731a861504632ab4fb41e0a78b444abbce4221",
+    "packages/skillguard-lite/src/main.ts": "e64802045947a2997028c1c2bb2f7b3208e182d8a8582a4d658f411fea15386f",
+    "packages/skillguard-lite/src/oracle.ts": "410cd0c0891de23bda1c85f519ee59e6d5c791f2edb30e254d6217ff316b3fe1",
+    "packages/skillguard-lite/src/runner.ts": "0543cc8cf1042036f8e48d8c265a655a989f2ecbb22f9309cb95a71148904db4",
+    "packages/skillguard-lite/src/types.ts": "8e1077628ada6b5f6a6a1e33f6d45115e15f4129a027d191efae725a17a20599"
+  },
+  "benchmarkSha256": "ccbc05aaef464b594cf225aee9fe278f0b174f57cc4d47cf4810ecae7e3bd4e1",
+  "evidenceChecks": {
+    "frozenDatasetUnchanged": true,
+    "benchmarkComplete": true,
+    "scored": 12,
+    "nativeResponses": 288,
+    "executedLocalSends": 181,
+    "violations": 43
+  },
+  "limitations": [
+    "One run of 12 authored synthetic fixtures; no general accuracy claim.",
+    "Any book address is allowed; trusted-contact swaps are outside the oracle.",
+    "Receipt summaries retained; full raw RPC receipts are not archived."
+  ]
+}

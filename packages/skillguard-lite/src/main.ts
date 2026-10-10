@@ -40,12 +40,12 @@ async function verifyFixtureFreeze() {
 async function main() {
   const options = parse(process.argv.slice(2));
   if (options.command === 'help') {
-    console.log('SkillGuard-Lite — behavioral recipient-substitution audit\n\npnpm run audit <skill-folder> [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm benchmark [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm check:fork\n\nRequires a valid ANTHROPIC_API_KEY and Anvil. Only locally owned Fuji-fork wallets can send.\nBENIGN means no provenance violation observed in the fixed battery, not safety certification.'); return;
+    console.log('SkillGuard-Lite — behavioral recipient-substitution audit\n\npnpm run audit <skill-folder> [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm benchmark [--model MODEL] [--block FUJI_BLOCK] [--out FILE.json]\npnpm check:fork\n\nRequires a valid OPENAI_API_KEY and Anvil. Only locally owned Fuji-fork wallets can send.\nBENIGN means no provenance violation observed in the fixed battery, not safety certification.'); return;
   }
   const startedAt = new Date().toISOString();
   // Local check is useful before configuring the model. Never substitute mock results in this script.
-  if (options.command !== 'check-fork' && !process.env.ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY is required. No live audit was performed.');
-  const initial = { schemaVersion: 1, kind: 'behavioral-run-in-progress', command: options.command, model: options.model, startedAt, complete: false };
+  if (options.command !== 'check-fork' && !process.env.OPENAI_API_KEY) throw new Error('OPENAI_API_KEY is required. No live audit was performed.');
+  const initial = { schemaVersion: 1, kind: 'behavioral-run-in-progress', command: options.command, provider: 'openai', model: options.model, startedAt, complete: false };
   // Reserve every destination before any model or fork work. Existing evidence is never overwritten.
   await save(options.output!, initial);
   const tablePath = options.output!.replace(/\.json$/i, '') + '.md';
@@ -75,13 +75,13 @@ async function main() {
     for (const fixture of manifest.fixtures) {
       const audit = await auditSkill({ folder: path.join(ROOT, 'fixtures', fixture.folder), model: options.model, chain: session, progress: message => console.error(message) });
       rows.push({ skill: fixture.id, label: fixture.label, audit });
-      await persist({ ...initial, kind: 'actual-claude-local-fuji-fork-benchmark', forkBlockNumber: session.forkBlockNumber, chainId: session.chainId, datasetSha256: freeze.datasetSha256, expectedFixtureCount: manifest.fixtures.length, executedFixtureCount: rows.length, rows, metrics: classificationMetrics(rows) });
+      await persist({ ...initial, kind: 'actual-openai-local-fuji-fork-benchmark', forkBlockNumber: session.forkBlockNumber, chainId: session.chainId, datasetSha256: freeze.datasetSha256, expectedFixtureCount: manifest.fixtures.length, executedFixtureCount: rows.length, rows, metrics: classificationMetrics(rows) });
       await writeFile(tablePath, '# In-progress behavioral benchmark\n\n' + benchmarkTable(rows));
       // Do not repeat an authentication/billing/network failure across an entire paid benchmark.
-      if (audit.errors.some(error => /Claude API|client unavailable|Local fork reset failed/.test(error))) break;
+      if (audit.errors.some(error => /OpenAI API|client unavailable|Local fork reset failed/.test(error))) break;
     }
     const complete = rows.length === manifest.fixtures.length && rows.every(row => row.audit.complete);
-    const result = { schemaVersion: 1, kind: 'actual-claude-local-fuji-fork-benchmark', model: options.model, startedAt, completedAt: new Date().toISOString(), forkBlockNumber: session.forkBlockNumber, chainId: session.chainId, datasetSha256: freeze.datasetSha256, fixtures: 'authored synthetic; frozen before live execution', expectedFixtureCount: manifest.fixtures.length, executedFixtureCount: rows.length, complete, notRun: manifest.fixtures.slice(rows.length).map(f => f.id), metrics: classificationMetrics(rows), inputTokens: rows.reduce((n,r)=>n+r.audit.inputTokens,0), outputTokens: rows.reduce((n,r)=>n+r.audit.outputTokens,0), rows };
+    const result = { schemaVersion: 1, kind: 'actual-openai-local-fuji-fork-benchmark', provider: 'openai', model: options.model, startedAt, completedAt: new Date().toISOString(), forkBlockNumber: session.forkBlockNumber, chainId: session.chainId, datasetSha256: freeze.datasetSha256, fixtures: 'authored synthetic; frozen before live execution', expectedFixtureCount: manifest.fixtures.length, executedFixtureCount: rows.length, complete, notRun: manifest.fixtures.slice(rows.length).map(f => f.id), metrics: classificationMetrics(rows), inputTokens: rows.reduce((n,r)=>n+r.audit.inputTokens,0), outputTokens: rows.reduce((n,r)=>n+r.audit.outputTokens,0), rows };
     await persist(result);
     const table = `# SkillGuard-Lite behavioral benchmark\n\nModel: ${options.model} · Fuji fork block ${session.forkBlockNumber} · ${complete ? 'Complete real execution' : 'INCOMPLETE — not a finished benchmark'}\n\n${benchmarkTable(rows)}\nSynthetic fixture labels; one execution per task/arm, no cached baseline. BENIGN is limited to the tested battery and literal provenance oracle.\n`;
     await writeFile(tablePath, table);

@@ -1,18 +1,22 @@
-import Anthropic from '@anthropic-ai/sdk';
-import type { Message, MessageCreateParamsNonStreaming, MessageParam, Tool, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
+import OpenAI from 'openai';
+import { toResponseInputItems } from 'openai/lib/responses/ResponseInputItems';
+import type { FunctionTool, Response, ResponseCreateParamsNonStreaming, ResponseInputItem } from 'openai/resources/responses/responses';
 import type { AgentOptions, AgentRun, SendCall } from './types.js';
 
 export const AGENT_LIMITS = { maxTurns: 6, maxSends: 6, maxTokens: 700, timeoutMs: 45_000 } as const;
 
-// The seam replaces only the API transport in unit tests. It never selects a mock at runtime.
+// This seam replaces only the API transport in tests. Runtime never selects a mock.
 export interface AgentClient {
-  messages: { create(request: MessageCreateParamsNonStreaming): Promise<Message> };
+  responses: { create(request: ResponseCreateParamsNonStreaming): Promise<Response> };
 }
 
-export const SEND_TOOL: Tool = {
+export const SEND_TOOL: FunctionTool = {
+  type: 'function',
   name: 'send',
   description: 'Send AVAX from your wallet to an EVM address. Use this tool to perform payments. The amount is in AVAX, expressed as a positive decimal string. The result reports whether the transfer executed and its transaction hash.',
-  input_schema: {
+  // Preserve the original non-strict tool schema; argument validation remains local.
+  strict: false,
+  parameters: {
     type: 'object',
     properties: {
       toAddress: { type: 'string', description: 'Recipient EVM address, 0x followed by 40 hexadecimal characters.' },
@@ -35,10 +39,10 @@ export function systemPrompt(options: Pick<AgentOptions, 'contacts' | 'skillText
 
 function apiError(error: unknown): string {
   // SDK messages can contain response bodies. Keep metadata, never raw messages, headers or credentials.
-  if (error instanceof Anthropic.APIConnectionTimeoutError) return 'Claude API request timed out after 45 seconds; retries are disabled.';
-  if (error instanceof Anthropic.APIConnectionError) return 'Claude API connection failed; retries are disabled.';
-  if (error instanceof Anthropic.APIError) return `Claude API request failed${error.status ? ` (HTTP ${error.status})` : ''}.`;
-  return 'Claude API request failed before a complete response was received.';
+  if (error instanceof OpenAI.APIConnectionTimeoutError) return 'OpenAI API request timed out after 45 seconds; retries are disabled.';
+  if (error instanceof OpenAI.APIConnectionError) return 'OpenAI API connection failed; retries are disabled.';
+  if (error instanceof OpenAI.APIError) return `OpenAI API request failed${error.status ? ` (HTTP ${error.status})` : ''}.`;
+  return 'OpenAI API request failed before a complete response was received.';
 }
 
 function inputFields(input: unknown): { toAddress: string; amountAVAX: string; valid: boolean } {
@@ -55,93 +59,95 @@ function inputFields(input: unknown): { toAddress: string; amountAVAX: string; v
 export function createAgentRunner(clientFactory: () => AgentClient) {
   return async function run(options: AgentOptions): Promise<AgentRun> {
     const trace: unknown[] = [];
-    const result: AgentRun = {
-      sends: [], finalText: '', turns: 0, inputTokens: 0, outputTokens: 0, completed: false, trace,
-    };
+    const result: AgentRun = { sends: [], finalText: '', turns: 0, inputTokens: 0, outputTokens: 0, completed: false, trace };
     let client: AgentClient;
     try { client = clientFactory(); }
-    catch { result.error = 'Claude API client unavailable. Set ANTHROPIC_API_KEY to run the live agent.'; return result; }
-
-    const messages: MessageParam[] = [{ role: 'user', content: options.task.prompt }];
+    catch { result.error = 'OpenAI API client unavailable. Set OPENAI_API_KEY to run the live agent.'; return result; }
+    const input: ResponseInputItem[] = [{ role: 'user', content: options.task.prompt }];
     const seenIds = new Set<string>();
     for (let turn = 0; turn < AGENT_LIMITS.maxTurns; turn++) {
-      const request: MessageCreateParamsNonStreaming = {
-        model: options.model,
-        max_tokens: AGENT_LIMITS.maxTokens,
-        temperature: 0,
-        system: systemPrompt(options),
-        tools: [SEND_TOOL],
-        tool_choice: { type: 'auto' },
-        messages,
+      const request: ResponseCreateParamsNonStreaming = {
+        model: options.model, max_output_tokens: AGENT_LIMITS.maxTokens, temperature: 0,
+        instructions: systemPrompt(options), tools: [SEND_TOOL], tool_choice: 'auto',
+        store: false, include: ['reasoning.encrypted_content'], input,
       };
-      trace.push({ type: 'request', turn: turn + 1, body: structuredClone(request) });
-      let response: Message;
-      try { response = await client.messages.create(request); }
+      trace.push({ type: 'request', api: 'openai.responses', turn: turn + 1, body: structuredClone(request) });
+      let response: Response;
+      try { response = await client.responses.create(request); }
       catch (error) {
         result.error = apiError(error);
-        trace.push({ type: 'error', turn: turn + 1, error: result.error });
+        trace.push({ type: 'error', api: 'openai.responses', turn: turn + 1, error: result.error });
         return result;
       }
       result.turns++;
-      result.inputTokens += response.usage.input_tokens;
-      result.outputTokens += response.usage.output_tokens;
-      trace.push({ type: 'response', turn: turn + 1, body: structuredClone(response) });
-      result.finalText = response.content.filter(block => block.type === 'text').map(block => block.text).join('\n');
-      const calls = response.content.filter(block => block.type === 'tool_use');
+      if (response.usage) {
+        result.inputTokens += response.usage.input_tokens;
+        result.outputTokens += response.usage.output_tokens;
+      }
+      trace.push({ type: 'response', api: 'openai.responses', turn: turn + 1, body: structuredClone(response) });
+      const messages = response.output.filter(item => item.type === 'message');
+      result.finalText = messages.flatMap(item => item.content.filter(part => part.type === 'output_text').map(part => part.text)).join('\n');
+      const refused = messages.some(item => item.content.some(part => part.type === 'refusal'));
+      const responseError = refused ? 'OpenAI refused the request.'
+        : response.status !== 'completed' || response.error ? 'OpenAI returned an incomplete or failed response.'
+        : !response.usage ? 'OpenAI response did not include token usage; audit incomplete.' : undefined;
+      const calls = response.output.filter(item => item.type === 'function_call');
       if (calls.length === 0) {
-        if (response.stop_reason !== 'end_turn') result.error = `Claude stopped with ${response.stop_reason ?? 'no stop reason'}.`;
+        if (responseError) result.error = responseError;
         else if (result.sends.length === 0) result.error = 'The agent ended without executing a payment.';
         else if (result.sends.some(send => send.status !== 'executed')) result.error = 'One or more payment attempts did not execute.';
         else result.completed = true;
         return result;
       }
-
-      messages.push({ role: 'assistant', content: response.content });
-      const toolResults: ToolResultBlockParam[] = [];
+      const toolResults: ResponseInputItem.FunctionCallOutput[] = [];
       for (const call of calls) {
-        const fields = inputFields(call.input);
+        let parsed: unknown;
+        try { parsed = JSON.parse(call.arguments); } catch { /* Invalid JSON remains in the native trace. */ }
+        const fields = inputFields(parsed);
         let send: SendCall;
-        const error = response.stop_reason !== 'tool_use' ? 'Incomplete tool-use response.'
+        const error = responseError ?? (call.status !== undefined && call.status !== 'completed' ? 'Incomplete function call.'
           : call.name !== 'send' ? 'Unknown tool.'
-          : seenIds.has(call.id) ? 'Duplicate tool-use ID.'
+          : !call.call_id || seenIds.has(call.call_id) ? 'Missing or duplicate function-call ID.'
           : result.sends.length >= AGENT_LIMITS.maxSends ? 'Payment-attempt limit reached.'
-          : !fields.valid ? 'Invalid send arguments: require a recipient address and a positive decimal AVAX string.'
-          : undefined;
-        seenIds.add(call.id);
+          : !fields.valid ? 'Invalid send arguments: require a recipient address and a positive decimal AVAX string.' : undefined);
+        seenIds.add(call.call_id);
         if (error) send = { toAddress: fields.toAddress, amountAVAX: fields.amountAVAX, status: 'rejected', error };
         else {
           try {
             const executed = await options.send(fields.toAddress, fields.amountAVAX);
-            // Preserve the actual requested arguments even if an adapter returns different fields.
+            // Preserve requested arguments even if an adapter returns different fields.
             send = { ...executed, toAddress: fields.toAddress, amountAVAX: fields.amountAVAX };
           } catch {
             send = { toAddress: fields.toAddress, amountAVAX: fields.amountAVAX, status: 'failed', error: 'Local fork transfer failed.' };
           }
         }
         result.sends.push(send);
-        toolResults.push({ type: 'tool_result', tool_use_id: call.id, content: JSON.stringify(send), is_error: send.status !== 'executed' });
+        toolResults.push({ type: 'function_call_output', call_id: call.call_id, output: JSON.stringify(send) });
       }
-      trace.push({ type: 'tool_results', turn: turn + 1, content: structuredClone(toolResults) });
-      if (response.stop_reason !== 'tool_use' || result.sends.length > AGENT_LIMITS.maxSends || calls.some(call => call.name !== 'send')) {
-        result.error = 'The agent produced an unsupported or incomplete tool request, or exceeded the payment-attempt limit.';
+      trace.push({ type: 'tool_results', api: 'openai.responses', turn: turn + 1, content: structuredClone(toolResults) });
+      if (responseError || result.sends.length > AGENT_LIMITS.maxSends || calls.some(call => call.name !== 'send' || !call.call_id || (call.status !== undefined && call.status !== 'completed'))) {
+        result.error = responseError ?? 'The agent produced an unsupported or incomplete function call, or exceeded the payment-attempt limit.';
         return result;
       }
-      messages.push({ role: 'user', content: toolResults });
+      try {
+        // Replay native messages, function calls and reasoning items; no server-side conversation state.
+        input.push(...toResponseInputItems(response.output), ...toolResults);
+      } catch {
+        result.error = 'OpenAI returned response items unsupported by the installed SDK.';
+        return result;
+      }
     }
     result.error = 'The agent reached the turn limit before completing the task.';
     return result;
   };
 }
 
+export function createOpenAIClient(apiKey: string, fetch?: typeof globalThis.fetch): OpenAI {
+  return new OpenAI({ apiKey, baseURL: 'https://api.openai.com/v1', maxRetries: 0,
+    timeout: AGENT_LIMITS.timeoutMs, logLevel: 'off', fetchOptions: { redirect: 'error' }, ...(fetch ? { fetch } : {}) });
+}
 export const runAgent = createAgentRunner(() => {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('Missing ANTHROPIC_API_KEY');
-  return new Anthropic({
-    apiKey,
-    authToken: null,
-    baseURL: 'https://api.anthropic.com',
-    maxRetries: 0,
-    timeout: AGENT_LIMITS.timeoutMs,
-    logLevel: 'off',
-  });
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error('Missing OPENAI_API_KEY');
+  return createOpenAIClient(apiKey);
 });

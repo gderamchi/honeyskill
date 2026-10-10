@@ -25,7 +25,6 @@
     "test:behavioral": "tsx --test packages/skillguard-lite/tests/*.test.ts"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.133.0",
     "@playwright/test": "1.64.0",
     "@types/node": "26.6.5",
     "@types/react": "19.3.0",
@@ -33,6 +32,7 @@
     "@vitejs/plugin-react": "6.1.2",
     "commander": "15.0.0",
     "esbuild": "0.28.2",
+    "openai": "7.32.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tsx": "4.23.15",

@@ -2,7 +2,7 @@
 
 The latest user specification replaces the static SkillGate installation product with a behavioral TypeScript experiment. Read `packages/skillguard-lite/AGENTS.md` and `docs/SKILLGUARD_LITE.md`. Active entry scripts: `pnpm run audit <folder>`, `pnpm benchmark`, `pnpm check:fork`, `pnpm test:behavioral`.
 
-Claude SDK + viem + an owned local Anvil Fuji fork only. No real wallet or public signed transaction. Fixtures are natural-language SKILL.md under the experiment folder, never installed into an agent profile. Preserve historical static code/releases and results as history; do not confuse them with new live model evidence. English deliverables. No secret, raw workstation log or private account data in publication.
+OpenAI SDK + viem + an owned local Anvil Fuji fork only. No real wallet or public signed transaction. Fixtures are natural-language SKILL.md under the experiment folder, never installed into an agent profile. Preserve historical static code/releases and results as history; do not confuse them with new live model evidence. English deliverables. No secret, raw workstation log or private account data in publication.
 
 The instructions below describe the preserved historical product only. They do not override the user's new locked scope.
 
