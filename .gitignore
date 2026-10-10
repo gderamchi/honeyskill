@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .skillgate/
-skillgate-lab/
+/skillgate-lab/
 .agents/
 work/
 outputs/

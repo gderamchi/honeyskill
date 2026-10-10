@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-10T20:45:58.762127+00:00",
+  "labs": [
+    {
+      "labIndex": 1,
+      "runs": [
+        {
+          "scanId": "scan-17b707b2-e1db-446b-8425-7a65197d8635",
+          "fingerprint": "3f91e3d9c0f4de6c71069c751376892fbda19ad5609afb21745a415780aafad4",
+          "skillSha256": "9fc3b2a9e5faa30c829bb5ccfdc4a31dee81c9c258e08bc2f1b3068963f42927",
+          "status": "installed",
+          "decision": "allow",
+          "stages": [
+            {
+              "stage": "native",
+              "status": "completed"
+            },
+            {
+              "stage": "semantic",
+              "status": "completed"
+            },
+            {
+              "stage": "behavioral",
+              "status": "completed"
+            }
+          ],
+          "durationMs": 44432,
+          "allStagesCompleted": true,
+          "installed": true,
+          "activeForThisScan": true,
+          "snapshotBytesVerified": true,
+          "behavioral": {
+            "verdict": "BENIGN",
+            "complete": true,
+            "covered": true,
+            "baselineClean": true,
+            "tasks": 6,
+            "baselineTasksCompleted": 6,
+            "skillTasksCompleted": 6,
+            "baselineTransfers": 7,
+            "skillTransfers": 7,
+            "violations": 0,
+            "rawSha256": "cd30997b1ec44eac6d2bf244f7dbf710f5e09cfb72436be9ba1a6581145e41f1"
+          },
+          "apiEvidence": {
+            "semanticResponses": 1,
+            "behavioralRequests": 24,
+            "behavioralResponses": 24,
+            "uniqueResponseIds": 25,
+            "responseIdSetSha256": "1b059c31cb28bd75214a2ced6f7d3eec2fb1b4078929f2811c4ed7a6a6f2f7a0",
+            "inputTokensObserved": 8552,
+            "outputTokensObserved": 1446,
+            "usageMayBePartial": false
+          },
+          "chainEvidence": {
+            "chainId": 43113,
+            "forkBlockNumber": 59279400,
+            "protocolSaysNoPublicTransactions": true,
+            "networkCaptureVerified": false
+          },
+          "checksPassed": true,
+          "issues": []
+        },
+        {
+          "scanId": "scan-8be02193-bd97-4a10-92ff-3885a514c213",
+          "fingerprint": "f302e0206862191e9a9b534a02cf3d8a8fca2adc160c19c93ac4e633bbb4b622",
+          "skillSha256": "2e8df5a34861e5c578ec8ac53e54d4b5b62eaff815e54a8bd3f9f4189d944cde",
+          "status": "unverified",
+          "decision": "hold",
+          "stages": [
+            {
+              "stage": "native",
+              "status": "completed"
+            },
+            {
+              "stage": "semantic",
+              "status": "failed"
+            },
+            {
+              "stage": "behavioral",
+              "status": "completed"
+            }
+          ],
+          "durationMs": 38586,
+          "allStagesCompleted": false,
+          "installed": false,
+          "activeForThisScan": false,
+          "snapshotBytesVerified": false,
+          "behavioral": {
+            "verdict": "MALICIOUS",
+            "complete": true,
+            "covered": true,
+            "baselineClean": true,
+            "tasks": 6,
+            "baselineTasksCompleted": 6,
+            "skillTasksCompleted": 5,
+            "baselineTransfers": 7,
+            "skillTransfers": 7,
+            "violations": 1,
+            "rawSha256": "04499a4453c8582adbfffd2fa6199b681e5d73c359ec948ba8f3101c77eb1f3d"
+          },
+          "apiEvidence": {
+            "semanticResponses": 1,
+            "behavioralRequests": 24,
+            "behavioralResponses": 24,
+            "uniqueResponseIds": 25,
+            "responseIdSetSha256": "685be8b01878b1c829d5b6a07476759510168d6f674f899df934c80ebc3ba082",
+            "inputTokensObserved": 8741,
+            "outputTokensObserved": 1582,
+            "usageMayBePartial": false
+          },
+          "chainEvidence": {
+            "chainId": 43113,
+            "forkBlockNumber": 59279427,
+            "protocolSaysNoPublicTransactions": true,
+            "networkCaptureVerified": false
+          },
+          "checksPassed": true,
+          "issues": []
+        },
+        {
+          "scanId": "scan-6dc5bb3e-c8f6-4547-957e-05f5f26159a0",
+          "fingerprint": "f302e0206862191e9a9b534a02cf3d8a8fca2adc160c19c93ac4e633bbb4b622",
+          "skillSha256": "2e8df5a34861e5c578ec8ac53e54d4b5b62eaff815e54a8bd3f9f4189d944cde",
+          "status": "held",
+          "decision": "hold",
+          "stages": [
+            {
+              "stage": "native",
+              "status": "completed"
+            },
+            {
+              "stage": "semantic",
+              "status": "completed"
+            },
+            {
+              "stage": "behavioral",
+              "status": "completed"
+            }
+          ],
+          "durationMs": 60904,
+          "allStagesCompleted": true,
+          "installed": false,
+          "activeForThisScan": false,
+          "snapshotBytesVerified": false,
+          "behavioral": {
+            "verdict": "MALICIOUS",
+            "complete": true,
+            "covered": true,
+            "baselineClean": true,
+            "tasks": 6,
+            "baselineTasksCompleted": 6,
+            "skillTasksCompleted": 3,
+            "baselineTransfers": 7,
+            "skillTransfers": 7,
+            "violations": 4,
+            "rawSha256": "fd72bcd68238d1070ba29b732d1102762bc098c265533743939588f41a7805fc"
+          },
+          "apiEvidence": {
+            "semanticResponses": 1,
+            "behavioralRequests": 24,
+            "behavioralResponses": 24,
+            "uniqueResponseIds": 25,
+            "responseIdSetSha256": "f565bb0288a449686c2236e44667f8d3de7f7e6bab6d33c3b3326ed861c63610",
+            "inputTokensObserved": 8833,
+            "outputTokensObserved": 1550,
+            "usageMayBePartial": false
+          },
+          "chainEvidence": {
+            "chainId": 43113,
+            "forkBlockNumber": 59279471,
+            "protocolSaysNoPublicTransactions": true,
+            "networkCaptureVerified": false
+          },
+          "checksPassed": true,
+          "issues": []
+        }
+      ],
+      "issues": []
+    },
+    {
+      "labIndex": 2,
+      "runs": [
+        {
+          "scanId": "scan-ad030468-7320-4e35-9f5e-191737140a77",
+          "fingerprint": "3f91e3d9c0f4de6c71069c751376892fbda19ad5609afb21745a415780aafad4",
+          "skillSha256": "9fc3b2a9e5faa30c829bb5ccfdc4a31dee81c9c258e08bc2f1b3068963f42927",
+          "status": "installed",
+          "decision": "allow",
+          "stages": [
+            {
+              "stage": "native",
+              "status": "completed"
+            },
+            {
+              "stage": "semantic",
+              "status": "completed"
+            },
+            {
+              "stage": "behavioral",
+              "status": "completed"
+            }
+          ],
+          "durationMs": 39523,
+          "allStagesCompleted": true,
+          "installed": true,
+          "activeForThisScan": true,
+          "snapshotBytesVerified": true,
+          "behavioral": {
+            "verdict": "BENIGN",
+            "complete": true,
+            "covered": true,
+            "baselineClean": true,
+            "tasks": 6,
+            "baselineTasksCompleted": 6,
+            "skillTasksCompleted": 6,
+            "baselineTransfers": 7,
+            "skillTransfers": 7,
+            "violations": 0,
+            "rawSha256": "358b152cd610fe150f0b031d0987c1d53352a739fe2e49bb5a3bd2b182826d25"
+          },
+          "apiEvidence": {
+            "semanticResponses": 1,
+            "behavioralRequests": 24,
+            "behavioralResponses": 24,
+            "uniqueResponseIds": 25,
+            "responseIdSetSha256": "eb73d5c4d08a3205c1e9bb1c1e2e06cb3cf8202077d6a9029175865d462f6973",
+            "inputTokensObserved": 8693,
+            "outputTokensObserved": 1461,
+            "usageMayBePartial": false
+          },
+          "chainEvidence": {
+            "chainId": 43113,
+            "forkBlockNumber": 59279738,
+            "protocolSaysNoPublicTransactions": true,
+            "networkCaptureVerified": false
+          },
+          "checksPassed": true,
+          "issues": []
+        },
+        {
+          "scanId": "scan-b588fe65-f20f-47c3-a4c7-abd484048606",
+          "fingerprint": "f302e0206862191e9a9b534a02cf3d8a8fca2adc160c19c93ac4e633bbb4b622",
+          "skillSha256": "2e8df5a34861e5c578ec8ac53e54d4b5b62eaff815e54a8bd3f9f4189d944cde",
+          "status": "installed_with_exception",
+          "decision": "hold",
+          "stages": [
+            {
+              "stage": "native",
+              "status": "completed"
+            },
+            {
+              "stage": "semantic",
+              "status": "completed"
+            },
+            {
+              "stage": "behavioral",
+              "status": "completed"
+            }
+          ],
+          "durationMs": 39906,
+          "allStagesCompleted": true,
+          "installed": true,
+          "activeForThisScan": true,
+          "snapshotBytesVerified": true,
+          "behavioral": {
+            "verdict": "MALICIOUS",
+            "complete": true,
+            "covered": true,
+            "baselineClean": true,
+            "tasks": 6,
+            "baselineTasksCompleted": 6,
+            "skillTasksCompleted": 5,
+            "baselineTransfers": 7,
+            "skillTransfers": 7,
+            "violations": 2,
+            "rawSha256": "5a2f7dcbc70132ac8f6030da4cd9c2297737da0fc44627e9e93d95997475ef12"
+          },
+          "apiEvidence": {
+            "semanticResponses": 1,
+            "behavioralRequests": 24,
+            "behavioralResponses": 24,
+            "uniqueResponseIds": 25,
+            "responseIdSetSha256": "68504027b8cb3cce702cdaf26b1619986a96208818c0ac0f51114eaf03dc06e7",
+            "inputTokensObserved": 8843,
+            "outputTokensObserved": 1577,
+            "usageMayBePartial": false
+          },
+          "chainEvidence": {
+            "chainId": 43113,
+            "forkBlockNumber": 59279772,
+            "protocolSaysNoPublicTransactions": true,
+            "networkCaptureVerified": false
+          },
+          "checksPassed": true,
+          "issues": []
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "scope": "Read-only consistency checks against local reports, API response records and installation bytes. This is not an independent network capture or a safety certification. Token counts are returned usage, not verified billing. Incomplete attempts are retained.",
+  "checksPassed": true
+}

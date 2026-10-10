@@ -1,0 +1,31 @@
+{
+  "version": "0.5.0",
+  "sourceCommit": "41fca4d8ec9422eebe32043b4006cc95c91dac72",
+  "compiledHashes": {
+    "compiled": "6bef88d405adbd9a4f0d57c78cc55a0e34df4a2cbb862dd9c23ade597a0b8e68",
+    "shortcut": "6bef88d405adbd9a4f0d57c78cc55a0e34df4a2cbb862dd9c23ade597a0b8e68",
+    "pinned": "6bef88d405adbd9a4f0d57c78cc55a0e34df4a2cbb862dd9c23ade597a0b8e68",
+    "release": "6bef88d405adbd9a4f0d57c78cc55a0e34df4a2cbb862dd9c23ade597a0b8e68"
+  },
+  "allIdentical": true,
+  "publicInstalls": [
+    {
+      "source": "gderamchi/skillgate",
+      "exitCode": 0,
+      "observedNpmElapsed": "3m",
+      "note": "First GitHub archive streamed slowly; bounded20s retry failed on SSH fallback."
+    },
+    {
+      "source": "gderamchi/skillgate#v0.5.0",
+      "exitCode": 0,
+      "observedNpmElapsed": "4s"
+    },
+    {
+      "source": "https://github.com/gderamchi/skillgate/releases/download/v0.5.0/skillgate.tgz",
+      "exitCode": 0,
+      "observedNpmElapsed": "1s"
+    }
+  ],
+  "anvilVersion": "1.8.5",
+  "anvilArchiveChecksumVerifiedAgainstOfficialRelease": true
+}

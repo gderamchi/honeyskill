@@ -3,7 +3,7 @@
 ## One command, all checks
 
 ```sh
-npm i -g gderamchi/skillgate
+npm i -g 'gderamchi/skillgate#v0.5.0'
 skillgate try good
 skillgate try trap
 ```

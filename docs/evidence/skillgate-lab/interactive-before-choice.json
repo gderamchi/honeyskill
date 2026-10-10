@@ -1,0 +1,9 @@
+{
+  "scanId": "scan-b588fe65-f20f-47c3-a4c7-abd484048606",
+  "reportWrittenBeforeChoice": true,
+  "targetAbsentBeforeChoice": true,
+  "decision": "hold",
+  "behavioralVerdict": "MALICIOUS",
+  "violations": 2,
+  "intendedChoice": "2 \u2014 Install despite the risk"
+}

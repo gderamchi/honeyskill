@@ -7,10 +7,16 @@ The latest user request combines three independent checks before a test installa
 Install Node.js 22.18+ and [Foundry Anvil](https://getfoundry.sh/getting-started/installation), then:
 
 ```sh
-npm i -g gderamchi/skillgate
+npm i -g 'gderamchi/skillgate#v0.5.0'
 skillgate lab
 skillgate try good
 skillgate try trap
+```
+
+The pinned public install was checked from a fresh npm cache. If GitHub's source archive stalls, the compiled release is also available:
+
+```sh
+npm i -g https://github.com/gderamchi/skillgate/releases/download/v0.5.0/skillgate.tgz
 ```
 
 The OpenAI key is requested with terminal echo disabled when missing; it is used only for that process. Alternatively supply `OPENAI_API_KEY` through your existing secure environment. Each successful trial makes a real LLM review plus twelve agent task runs using paid API calls. API credits are distinct from a ChatGPT subscription. No key is stored by SkillGate. Anvil must be installed; `ANVIL_BIN` can specify an absolute executable path. No account, faucet, public transaction or real wallet is required for the local fork.
