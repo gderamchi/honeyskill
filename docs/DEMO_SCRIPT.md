@@ -1,6 +1,6 @@
-# Terminal demonstration — about 3 minutes
+# Terminal demonstration
 
-This is the **English-language script for SkillGate 0.3.1**. The English-default source and full local validation are complete; public 0.3.1 installation verification and the new English video are still pending. Do not present the older 0.3.0 recording or its results as proof of an English 0.3.1 release.
+This is the **English-language script for SkillGate 0.3.1**. English source, local validation, anonymous public installation verification and the new 48-second English video are complete. [Recording evidence](evidence/english-terminal-video-0.3.1.json) distinguishes the filmed local-clone acquisition from the prior GitHub API HTTP 403 failure. The older 0.3.0 recording remains historical.
 
 Use the two public repositories with one skill each: [skill-safe](https://github.com/gderamchi/skill-safe) and [skill-trap](https://github.com/gderamchi/skill-trap). Their files are unchanged synthetic fixtures from the [original demonstration corpus](https://github.com/gderamchi/skillgate-demo-skills). No skill-selection flag is needed.
 
@@ -20,7 +20,19 @@ Narration: “SkillGate checks skills before they become active. One command ope
 
 The `[SkillGate]` prompt identifies the protected session. `exit` leaves it. Protection applies to supported installer commands in this terminal and to agents inheriting its environment; it does not modify global shell profiles. The scanner never executes acquired skill code.
 
-Run each block separately: wait for the protected prompt before installing, then answer any risk prompt before proceeding. The [previous public terminal demonstration](evidence/public-short-demo.json) was actually executed on 0.3.0 after an anonymous installation. It is historical evidence, not the pending English recording.
+Run each block separately: wait for the protected prompt before installing, then answer any risk prompt before proceeding. The [previous public terminal demonstration](evidence/public-short-demo.json) was actually executed on 0.3.0 after an anonymous installation. It is historical evidence. The new English recording uses the local-clone fallback below.
+
+## Recorded fallback when GitHub API quota is exhausted
+
+The English video uses anonymously cloned copies of the public repositories, with exact revisions and file hashes verified before filming. In a temporary project, clone them before opening the protected terminal:
+
+```sh
+git clone https://github.com/gderamchi/skill-safe
+git clone https://github.com/gderamchi/skill-trap
+skillgate on
+```
+
+The filmed commands are `npx skills add ./skill-safe` and `npx skills add ./skill-trap`. All terminal output and decisions are real. The frame footer discloses local clones. No acquired skill code is executed. The source-acquisition fallback does not fix the CLI's direct GitHub API quota limitation.
 
 ## Legitimate skill: automatic installation
 
@@ -78,4 +90,4 @@ The previously measured internal synthetic benchmark also exposes failures: 11/1
 
 Local outputs such as `outputs/cli-demo.json`, `outputs/cli-only-pty-smoke.json` and `outputs/demo-publication.json` document actual executions. Read their version and timestamps before using them. The 0.1.0 web-UI video is historical and must not represent the current CLI-only product.
 
-Sanitized public verification summaries are in [evidence](evidence/). The referenced `outputs/` files are generated locally and excluded from the public repository to avoid publishing private workstation paths and raw logs. Publish only the reviewed English video and sanitized evidence after the 0.3.1 checks complete.
+Sanitized public verification summaries are in [evidence](evidence/). The referenced `outputs/` files are generated locally and excluded from the public repository to avoid publishing private workstation paths and raw logs. The English video passed full decode and visual checks; sanitized evidence records its SHA-256, CLI version, source revisions and actual installation decisions.

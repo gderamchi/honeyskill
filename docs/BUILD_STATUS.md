@@ -1,4 +1,4 @@
-# SkillGate 0.3.1 — English release in progress
+# SkillGate 0.3.1 — English CLI verified
 
 Updated 10 October 2026. The current product is a CLI with checks before skill installation. The user replaced the original local web-UI requirement with terminal integration, then requested an English-default product and video.
 
@@ -6,7 +6,7 @@ Updated 10 October 2026. The current product is a CLI with checks before skill i
 
 The CLI source now uses English for help, setup, risk choices, installation messages, protected-session messages, hook explanations and exported HTML reports. The safe path remains automatic; the risky path still defaults to cancellation and requires explicit choice `2` for an exception. No language-selection layer or change to detection behavior is intended.
 
-The [actual local 0.3.1 validation](evidence/local-validation-0.3.1.json) passed typecheck, 47 tests, 13 PTY decision scenarios, 10 protected-session checks, seven packaged-terminal interception cases, the CLI build, isolated simulation, packaging and installation outside the repository. The [translation parity check](evidence/english-translation-validation.json) confirmed 32/32 detection regexes and 40/40 case outcomes unchanged, and the frozen benchmark rerun completed with the same totals. **Public 0.3.1 publication/install verification and the new English video are still pending.** Historical public results below must not be presented as completed public 0.3.1 checks.
+The [actual local 0.3.1 validation](evidence/local-validation-0.3.1.json) passed typecheck, 47 tests, 13 PTY decision scenarios, 10 protected-session checks, seven packaged-terminal interception cases, the CLI build, isolated simulation, packaging and installation outside the repository. The [translation parity check](evidence/english-translation-validation.json) confirmed 32/32 detection regexes and 40/40 case outcomes unchanged, and the frozen benchmark rerun completed with the same totals. The [public 0.3.1 installation verification](evidence/public-short-install-0.3.1.json) also passed: anonymous GitHub installation, ten real terminal checks, a fresh public clone with 47 passing tests and typecheck, and a byte-identical rebuilt CLI. The [English terminal video](evidence/english-terminal-video-0.3.1.json) is complete: 48 seconds, 1080p, actual public CLI execution against verified local Git clones of the two public synthetic skills. It shows automatic installation, cancellation of the held trap, then explicit exception. Direct GitHub API acquisition hit HTTP 403 in a prior take; the video does not claim to show that acquisition path succeeding. Historical public results below remain versioned evidence.
 
 ## Implemented product scope
 
@@ -16,7 +16,7 @@ The [actual local 0.3.1 validation](evidence/local-validation-0.3.1.json) passed
 - Unsupported global or ambiguous options, multiple sources, third-party updates and interactive searches that can install are denied with an explanation.
 - An optional Codex `PreToolUse` hook preserves other hooks and uses native `/hooks` trust review. The product does not bypass that trust decision or modify the agent sandbox.
 - The public [original demo corpus](https://github.com/gderamchi/skillgate-demo-skills) and single-skill [safe](https://github.com/gderamchi/skill-safe) / [trap](https://github.com/gderamchi/skill-trap) repositories contain synthetic fixtures. The scanner never executes their code.
-- Short public commands remain `npm i -g gderamchi/skillgate`, then `skillgate on`. Distribution uses a compiled GitHub package, not the npm registry. The public repository must be verified after the new version is published before claiming that this command installs 0.3.1.
+- Short public commands remain `npm i -g gderamchi/skillgate`, then `skillgate on`. Distribution uses a compiled GitHub package, not the npm registry. Anonymous public installation of 0.3.1 is verified in the linked evidence.
 
 ## Completed historical verification: 0.3.0
 
@@ -40,7 +40,7 @@ The old 0.1.0 web sources and video remain historical work artifacts and are exc
 
 The frozen benchmark and the actual 0.3.1 rerun both recorded 11/16 suspicious cases detected, five missed, 4/16 false positives and 11/16 legitimate cases allowed. Seven of eight incomplete cases were held, and one acquisition error produced no activation. This is an internal synthetic evaluation, not an independent assessment. The [English translation parity check](evidence/english-translation-validation.json) confirmed all 32 detection regexes and all 40 case outcomes unchanged.
 
-- **Distribution:** GitHub source and compiled packages were publicly verified for earlier versions. No npm-registry release is claimed. Verify anonymous installation of 0.3.1 after publication.
+- **Distribution:** GitHub source and compiled packages were publicly verified for 0.3.1. No npm-registry release is claimed. During the English recording, direct fixture acquisition hit the anonymous GitHub API rate limit (HTTP 403) and activated nothing; Git-cloned local sources avoid that API but remain a distinct acquisition path.
 - **Coverage:** other installers, unsupported agents, absolute binaries bypassing the wrappers, manual copies and processes without the protected PATH remain outside scope. This is not universal system monitoring or a transaction firewall.
 - **Codex:** a trusted project, native hook authorization and permission to write the skill directory are required. Hooks may fail open on startup errors or timeouts and do not intercept `write_stdin`.
 - **Detection quality:** improve false negatives and false positives on a separate development set, then evaluate without rewriting the frozen benchmark.

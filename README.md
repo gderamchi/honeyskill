@@ -87,6 +87,8 @@ An optional OpenAI Responses provider is implemented and tested with simulated r
 
 ## Boundaries
 
+Public GitHub acquisition uses GitHub's unauthenticated API and is subject to its rate limit. If GitHub returns HTTP 403, acquisition fails and no skill is activated. A verified local clone can be scanned without that API; the English terminal video uses this path after an actual quota failure.
+
 PATH interception covers supported commands in the activated session and descendants inheriting its environment. It does not cover manual copies, absolute executable paths that bypass wrappers, arbitrary installers, environments that replace PATH, commands passed to an already-running shell through `write_stdin`, or processes started before activation. It does not control transactions or agent behavior after installation. A local process can deliberately bypass or alter the protection.
 
 An optional Codex `PreToolUse` hook provides additional command rewriting:

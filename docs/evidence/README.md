@@ -1,5 +1,10 @@
 # Public execution evidence
 
+- `english-terminal-video-0.3.1.json`: real English CLI session, 48-second video, verified public Git clones, real held/override checks and the separate HTTP 403 acquisition limitation.
+
+- `public-short-install-0.3.1.json`: anonymous English release installation, ten protected-session checks, 47 public-source tests and a byte-identical rebuild.
+- `english-translation-validation.json`: 32 regexes and all 40 frozen benchmark outcomes preserved after translation.
+
 - `local-validation-0.3.1.json`: English CLI validation, 47 tests, 13 general terminal scenarios, ten protected-session checks and seven package interception cases.
 - `local-validation-0.3.0.json`: historical local validation of the shorter install/activation commands, including a real protected Bash session.
 - `public-short-install.json`: historical 0.3.0 anonymous GitHub shorthand installation, ten real protected-session checks, a fresh public source clone with 45 passing tests and a byte-identical rebuilt CLI. The verification harness uses a short temporary path for macOS IPC sockets.

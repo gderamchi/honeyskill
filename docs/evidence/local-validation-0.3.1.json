@@ -11,7 +11,7 @@
   "paidProviderCalls": 0,
   "productIncludesWebUi": false,
   "upstreamInstallerExecuted": false,
-  "artifactSha256": "dbb8365326b47494f838d7ecc6d8909db2ceb8d9972f3fdef7ae8653b21887fa",
+  "artifactSha256": "5b94be48c7a880eec0350c9ef8b164483ef305fa26ea7ff687c30edb4766b756",
   "cliSha256": "3051a2361d02baba7f3e7ccd6276ddeafaab9388e04fa9ab09aecc2b3bdf6108",
   "commands": [
     {
@@ -63,5 +63,14 @@
     "Static financial rules are heuristic, not a safety certification.",
     "Interactive session covers supported installers and descendants inheriting its PATH.",
     "Raw workstation paths and transcripts are excluded."
-  ]
+  ],
+  "initialValidatedArtifactSha256": "dbb8365326b47494f838d7ecc6d8909db2ceb8d9972f3fdef7ae8653b21887fa",
+  "packagingFollowUp": {
+    "change": "README now documents the actual anonymous GitHub API quota failure; CLI bytes unchanged.",
+    "commands": [
+      "pnpm pack:local",
+      "pnpm smoke:package"
+    ],
+    "status": "passed"
+  }
 }
