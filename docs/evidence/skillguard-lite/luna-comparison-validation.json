@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-paired-recorded-evidence-validation",
+  "status": "passed",
+  "validatedAt": "2026-10-10T18:23:16.204429+00:00",
+  "scope": "Independent recomputation from stored native API traces and local transaction summaries, not a new model or RPC execution.",
+  "modelCallsMadeByValidator": 0,
+  "rpcCallsMadeByValidator": 0,
+  "source": {
+    "file": "luna-comparison.json",
+    "sha256": "d1a73555d9bd83cf35dddab0613f9c7251d005f779bb72bc15ae9c37aa01f93a"
+  },
+  "historicalResponseExclusion": {
+    "files": {
+      "openai-benign-audit.json": "1611a2f63017455e8dbb86b1f117c6ba3481c440dc84b93b79250a4dff99618f",
+      "openai-malicious-audit.json": "255ae940649ef9f7af88b6b443cdb88f57496e9dd4bdd92f5a82fc62ef85c2e2",
+      "openai-benchmark.json": "ccbc05aaef464b594cf225aee9fe278f0b174f57cc4d47cf4810ecae7e3bd4e1",
+      "luna-benchmark.json": "2ec97732f66e2ef1ae6ae187c7fc19ea5800ece60e8aa825c7f27398f445079e",
+      "public-luna-benign-audit.json": "9b41d874d406a478ca1a6fca8469a006b7bdf8456742008e4695bc6e3ff94b70",
+      "public-luna-malicious-audit.json": "378324dd63e9864914306c1a291e824b945c2e96b9afb2fa04b77cc64dca4f5f"
+    },
+    "uniqueHistoricalResponseIds": 681,
+    "freshCurrentResponseIds": 308,
+    "overlap": 0
+  },
+  "datasetSha256": "7e685d3130121193ea2f15551943b007467242a550a7cc4b9c4a31d51d1d408e",
+  "textReviewPromptSha256": "f4b8a9779e25422cf01cc72e05437de5633e746401a706d51521f98e5ec44b22",
+  "checks": {
+    "frozenFileHash": 15,
+    "datasetHash": 1,
+    "comparisonFinalized": 1,
+    "comparisonIdentity": 1,
+    "expectedFixtureCount": 1,
+    "fixtureOrder": 1,
+    "notRunList": 1,
+    "fixedPromptSource": 1,
+    "fixedReviewPrompt": 1,
+    "authorLabel": 12,
+    "sameRawSkillHash": 12,
+    "methodOrder": 12,
+    "reviewIdentity": 12,
+    "reviewTiming": 12,
+    "traceAPI": 768,
+    "modelParameters": 308,
+    "reviewNoTools": 12,
+    "reviewFixedInstructions": 12,
+    "reviewOneInput": 12,
+    "reviewBlindedExactInput": 12,
+    "reviewStructuredOutput": 12,
+    "freshResponseId": 308,
+    "nativeResponseIdentity": 308,
+    "completedNativeResponse": 308,
+    "nonnegativeTokenUsage": 616,
+    "reviewNoExecutions": 12,
+    "reviewUsage": 12,
+    "reviewOneResponse": 12,
+    "reviewTextOnlyResponse": 12,
+    "reviewVerdictEvidence": 12,
+    "completeReviewNoError": 12,
+    "behaviorIdentity": 12,
+    "behaviorFork": 12,
+    "behaviorTiming": 12,
+    "behaviorContextHash": 12,
+    "behaviorTaskIdentity": 72,
+    "behaviorSingleTool": 296,
+    "behaviorPromptIdentity": 296,
+    "behaviorTaskPrompt": 296,
+    "behaviorCallCount": 144,
+    "behaviorUsage": 144,
+    "behaviorCallEvidence": 177,
+    "sendStatus": 177,
+    "executedTransactionSummary": 177,
+    "independentOracle": 144,
+    "recipientCompletionEvidence": 144,
+    "aggregateBehaviorViolations": 12,
+    "behaviorCompletion": 12,
+    "behaviorVerdict": 12,
+    "behaviorBaselineVerdict": 12,
+    "aggregateBehaviorUsage": 12,
+    "methodOrderTimestamps": 12,
+    "pairedCoverage": 1,
+    "pairedAgreement": 1,
+    "overallCompletion": 1,
+    "sharedConfusionMatrix": 2,
+    "sharedClassificationMetric": 6,
+    "resourceCoverage": 2,
+    "resourceTokenTotals": 2,
+    "resourceTimeTotal": 2,
+    "forkStartupTime": 1
+  },
+  "assertionsPassed": 5036,
+  "methodCounts": {
+    "textReview": {
+      "requests": 12,
+      "responses": 12
+    },
+    "skillGuard": {
+      "requests": 296,
+      "responses": 296,
+      "taskArms": 144,
+      "sends": 177,
+      "executed": 177,
+      "violations": 37,
+      "inputTokens": 103126,
+      "outputTokens": 17749
+    }
+  },
+  "metrics": {
+    "total": 12,
+    "pairedScored": 12,
+    "unscored": 0,
+    "pairedAgreement": 12,
+    "pairedDisagreement": 0,
+    "textReview": {
+      "truePositives": 7,
+      "trueNegatives": 5,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "recall": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 5,
+        "value": 0
+      },
+      "completed": 12,
+      "eligible": 12,
+      "usageMayBePartial": false,
+      "usageUncertainRows": 0,
+      "elapsedMs": 20484,
+      "inputTokens": 6698,
+      "outputTokens": 762
+    },
+    "skillGuard": {
+      "truePositives": 7,
+      "trueNegatives": 5,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "recall": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 5,
+        "value": 0
+      },
+      "completed": 12,
+      "eligible": 12,
+      "usageMayBePartial": false,
+      "usageUncertainRows": 0,
+      "elapsedMs": 436745.6987499999,
+      "inputTokens": 103126,
+      "outputTokens": 17749
+    }
+  },
+  "outputs": {
+    "luna-comparison-slide.svg": {
+      "sha256": "af67aeb0acb2a77d850b96279edf259e248f65e9b0d6828e92e50e4d072e42e3",
+      "bytes": 17931
+    },
+    "luna-comparison-slide.png": {
+      "sha256": "fd756c0609698c0a4864f0876f0f529d0168df1b355552cce1831c25cbae8bc4",
+      "bytes": 395604
+    }
+  },
+  "visual": {
+    "width": 1920,
+    "height": 1080,
+    "aspectRatio": "16:9",
+    "renderer": "rsvg-convert",
+    "reviewed": true,
+    "review": "Rendered PNG visually inspected: all 12 paired rows, method metrics/resources, data-derived conclusion and limitations fit without clipping or overlap."
+  },
+  "limitations": [
+    "Small synthetic corpus and one fresh run per method/fixture.",
+    "API text-review proxy, not ChatGPT web/app.",
+    "Resource totals reflect different workflows and compute budgets.",
+    "Stored transaction summaries were checked; full RPC receipts were not independently re-queried.",
+    "Author-label intent and observed behavior are distinct endpoints."
+  ]
+}

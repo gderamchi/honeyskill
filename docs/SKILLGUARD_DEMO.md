@@ -38,8 +38,10 @@ unset OPENAI_API_KEY
 
 ## Present the result
 
-The primary comparison is the table written by `pnpm benchmark`: author label, text-only review, SkillGuard-Lite verdict, observed violations and paired completion. It also reports precision/recall/FPR, elapsed time and returned input/output tokens for both methods. The earlier [behavioral-only table](evidence/skillguard-lite/luna-benchmark.md) is historical and does not measure an advantage over a text review.
+Show the [recorded comparison table](evidence/skillguard-lite/luna-comparison.md) or [slide](evidence/skillguard-lite/luna-comparison-slide.png). The actual run completed all 12 pairs: both methods detected 7/7 malicious skills, with 0/5 false positives. Text review took 20.48 seconds and returned 7,460 total tokens; SkillGuard-Lite took 436.75 seconds and returned 120,875 total tokens. The behavioral method recorded 37 unintended-recipient send calls on the local fork. No classification advantage was demonstrated on this corpus.
 
-Say: “We compare a text-only model review with behavioral testing on the same synthetic skills. Both use GPT-6 Luna through the API. The text method predicts risk from instructions; SkillGuard-Lite records actual reference-agent payments on a local fork. We report their measured accuracy and compute costs, including ties and errors. This is not a test of the ChatGPT app or a general safety certificate.”
+The table written by `pnpm benchmark` shows author label, text-only review, SkillGuard-Lite verdict, observed violations and paired completion. It reports precision/recall/FPR, elapsed time and returned input/output tokens for both methods. A new run may differ. The earlier [behavioral-only table](evidence/skillguard-lite/luna-benchmark.md) is historical and does not measure an advantage over a text review.
+
+Say: “We compared a text-only model review with behavioral testing on the same 12 synthetic skills. Both used GPT-6 Luna through the API and detected all seven malicious skills without false alarms. SkillGuard-Lite added actual reference-agent payment traces on a local fork, at substantially greater time and token usage. This run shows a tie in classification, not a detection improvement. It is not a test of the ChatGPT app or a general safety certificate.”
 
 This behavioral experiment reports a verdict. It does not intercept terminal installations or present an installation override; those belong to the preserved historical SkillGate product.

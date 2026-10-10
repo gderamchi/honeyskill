@@ -1,0 +1,115 @@
+{
+  "kind": "actual-comparison-public-source-validation",
+  "executedAt": "2026-10-10T18:14:23.995634+00:00",
+  "repository": "https://github.com/gderamchi/skillgate",
+  "commit": "496239142ade9bc6d602cc265c69c90add0196df",
+  "clone": "fresh HTTPS clone with credential.helper disabled",
+  "checks": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm exec tsx packages/skillguard-lite/src/main.ts --help",
+      "exitCode": 0
+    }
+  ],
+  "tests": {
+    "tests": 58,
+    "pass": 58,
+    "fail": 0,
+    "skipped": 0
+  },
+  "liveForkTest": true,
+  "unitModelTransport": "mocked; live comparison recorded separately",
+  "sourceSha256": {
+    "packages/skillguard-lite/src/agent.ts": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c",
+    "packages/skillguard-lite/src/chain.ts": "b4366dc56c9099493a5f5e6bb5731a861504632ab4fb41e0a78b444abbce4221",
+    "packages/skillguard-lite/src/comparison.ts": "7922823066dbcd66de18961a03a25657063f180ee199cce4203a933b71eab4e0",
+    "packages/skillguard-lite/src/main.ts": "01b0131b3c2dc54782ba4c6731df89fe0c29998d9e4018ee28b49e906ea05915",
+    "packages/skillguard-lite/src/oracle.ts": "410cd0c0891de23bda1c85f519ee59e6d5c791f2edb30e254d6217ff316b3fe1",
+    "packages/skillguard-lite/src/runner.ts": "810dee41a4750ea8648684f0bea250183072ede95b55886bec58fbaee078d01b",
+    "packages/skillguard-lite/src/text-review.ts": "e89ef6aaf9aab73fdbf0568ea9ac8618369f6fb2a86f24e2e014422821908cc3",
+    "packages/skillguard-lite/src/types.ts": "8e1077628ada6b5f6a6a1e33f6d45115e15f4129a027d191efae725a17a20599"
+  },
+  "comparisonCommand": "pnpm benchmark --block 59275449 --out <fresh-evidence-path>.json",
+  "comparisonStatus": "complete real paired execution",
+  "publicSignedTransactions": 0,
+  "comparisonExitCode": 0,
+  "comparisonCompletedAt": "2026-10-10T18:21:27.431Z",
+  "comparisonEvidence": "luna-comparison.json",
+  "comparisonEvidenceSha256": "d1a73555d9bd83cf35dddab0613f9c7251d005f779bb72bc15ae9c37aa01f93a",
+  "comparisonMetrics": {
+    "total": 12,
+    "pairedScored": 12,
+    "unscored": 0,
+    "pairedAgreement": 12,
+    "pairedDisagreement": 0,
+    "textReview": {
+      "truePositives": 7,
+      "trueNegatives": 5,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "recall": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 5,
+        "value": 0
+      },
+      "completed": 12,
+      "eligible": 12,
+      "usageMayBePartial": false,
+      "usageUncertainRows": 0,
+      "elapsedMs": 20484,
+      "inputTokens": 6698,
+      "outputTokens": 762
+    },
+    "skillGuard": {
+      "truePositives": 7,
+      "trueNegatives": 5,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "recall": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1
+      },
+      "falsePositiveRate": {
+        "numerator": 0,
+        "denominator": 5,
+        "value": 0
+      },
+      "completed": 12,
+      "eligible": 12,
+      "usageMayBePartial": false,
+      "usageUncertainRows": 0,
+      "elapsedMs": 436745.6987499999,
+      "inputTokens": 103126,
+      "outputTokens": 17749
+    }
+  },
+  "evidenceValidation": "luna-comparison-validation.json",
+  "verifiedAt": "2026-10-10T18:24:12.541134+00:00"
+}

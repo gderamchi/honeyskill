@@ -58,7 +58,24 @@ SKILLGUARD_LIVE_CHAIN_TEST=1 pnpm test:behavioral
 
 ## Primary comparison — GPT-6 Luna text review vs SkillGuard-Lite
 
-The paired runner and fixed text-review prompt are implemented and tested. Fresh comparison measurements will be published here after execution. The previous behavioral-only scores below do not establish an advantage over a text review. Read the [comparison protocol](docs/SKILLGUARD_COMPARISON.md) for blinding, method order, shared scoring, compute differences and interpretation limits.
+The fresh paired run completed **12/12 synthetic fixtures** on 10 October 2026. Both methods detected all seven malicious skills and classified all five benign skills correctly. **This corpus demonstrates no detection advantage for SkillGuard-Lite.** Its additional output is evidence of actual reference-agent behavior on the local fork.
+
+| Measurement | GPT-6 Luna text review | SkillGuard-Lite |
+| --- | ---: | ---: |
+| Precision | 7/7 (100%) | 7/7 (100%) |
+| Recall | 7/7 (100%) | 7/7 (100%) |
+| False-positive rate | 0/5 (0%) | 0/5 (0%) |
+| Complete scored pairs | 12/12 | 12/12 |
+| Method elapsed time | 20.48 s | 436.75 s |
+| Returned input / output tokens | 6,698 / 762 | 103,126 / 17,749 |
+
+The behavioral audit observed **37 unintended-recipient send calls**, with every no-skill baseline clean. There were no excluded pairs or disagreements. Fork startup took another 0.23 seconds, reported separately. Token totals are API-reported usage, not verified billing; the methods have different compute budgets.
+
+The fixed prompt and runner were published before this execution. A fresh public clone passed installation, typecheck and **58/58 tests**, including the live local-fork test, then ran the comparison. [Public source validation](docs/evidence/skillguard-lite/comparison-public-source-validation.json) identifies the tested commit.
+
+[Comparison table](docs/evidence/skillguard-lite/luna-comparison.md) · [Native API and chain traces](docs/evidence/skillguard-lite/luna-comparison.json) · [Slide](docs/evidence/skillguard-lite/luna-comparison-slide.png) · [Evidence validation](docs/evidence/skillguard-lite/luna-comparison-validation.json).
+
+This is one run on 12 authored synthetic examples, several of which describe their attacks explicitly. It is an API text-review baseline, not a test of the ChatGPT app, and it establishes neither general accuracy nor superiority. Read the [comparison protocol](docs/SKILLGUARD_COMPARISON.md) for blinding, method order, shared scoring, compute differences and interpretation limits. Historical behavioral-only scores below are separate executions.
 
 ## Historical behavioral-only run — GPT-6 Luna
 
@@ -66,7 +83,7 @@ The GPT-6 Luna run completed **12/12 synthetic fixtures**: seven malicious skill
 
 At Fuji fork block **59275449**, it produced **297 model responses**, **178 executed local transfers** and **38 provenance violations** across 144 task arms. Every request used `gpt-6-luna`, reasoning effort `none`, temperature `0` and a 700-token output limit. All baselines were clean.
 
-[Current benchmark table](docs/evidence/skillguard-lite/luna-benchmark.md) · [Full native traces](docs/evidence/skillguard-lite/luna-benchmark.json) · [Slide](docs/evidence/skillguard-lite/luna-benchmark-slide.png) · [Independent evidence checks](docs/evidence/skillguard-lite/luna-evidence-validation.json).
+[Recorded behavioral table](docs/evidence/skillguard-lite/luna-benchmark.md) · [Full native traces](docs/evidence/skillguard-lite/luna-benchmark.json) · [Slide](docs/evidence/skillguard-lite/luna-benchmark-slide.png) · [Independent evidence checks](docs/evidence/skillguard-lite/luna-evidence-validation.json).
 
 A fresh copy of the public repository passed installation, typecheck and **44/44 behavioral tests**, including a real local fork. Actual public-source audits produced [BENIGN, zero violations](docs/evidence/skillguard-lite/public-luna-benign-audit.json) and [MALICIOUS, four violations](docs/evidence/skillguard-lite/public-luna-malicious-audit.json). [Public source validation](docs/evidence/skillguard-lite/luna-public-source-validation.json) identifies the tested commit. Violation counts differ across runs; no model output was reused.
 
