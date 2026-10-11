@@ -24,7 +24,7 @@
     "kind": "research",
     "section": "Our methodology: Building a threat taxonomy; Attack techniques: How malicious skills operate; Beyond malware: The Insecure by Design problem",
     "summary": "Le rapport distingue les défauts signalés par ses détecteurs des charges intentionnellement malveillantes confirmées après revue humaine. Il décrit des téléchargements externes, une exfiltration masquée et des instructions trompant l’agent.",
-    "limitations": ["Les chiffres de ce rapport ne sont pas des mesures de SkillGate.", "L’accès à un compte financier est une capacité; il ne démontre pas seul une malveillance.", "La méthode et le corpus de l’éditeur n’ont pas été réexécutés ici; les mécanismes recoupant SRC-01 ne sont pas recomptés."],
+    "limitations": ["Les chiffres de ce rapport ne sont pas des mesures de HoneySkill.", "L’accès à un compte financier est une capacité; il ne démontre pas seul une malveillance.", "La méthode et le corpus de l’éditeur n’ont pas été réexécutés ici; les mécanismes recoupant SRC-01 ne sont pas recomptés."],
     "deduplicationGroup": "openclaw-early-2026-research"
   },
   {
@@ -80,7 +80,7 @@
     "kind": "comparison",
     "section": "README — Scope and Limitations; License",
     "summary": "Le scanner combine plusieurs analyses et présente explicitement ses résultats comme une détection imparfaite, sans certification. Le README indique Apache 2.0.",
-    "limitations": ["Documentation consultée sur main, version non figée pour une exécution.", "Aucune intégration, installation ou comparaison exécutée dans ce travail de recherche.", "Les performances publiées par Cisco ne sont pas reprises comme résultats de SkillGate."],
+    "limitations": ["Documentation consultée sur main, version non figée pour une exécution.", "Aucune intégration, installation ou comparaison exécutée dans ce travail de recherche.", "Les performances publiées par Cisco ne sont pas reprises comme résultats de HoneySkill."],
     "license": "Apache-2.0",
     "licenseUrl": "https://github.com/cisco-ai-defense/skill-scanner/blob/main/LICENSE",
     "comparisonExecution": "not-executed",
@@ -139,7 +139,7 @@
     "kind": "documentation",
     "section": "Install a Skill; Source Formats; License",
     "summary": "L’installateur documente notamment les sources locales et GitHub avec sélection de sous-dossier. Le dépôt indique une licence MIT.",
-    "limitations": ["README et licence consultés; aucun code copié et aucune intégration à cet installateur revendiquée.", "La protection SkillGate s’applique à son propre chemin d’installation."],
+    "limitations": ["README et licence consultés; aucun code copié et aucune intégration à cet installateur revendiquée.", "La protection HoneySkill s’applique à son propre chemin d’installation."],
     "license": "MIT",
     "licenseUrl": "https://github.com/vercel-labs/skills/blob/main/LICENSE",
     "deduplicationGroup": "vercel-skills-installer"

@@ -5,7 +5,7 @@
     "title": "Exfiltration de clés sous couvert de synchronisation",
     "source_id": "SRC-01",
     "section": "When ‘Sync’ Really Means Silent Exfiltration",
-    "confirmation": "Comportement identifié et décrit par les chercheurs; non réexécuté par SkillGate.",
+    "confirmation": "Comportement identifié et décrit par les chercheurs; non réexécuté par HoneySkill.",
     "claimedFunction": "Synchronisation ou sauvegarde de fichiers.",
     "mechanism": "Recherche de fichiers de clés, lecture, encodage puis transmission à un endpoint contrôlé par l’attaquant.",
     "asset": "Clés privées et actifs accessibles avec ces clés.",

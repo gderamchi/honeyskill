@@ -11,7 +11,11 @@ import { question } from './interaction.js';
 const marker = '.skillgate-lab.json';
 const model = 'gpt-6-luna';
 export async function initializeLab(directory?: string, cwd = process.cwd()): Promise<string> {
-  const root = resolve(directory ?? (await exists(join(cwd, marker)) ? cwd : join(cwd, 'skillgate-lab')));
+  const legacyDefault = join(cwd, 'skillgate-lab');
+  const defaultRoot = await exists(join(cwd, marker)) ? cwd
+    : await exists(join(legacyDefault, marker)) ? legacyDefault
+    : join(cwd, 'honeyskill-lab');
+  const root = resolve(directory ?? defaultRoot);
   // Only a new/empty dedicated directory can acquire the marker. Existing projects cannot opt in accidentally.
   if (root === homedir() || root === sep || root.split(sep).some(part => ['.agents', '.codex', '.claude', '.cursor', '.openclaw'].includes(part)) ||
       [process.env.CODEX_HOME, process.env.CLAUDE_CONFIG_DIR].some(value => value && (root === resolve(value) || root.startsWith(resolve(value) + sep)))) {

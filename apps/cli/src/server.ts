@@ -6,10 +6,10 @@ import { join } from 'node:path';
 import { listReports, listInstalls, loadConfig, readReport } from '../../../packages/core/src/index.js';
 import { assetRoot } from './paths.js';
 import { reportHtml } from './report.js';
-export const scope = 'Seuls les ajouts et mises à jour réalisés avec SkillGate passent par ce contrôle. Les copies manuelles et autres installateurs restent hors périmètre.';
+export const scope = 'Seuls les ajouts et mises à jour réalisés avec HoneySkill passent par ce contrôle. Les copies manuelles et autres installateurs restent hors périmètre.';
 const equal = (a:string,b:string) => {const x=Buffer.from(a),y=Buffer.from(b);return x.length===y.length && timingSafeEqual(x,y);};
 const webRoot=existsSync(join(assetRoot,'web'))?join(assetRoot,'web'):join(assetRoot,'apps/web/dist');
-const cookies = (req:IncomingMessage) => (req.headers.cookie??'').split(';').map(c=>c.trim()).find(c=>c.startsWith('skillgate_session='))?.slice(18) ?? '';
+const cookies = (req:IncomingMessage) => { const values=(req.headers.cookie??'').split(';').map(c=>c.trim()); return values.find(c=>c.startsWith('honeyskill_session='))?.slice(19) ?? values.find(c=>c.startsWith('skillgate_session='))?.slice(18) ?? ''; };
 export async function startUi(projectRoot:string, port=0) {
   const token=randomBytes(32).toString('hex');
   let origin='';
@@ -23,9 +23,9 @@ export async function startUi(projectRoot:string, port=0) {
       if (req.headers.host!==new URL(origin).host || (req.headers.origin && req.headers.origin!==origin) || req.headers['sec-fetch-site']==='cross-site') return json(403,{error:'Origine ou hôte refusé.'});
       const url=new URL(req.url??'/',origin);
       if(req.method==='GET' && url.pathname==='/' && equal(url.searchParams.get('session')??'',token)) {
-        res.writeHead(303,{'Set-Cookie':`skillgate_session=${token}; HttpOnly; SameSite=Strict; Path=/`,Location:'/'});return res.end();
+        res.writeHead(303,{'Set-Cookie':`honeyskill_session=${token}; HttpOnly; SameSite=Strict; Path=/`,Location:'/'});return res.end();
       }
-      if(!equal(cookies(req),token)) return json(403,{error:'Session locale requise. Utilisez le lien affiché par skillgate ui.'});
+      if(!equal(cookies(req),token)) return json(403,{error:'Session locale requise. Utilisez le lien affiché par honeyskill ui.'});
       if(req.method!=='GET' && req.method!=='HEAD') return json(405,{error:'Interface en lecture seule. Les exceptions restent dans le CLI.'});
       if(url.pathname==='/api/state') return json(200,{reports:await listReports(projectRoot),installations:await listInstalls(projectRoot),scope,profile:(await loadConfig(projectRoot)).profile});
       if(url.pathname==='/api/research') return json(200,{sources:JSON.parse(await readFile(join(assetRoot,'research/sources.json'),'utf8')),techniques:JSON.parse(await readFile(join(assetRoot,'research/techniques.json'),'utf8'))});

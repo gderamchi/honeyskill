@@ -4,7 +4,7 @@ Updated 11 October 2026. The user requested the HoneySkill name, honey-jar ident
 
 ## Product
 
-Primary CLI: `honeyskill`; `skillgate` remains a compatibility alias. Package: `@gderamchi/honeyskill`, version `0.6.0-dev.0`. Legacy internal storage/schema identifiers remain stable. The public historical release remains SkillGate v0.5.0. Root README covers the active product; `README-SKILLGATE-HISTORY.md` preserves the previous overview.
+Primary CLI: `honeyskill`. Package: `@gderamchi/honeyskill`, version `0.6.0-dev.0`. Existing storage and schema identifiers remain stable. The previous v0.5.0 release and its historical evidence remain available. Root README covers the active product; the earlier-overview file preserves the previous workflow.
 
 `honeyskill payment-demo --out outputs/payment-demo` runs four authored scenarios: checkout, settlement routing, service fee, wallet approval. Source fixture instructions are inert; an author-scripted replay supplies six typed proposals. The same proposals run from identical owned-local snapshots, with direct execution versus the financial monitor. This is separate from `try` and from every frozen inspection or model benchmark.
 

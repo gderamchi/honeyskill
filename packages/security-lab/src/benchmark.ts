@@ -128,7 +128,7 @@ export async function runSecurityBenchmark(manifestPath: string, options: Securi
     configuration: { semantic: !!options.semantic, threshold: 'medium', scannerVersion: '2.2.2', retries: 0 },
     freeze: await sourceFreeze(options.repositoryRoot), cases: [], metrics: {},
     limitations: ['Development external evaluation, not a blind holdout or an independent replication.',
-      'Source-study malware labels are independent of SkillGate; authenticity to original incident bytes can remain unverified.',
+      'Source-study malware labels are independent of HoneySkill; authenticity to original incident bytes can remain unverified.',
       'Complete preserved package snapshots only enter TP/FP/TN/FN; partial packages, errors and missing selected engines remain separate.',
       'Official upstream controls with unknown labels do not count as true negatives.',
       'Family/source groups are not necessarily independent campaigns. Model training contamination is unknown.',
@@ -140,7 +140,7 @@ export async function runSecurityBenchmark(manifestPath: string, options: Securi
   const worker = async () => {
     while (cursor < selected.length) {
       const index = cursor++, sample = selected[index]!;
-      const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'skillgate-corpus-'));
+      const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'honeyskill-corpus-'));
       let item: CaseResult;
       try {
         await materializeSample(path.dirname(manifestPath), sample, temporary);

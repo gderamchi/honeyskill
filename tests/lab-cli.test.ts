@@ -28,14 +28,14 @@ test('lab and try help are discoverable and do not initialize a lab', async t =>
   for (const command of ['lab', 'try']) {
     const help = cli(cwd, [command, '--help']); assert.equal(help.status, 0, help.stderr); assert.match(help.stdout, /--lab/);
   }
-  assert.equal(existsSync(path.join(cwd, 'skillgate-lab')), false);
+  assert.equal(existsSync(path.join(cwd, 'honeyskill-lab')), false);
 });
 
 test('lab JSON preflight creates only the isolated child and reports missing requirements honestly', async t => {
   const { cwd } = await setup(t);
   const result = cli(cwd, ['lab', '--json']); assert.equal(result.status, 3, result.stderr); assert.equal(result.stderr, '');
   const value = JSON.parse(result.stdout);
-  assert.equal(value.root, path.join(cwd, 'skillgate-lab')); assert.equal(value.model, 'gpt-6-luna'); assert.equal(value.ready, false); assert.equal(value.apiKeyPresent, false); assert.equal(value.anvil.available, false);
+  assert.equal(value.root, path.join(cwd, 'honeyskill-lab')); assert.equal(value.model, 'gpt-6-luna'); assert.equal(value.ready, false); assert.equal(value.apiKeyPresent, false); assert.equal(value.anvil.available, false);
   assert.equal(existsSync(path.join(cwd, '.skillgate')), false); assert.equal(existsSync(path.join(cwd, '.agents')), false);
   assert.equal(JSON.parse(await fs.readFile(path.join(value.root, '.skillgate', 'config.json'), 'utf8')).profile, 'full');
 });

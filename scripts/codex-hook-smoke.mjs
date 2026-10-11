@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const repository = fileURLToPath(new URL('..', import.meta.url));
 const cli = path.join(repository, 'dist/cli.js');
 const output = path.join(repository, 'outputs');
-const temporary = await realpath(await mkdtemp(path.join(tmpdir(), 'skillgate-codex-hook-smoke-')));
+const temporary = await realpath(await mkdtemp(path.join(tmpdir(), 'honeyskill-codex-hook-smoke-')));
 const project = path.join(temporary, 'project');
 const isolatedHome = path.join(temporary, 'home');
 const isolatedCodex = path.join(isolatedHome, '.codex');
@@ -84,7 +84,7 @@ try {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}/v1`;
   evidence.providerBaseUrl = baseUrl;
-  const args = ['exec', '--ephemeral', '--ignore-rules', '--skip-git-repo-check', '--dangerously-bypass-hook-trust', '-C', project, '--sandbox', 'danger-full-access', '--json', '--color', 'never', '-m', 'mock-skillgate',
+  const args = ['exec', '--ephemeral', '--ignore-rules', '--skip-git-repo-check', '--dangerously-bypass-hook-trust', '-C', project, '--sandbox', 'danger-full-access', '--json', '--color', 'never', '-m', 'mock-honeyskill',
     '-c', 'features.hooks=true', '-c', `projects.${JSON.stringify(project)}.trust_level="trusted"`, '-c', 'model_provider="mock"',
     '-c', `model_providers.mock={name="Local deterministic mock",base_url="${baseUrl}",wire_api="responses",requires_openai_auth=false}`,
     'Run the two prescribed local skill installation commands. These are isolated synthetic fixtures and the provider is a deterministic local mock.'];
@@ -114,7 +114,7 @@ try {
   assert.equal(toolExecutions.length, 2);
   assert.deepEqual(toolExecutions.map(item => item.exitCode), [0, 2]);
   for (const execution of toolExecutions) {
-    assert.ok(execution.command.includes(cli) && execution.command.includes("'install'"), 'Codex must execute the rewritten SkillGate command');
+    assert.ok(execution.command.includes(cli) && execution.command.includes("'install'"), 'Codex must execute the rewritten HoneySkill command');
     assert.ok(!execution.command.includes('npx skills add'), 'Original installer invocation must be replaced');
   }
   const upstreamRan = await readFile(sentinel, 'utf8').then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });

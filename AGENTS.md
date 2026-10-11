@@ -16,11 +16,11 @@ Research spending is authorized. Preserve the [first live evaluation](docs/evide
 
 Active inspection uses dedicated `security-semantic-2`: SG-01–SG-04 plus FIN-01–FIN-06, deterministic 64 KiB source batches and host-resolved evidence IDs. The legacy release financial reviewer is unchanged. The repair run recorded 367 GPT-6 Luna responses, reasoning none, zero retries, 8,309,767 tokens; seven partial batches across six semantic stages remain failures. Local checks recorded 264 application passes / 2 skips and 74 preserved behavioral passes / 1 skip. CI and a new release were not run. Keys were supplied through masked input and not persisted; do not recover, print or store credentials. Independent holdout evaluation and causal runtime-prevention evidence remain outstanding. Keep product/docs English and user communication French.
 
-# Completed release scope: SkillGate 0.5.0 laboratory pipeline
+# Completed previous-release scope: 0.5.0 laboratory pipeline
 
 For a new agent or chat, start with `docs/HANDOFF.md`, `docs/PROJECT_STATE.md` and `docs/adr/README.md`. These summarize the current delivery and distinguish it from historical requirements; read applicable package instructions before changes.
 
-The completed 0.5.0 request added `skillgate try <source>`. Run native regex checks, a GPT-6 Luna financial review and the existing SkillGuard-Lite behavioral audit on the exact quarantined snapshot, then save one report before activation. Full-profile activation is restricted to an explicitly marked dedicated local lab, never this repository or a real agent profile. Incomplete analysis, missing coverage or changed bytes cannot be overridden. Complete risky analyses may be installed in the lab through an explicit interactive exception. Preserve all frozen benchmark protocols and historical results. See `docs/SKILLGATE_LAB.md`.
+The completed 0.5.0 request added `skillgate try <source>`. Run native regex checks, a GPT-6 Luna financial review and the existing SkillGuard-Lite behavioral audit on the exact quarantined snapshot, then save one report before activation. Full-profile activation is restricted to an explicitly marked dedicated local lab, never this repository or a real agent profile. Incomplete analysis, missing coverage or changed bytes cannot be overridden. Complete risky analyses may be installed in the lab through an explicit interactive exception. Preserve all frozen benchmark protocols and historical results. See `docs/PREVIOUS_INSTALLATION_LAB.md`.
 
 # Preserved experiment: SkillGuard-Lite
 
@@ -32,11 +32,11 @@ The instructions below describe the preserved historical product only. They do n
 
 ---
 
-# SkillGate Finance
+# Previous product scope (historical)
 
 Protection before installing financial-agent skills; no wallet or transaction firewall.
 
-- Latest user scope (2026-10-10): product name SkillGate, CLI and terminal interception; no web UI in the shipped product. Legacy web sources/evidence may remain for provenance. The user explicitly authorized publishing the product, its sources and the demo on gderamchi's personal GitHub account and testing the public installation. Never publish secrets, private local state or raw workstation logs.
+- Previous user scope (2026-10-10): a CLI and terminal interception product; no web UI in the shipped package. Legacy web sources/evidence and the v0.5.0 publication remain available for provenance. The user explicitly authorized publishing the product, its sources and demo on gderamchi's personal GitHub account and testing the public installation. Never publish secrets, private local state or raw workstation logs.
 
 - Product language: English by default for shipped CLI/help/errors/reports, demonstration narration, captions and videos. Preserve original evidence excerpts and historical results; do not add an i18n layer or change detection behavior merely to translate text.
 

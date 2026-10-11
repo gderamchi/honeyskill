@@ -6,7 +6,7 @@
 
 HoneySkill inspects agent skills and checks proposed financial actions against explicit user authorization before they reach the execution adapter. The hackathon PoC replays six scripted action proposals, including a changed recipient, hidden charge and unrequested unlimited approval, through a real local transaction adapter.
 
-Formerly SkillGate. This is **0.6.0-dev.0**, local development for Secure Horizons, Track 1 — Guardians of Value. HoneySkill source is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill); the original [SkillGate repository](https://github.com/gderamchi/skillgate), published `v0.5.0` and its evidence remain unchanged. The `skillgate` command is retained as a compatibility alias.
+This is **0.6.0-dev.0**, the HoneySkill development release for Secure Horizons, Track 1 — Guardians of Value. HoneySkill source is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill). The previous public `v0.5.0` release and its evidence remain available in the earlier repository. A compatibility command remains available for existing installations.
 
 ## Start here
 
@@ -20,7 +20,7 @@ honeyskill payment-demo --local --out ./honeyskill-demo
 
 Open the HTML report in the output directory to review each proposal, the policy decision and the actual local-chain effects. `--local` runs entirely on a disposable local chain and needs no OpenAI key. Omit `--local` to attempt a read-only Avalanche Fuji fork. Choose a new output directory for each run.
 
-The compiled package is also available as a [release download](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/gderamchi-honeyskill-0.6.0-dev.0.tgz). The package is distributed through GitHub; it has not been published to the npm registry. If an existing global SkillGate installation owns the compatibility binary, use an isolated npm prefix.
+The compiled package is also available as a [release download](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/gderamchi-honeyskill-0.6.0-dev.0.tgz). The package is distributed through GitHub; it has not been published to the npm registry. If an older global installation owns the compatibility binary, use an isolated npm prefix.
 
 ## Demo and hackathon deliverables
 
@@ -59,7 +59,7 @@ honeyskill payment-demo --out outputs/payment-demo-installed
 honeyskill --help
 ```
 
-The HoneySkill package is not yet published to npm. An existing global SkillGate package can conflict with the legacy binary alias; use an isolated npm prefix or intentionally remove the old package before replacing it.
+The HoneySkill package is not yet published to npm. An older global package can conflict with the compatibility binary; use an isolated npm prefix or remove the older package before replacing it.
 
 ## What the PoC proves
 
@@ -89,9 +89,9 @@ The monitor protects actions routed through its adapter. It is not universal ter
 
 The latest inspection development rerun used all 114 unchanged cases. Among 80 malicious-labelled cases: **18 TP, 14 FN, 48 incomplete**. Among 20 constructed benign controls: **7 FP, 12 TN, 1 incomplete**. Fourteen unknown-label cases are reported separately. This tuned development corpus is not an unseen holdout; unsupported cases are never counted as safe. [Full before/after evidence](docs/evidence/security-v1/repair-2026-10-11/report-public.md) · [Case explorer](docs/evidence/security-v1/repair-2026-10-11/cases-public.html).
 
-The small deterministic payment demo tests containment, whereas this corpus tests skill inspection. Their denominators and claims must not be combined. [Security methods and limits](docs/SECURITY_V1.md) · [Preserved SkillGate experiments and releases](README-SKILLGATE-HISTORY.md).
+The small deterministic payment demo tests containment, whereas this corpus tests skill inspection. Their denominators and claims must not be combined. [Security methods and limits](docs/SECURITY_V1.md) · [Preserved earlier experiments and releases](README-PREVIOUS-RELEASE.md).
 
-## The original installation laboratory
+## The preserved installation laboratory
 
 The existing trial remains available:
 
@@ -102,7 +102,7 @@ honeyskill try trap
 honeyskill try ./my-skill
 ```
 
-Live trials spend OpenAI API credits and use GPT-6 Luna, reasoning none. They inspect the exact quarantined snapshot, run the preserved six-task AVAX behavioral battery, and save a unified report before activation. Activation is allowed only inside a marked dedicated lab. Incomplete checks or changed bytes cannot be overridden; complete risky results require an explicit interactive exception. Bundled `good` and `trap` are authored examples. [Lab guide](docs/SKILLGATE_LAB.md).
+Live trials spend OpenAI API credits and use GPT-6 Luna, reasoning none. They inspect the exact quarantined snapshot, run the preserved six-task AVAX behavioral battery, and save a unified report before activation. Activation is allowed only inside a marked dedicated lab. Incomplete checks or changed bytes cannot be overridden; complete risky results require an explicit interactive exception. Bundled `good` and `trap` are authored examples. [Preserved 0.5.0 lab workflow and evidence](docs/PREVIOUS_INSTALLATION_LAB.md).
 
 ## Development
 

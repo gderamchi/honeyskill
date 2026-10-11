@@ -220,7 +220,7 @@ test('a trace write failure after promotion explicitly reports activation and re
     await assert.rejects(installScan(root, report.id), error => {
       assert.equal((error as { code: string }).code, 'ACTIVATED_RECOVERY_REQUIRED');
       assert.match((error as Error).message, /was activated/);
-      assert.match((error as Error).message, /skillgate list or skillgate doctor/);
+      assert.match((error as Error).message, /honeyskill list or honeyskill doctor/);
       return true;
     });
   } finally { fsPromises.rename = rename; syncBuiltinESMExports(); }

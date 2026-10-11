@@ -1,6 +1,6 @@
 # SkillGuard-Lite — active scope
 
-The latest user request integrates this unchanged behavioral engine into the full SkillGate laboratory pipeline (see root AGENTS.md and docs/SKILLGATE_LAB.md). The rules below govern the preserved audit/benchmark experiment; the new installation adapter and dedicated lab packaging are explicitly authorized.
+The current HoneySkill product integrates this unchanged behavioral engine into its full laboratory pipeline (see root AGENTS.md and docs/PREVIOUS_INSTALLATION_LAB.md). The rules below govern the preserved audit/benchmark experiment; the installation adapter and dedicated lab packaging are separate from its frozen protocol.
 - Preserve TypeScript audit and benchmark scripts and their frozen protocol. The full installer adds independent regex/LLM stages; do not add them to the frozen benchmark or expand its behavioral threat scope.
 - Minimal OpenAI tool-calling loop using the OpenAI SDK and one send tool. The reference model is gpt-6-luna with reasoning effort none, as documented in the experiment. viem executes transfers only on an owned local Anvil fork of Avalanche Fuji (43113).
 - Never connect a real wallet or send a signed transaction to a public RPC. The public Fuji RPC is read-only upstream. Only ephemeral random throwaway keys held in memory may sign.

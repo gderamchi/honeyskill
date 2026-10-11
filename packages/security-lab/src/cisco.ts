@@ -262,8 +262,8 @@ async function snapshotDigest(root: string): Promise<string> {
 /** Run the pinned, externally installed scanner. This reads acquired skill code as data only. */
 export async function scanCisco(snapshotFolder: string, options: { binary?: string; timeoutMs?: number } = {}): Promise<CiscoResult> {
   const started = performance.now();
-  const binary = options.binary ?? process.env.SKILLGATE_CISCO_BIN;
-  if (!binary || !path.isAbsolute(binary)) return empty('unsupported', 'Set SKILLGATE_CISCO_BIN to the absolute path of the pinned skill-scanner 2.2.2 executable.');
+  const binary = options.binary ?? process.env.HONEYSKILL_CISCO_BIN ?? process.env.SKILLGATE_CISCO_BIN;
+  if (!binary || !path.isAbsolute(binary)) return empty('unsupported', 'Set HONEYSKILL_CISCO_BIN to the absolute path (legacy SKILLGATE_CISCO_BIN is also accepted) of the pinned skill-scanner 2.2.2 executable.');
   const timeoutMs = options.timeoutMs ?? 120_000;
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 600_000) return empty('error', 'Cisco timeout must be between 1 and 600000 milliseconds.');
   let temp: string | undefined;
@@ -275,7 +275,7 @@ export async function scanCisco(snapshotFolder: string, options: { binary?: stri
     let digest: string;
     try { digest = await snapshotDigest(root); }
     catch { return empty('unsupported', 'Cisco requires a bounded regular-file snapshot without symlinks or .git entries.'); }
-    temp = await fs.mkdtemp(path.join(os.tmpdir(), 'skillgate-cisco-'));
+    temp = await fs.mkdtemp(path.join(os.tmpdir(), 'honeyskill-cisco-'));
     const checked = await run(binary, ['--version'], temp, Math.min(timeoutMs, 30_000));
     const match = /^skill-scanner (\d+\.\d+\.\d+)\s*$/.exec(checked.stdout);
     version = match?.[1] ?? null;

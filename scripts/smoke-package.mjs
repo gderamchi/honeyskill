@@ -36,7 +36,7 @@ assert.ok(sourceMap.sources.every(source=>!/(?:apps\/web|\/react(?:-dom)?\/|vite
 for(const file of ['tasks.json','address-book.json'])assert.deepEqual(await readFile(join(installedRoot,'skillguard-lite/data',file)),await readFile(join('packages/skillguard-lite/data',file)),'Bundled payment context must match the source bytes.');
 for(const name of ['good','trap'])assert.deepEqual(await readFile(join(installedRoot,'lab-skills',name,'SKILL.md.fixture')),await readFile(join('packages/skillguard-lite/lab-fixtures',name,'SKILL.md.fixture')),'Bundled examples remain inert fixture files with exact bytes.');
 for(const file of ['manifest.json',...['checkout-helper','settlement-router','invoice-assistant','settlement-connect'].map(name=>`${name}/SKILL.md.fixture`)])assert.deepEqual(await readFile(join(installedRoot,'public-demo',file)),await readFile(join('public-demo',file)),'Bundled controlled payment fixtures retain their exact bytes and provenance.');
-for(const file of ['assets/honeyskill/logo.png','README.md','README-SKILLGATE-HISTORY.md'])assert.deepEqual(await readFile(join(installedRoot,file)),await readFile(file),'Packaged branding and history match the source files.');
+for(const file of ['assets/honeyskill/logo.png','README.md','README-PREVIOUS-RELEASE.md'])assert.deepEqual(await readFile(join(installedRoot,file)),await readFile(file),'Packaged branding and history match the source files.');
 const notices=await readFile(join(installedRoot,'THIRD_PARTY_NOTICES.txt'),'utf8');
 for(const name of ['commander','zod','yaml','openai','viem'])assert.match(notices,new RegExp(`(?:^|\\n)${name}@`),'Every directly bundled dependency must carry its license.');
 const commands=[];

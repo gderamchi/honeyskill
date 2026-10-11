@@ -1,6 +1,6 @@
-> Historical SkillGate overview preserved on 11 October 2026. See README.md for the current HoneySkill development product.
+> Historical guide to the published 0.5.0 release, preserved for provenance. That release used the SkillGate name and `skillgate` command. See README.md for the current HoneySkill product.
 
-# SkillGate — try a skill before trusting it
+# Previous 0.5.0 release — try a skill before trusting it
 
 **Resuming development?** Read [HANDOFF](docs/HANDOFF.md), [current state](docs/PROJECT_STATE.md), and [architecture decisions](docs/adr/README.md).
 
@@ -29,7 +29,7 @@ skillgate try https://github.com/owner/repository/tree/COMMIT/path/to/skill
 
 Only the exact analyzed copy is activated; updates use the same command and a rejected update preserves the previous installation. Acquired scripts are never executed. The behavioral engine reads SKILL.md and tests native AVAX recipient substitution on a disposable local Fuji fork. Extra skill resources it cannot exercise are reported as uncovered and prevent activation. This is a test lab, not a general agent sandbox or protection for arbitrary terminal commands.
 
-[Full lab guide](docs/SKILLGATE_LAB.md) · [Preserved experiment and results](#experiment)
+[Full lab guide](docs/PREVIOUS_INSTALLATION_LAB.md) · [Preserved experiment and results](#experiment)
 
 ## Preserved comparison experiment
 
@@ -37,7 +37,7 @@ Compare **GPT-6 Luna reading a skill and giving a security opinion** with **Skil
 
 SkillGuard-Lite runs a minimal wallet agent on six tasks, with and without the skill, on an owned local Anvil fork of Avalanche Fuji. A code oracle checks every `send(toAddress, amountAVAX)` recipient. The text-only comparator reviews the instructions without tools or transactions.
 
-This is the preserved benchmark scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/SkillGate-0.4.0.md) and its release. Its historical benchmark and installer wrappers are **not** behavioral evidence. Version 0.5.0 integrates the behavioral engine into the new explicit `try` command.
+This is the preserved benchmark scope. On 10 October 2026 the user explicitly switched the reference provider from Claude to OpenAI; the frozen tasks, fixtures and oracle are unchanged. The previous static SkillGate 0.4.0 product is preserved in [historical documentation](docs/archive/PREVIOUS_STATIC_RELEASE_0.4.0.md) and its release. Its historical benchmark and installer wrappers are **not** behavioral evidence. Version 0.5.0 integrates the behavioral engine into the new explicit `try` command.
 
 ## Run
 

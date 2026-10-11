@@ -1,6 +1,6 @@
 > **Current branding update (11 October 2026):** active development is now HoneySkill. Read [the hackathon update](HONEYSKILL.md) for the new controlled payment demonstration and submission artifacts. The release and inspection evidence below are preserved.
 
-# SkillGate — current project state
+# HoneySkill — current project state
 
 As of 2026-10-11. Read [HANDOFF.md](HANDOFF.md) first. Published 0.5.0 and its measured results remain unchanged; local `0.6.0-dev.0` is experimental security-v1 development.
 
@@ -28,14 +28,14 @@ Six live synthetic guarded cases produced six exact simulated payments, 12 respo
 
 The new inert corpus contains 80 external-source malicious labels plus 14 unknown official controls. A separate 20-case AgentTrap cohort supplies author-intended, task-conditioned constructed negatives. Nine of those explicitly reveal benign labels; they support an overblocking smoke test, not real-world FPR. Missing files, unknown labels, errors and unsupported behavior remain separate from confusion matrices. The collection is development data, not an unseen holdout, and redistribution rights are unresolved.
 
-Read [SECURITY_V1](SECURITY_V1.md) for commands, exact artifact hashes, architecture, claim boundaries and a preregistered independent evaluation protocol. Research notes cover [Cisco](research/security-v1-research.md), [Progent](research/security-v1-progent.md), [financial checks](research/security-v1-policy.md), [malicious labels](research/security-v1-corpus.md) and [constructed negatives](../evaluation/security-v1/negative-corpus/README.md). No result currently proves SkillGate prevented a real blockchain-malware campaign.
+Read [SECURITY_V1](SECURITY_V1.md) for commands, exact artifact hashes, architecture, claim boundaries and a preregistered independent evaluation protocol. Research notes cover [Cisco](research/security-v1-research.md), [Progent](research/security-v1-progent.md), [financial checks](research/security-v1-policy.md), [malicious labels](research/security-v1-corpus.md) and [constructed negatives](../evaluation/security-v1/negative-corpus/README.md). No result currently proves HoneySkill prevented a real blockchain-malware campaign.
 
 ## Completed published 0.5.0 delivery
 
 | Requested work | Implemented behavior |
 | --- | --- |
-| Simple test environment | `skillgate lab` checks prerequisites; `skillgate try` automatically creates/reuses a dedicated marked lab. Real profiles, nonempty unmarked roots and unsafe paths are refused. |
-| One installation attempt | `skillgate try good`, `trap`, a local folder or public GitHub source; multi-skill repositories can use `--skill`. |
+| Simple test environment | `honeyskill lab` checks prerequisites; `honeyskill try` automatically creates/reuses a dedicated marked lab. Real profiles, nonempty unmarked roots and unsafe paths are refused. |
+| One installation attempt | `honeyskill try good`, `trap`, a local folder or public GitHub source; multi-skill repositories can use `--skill`. |
 | Complete analysis pipeline | Native regex/rules → GPT-6 Luna financial review → six paired behavioral scenarios. Findings do not skip later stages. Missing/error/unsupported stages remain visible and cannot auto-install. |
 | Report and human decision | HTML, Markdown and JSON are saved before activation. A clean complete snapshot installs automatically. Complete risky results offer decline or a recorded exception. Exceptions do not erase findings. |
 | Tests and distribution | Version 0.5.0 is published on GitHub as source, compiled CLI and release archive. Same-name rejected updates preserve the previous version; package bytes and public installations were checked. |
@@ -44,7 +44,7 @@ The shipped product has no web server or web application. HTML is a standalone l
 
 ## Last verified evidence, not a fresh run on every read
 
-Release code: `41fca4d8ec9422eebe32043b4006cc95c91dac72`, tag [v0.5.0](https://github.com/gderamchi/skillgate/releases/tag/v0.5.0). Runtime and reports use English. Node.js 22.18+, pnpm for source development, OpenAI SDK, viem and local Foundry Anvil are used; Anvil 1.8.5 was verified in the release environment.
+Historical release code: `41fca4d8ec9422eebe32043b4006cc95c91dac72`, preserved tag [v0.5.0](https://github.com/gderamchi/skillgate/releases/tag/v0.5.0) in the earlier repository. Current HoneySkill development is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill). Runtime and reports use English. Node.js 22.18+, pnpm for source development, OpenAI SDK, viem and local Foundry Anvil are used; Anvil 1.8.5 was verified in the release environment.
 
 - **127 application tests and 74 behavioral tests passed**, with one optional live-chain test skipped. Typecheck, build, pack and offline package smoke passed. These are local results, not a CI-green claim.
 - Fresh public CLI: benign synthetic fixture installed after all stages, 39.5 seconds, zero observed recipient violations.

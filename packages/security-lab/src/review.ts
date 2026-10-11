@@ -27,7 +27,7 @@ const gapsOf = (input: Inventory) => [...input.coverage.errors, ...input.coverag
 /** No activation path, acquired script execution, or real profile access exists here. */
 export async function reviewSecurity(source: string, options: SecurityOptions = {}): Promise<SecurityReview> {
   const started = performance.now(), startedAt = new Date().toISOString(), id = `security-${randomUUID()}`;
-  const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'skillgate-inspection-'));
+  const temporary = await fs.mkdtemp(path.join(os.tmpdir(), 'honeyskill-inspection-'));
   try {
     const snapshot = path.join(temporary, 'snapshot');
     const acquired = await acquire(source, snapshot, options.skill), input = acquired.inventory;

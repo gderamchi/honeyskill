@@ -5,7 +5,7 @@ import { constants as osConstants } from 'node:os';
 import { delimiter, isAbsolute, join, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { atomicJson, ensureDirectory, ensureState, readJson, sanitizeTerminal, SkillGateError, stateDir } from '../../../packages/core/src/storage.js';
+import { atomicJson, ensureDirectory, ensureState, readJson, sanitizeTerminal, HoneySkillError, stateDir } from '../../../packages/core/src/storage.js';
 
 export const terminalCommands = ['npx', 'pnpm', 'skills'] as const;
 export type TerminalCommand = typeof terminalCommands[number];
@@ -71,7 +71,7 @@ const shellQuote = (value: string) => `'${value.replace(/'/g, `'"'"'`)}'`;
 
 async function readTerminalConfig(root: string): Promise<TerminalConfig> {
   const config = TerminalConfigSchema.parse(await readJson(configPath(root)));
-  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Inconsistent terminal configuration; reactivate HoneySkill in this project.');
+  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new HoneySkillError('TERMINAL_CONFIG', 'Inconsistent terminal configuration; reactivate HoneySkill in this project.');
   return config;
 }
 
@@ -94,7 +94,7 @@ async function originalExecutable(command: TerminalCommand): Promise<string | nu
 
 export async function prepareTerminal(root: string, cliPath: string, nodePath = process.execPath): Promise<TerminalConfig> {
   const projectRoot = resolve(root);
-  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError('TERMINAL_RUNTIME', 'Absolute paths to a compiled CLI and a Node executable are required.');
+  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new HoneySkillError('TERMINAL_RUNTIME', 'Absolute paths to a compiled CLI and a Node executable are required.');
   await access(cliPath, fsConstants.R_OK);
   await ensureState(projectRoot);
   await ensureDirectory(binPath(projectRoot));
@@ -142,7 +142,7 @@ function run(executable: string, args: string[]): Promise<number> {
 }
 
 export async function dispatchTerminal(root: string, command: TerminalCommand, args: string[]): Promise<number> {
-  if (!terminalCommands.includes(command)) throw new SkillGateError('TERMINAL_COMMAND', 'Unsupported terminal command.');
+  if (!terminalCommands.includes(command)) throw new HoneySkillError('TERMINAL_COMMAND', 'Unsupported terminal command.');
   const invocation = parseInstallerArgv(command, args);
   if (invocation.kind === 'reject') { process.stderr.write(`HoneySkill: ${invocation.reason}\nNo upstream installer was started.\n`); return 2; }
   const config = await readTerminalConfig(root);

@@ -39,7 +39,7 @@ const target = (lab: string, name = 'lab-workflow-test') => path.join(lab, '.age
 test('lab initialization chooses a dedicated child and reuses only a valid lab', async t => {
   const { temporary } = await setup(t);
   const lab = await initializeLab(undefined, temporary);
-  assert.equal(lab, path.join(temporary, 'skillgate-lab'));
+  assert.equal(lab, path.join(temporary, 'honeyskill-lab'));
   assert.equal(existsSync(path.join(temporary, '.skillgate')), false);
   assert.deepEqual(JSON.parse(await fs.readFile(path.join(lab, marker), 'utf8')), { schemaVersion: 1, kind: 'skillgate-test-lab' });
   const config = await loadConfig(lab); assert.equal(config.profile, 'full'); assert.equal(config.model, 'gpt-6-luna'); assert.equal(config.semanticConsent, true);

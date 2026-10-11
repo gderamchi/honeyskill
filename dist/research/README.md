@@ -18,11 +18,11 @@ Les compteurs de l’UI doivent être calculés sur les fichiers:
 
 Le champ `family` déduplique les mécanismes. Les recoupements entre Bitdefender, Snyk et Unit 42 ne créent pas plusieurs techniques pour une même chaîne de téléchargement. `corroboratingSources` conserve ces rapprochements. Un article peut décrire plusieurs familles et une famille peut apparaître dans plusieurs articles: aucun compteur n’est présenté comme un nombre d’attaques indépendantes.
 
-Chaque fiche documentée conserve une source primaire et une section. La confirmation est celle déclarée par l’auteur; SkillGate n’a pas réexécuté les échantillons. Les fixtures liées sont des adaptations inertes ou des hypothèses du projet, jamais les échantillons originaux. Leur lien avec une fiche n’est pas une preuve de détection. Seuls les résultats d’évaluation montrent ce que le moteur exécuté a produit.
+Chaque fiche documentée conserve une source primaire et une section. La confirmation est celle déclarée par l’auteur; HoneySkill n’a pas réexécuté les échantillons. Les fixtures liées sont des adaptations inertes ou des hypothèses du projet, jamais les échantillons originaux. Leur lien avec une fiche n’est pas une preuve de détection. Seuls les résultats d’évaluation montrent ce que le moteur exécuté a produit.
 
 ## État de l’art et licences
 
-L’affichage d’audits avant installation est déjà documenté par [Vercel](https://vercel.com/changelog/automated-security-audits-now-available-for-skills-sh). SkillGate ne revendique pas l’invention de ce parcours.
+L’affichage d’audits avant installation est déjà documenté par [Vercel](https://vercel.com/changelog/automated-security-audits-now-available-for-skills-sh). HoneySkill ne revendique pas l’invention de ce parcours.
 
 Les README de [Cisco Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner) et [vercel-labs/skills](https://github.com/vercel-labs/skills) indiquent respectivement Apache-2.0 et MIT. Aucun code de ces dépôts n’a été repris dans ce travail de recherche. Cisco constitue une référence de comparaison **non exécutée**, sans version de runtime installée ou résultat concurrent attribué à ce projet. Une comparaison ultérieure devra figer sa version et enregistrer sa commande, sa configuration et ses résultats.
 

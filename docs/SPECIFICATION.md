@@ -1,4 +1,4 @@
-> Historical requirements and original user brief, preserved for provenance. Later user revisions supersede the web platform and automatic-interception scope below. The current request is the explicit full laboratory pipeline: [SKILLGATE_LAB.md](SKILLGATE_LAB.md), [PROJECT_STATE.md](PROJECT_STATE.md).
+> Historical requirements and original user brief, preserved for provenance. Later user revisions supersede the web platform and automatic-interception scope below. The current request is the explicit full laboratory pipeline: [PREVIOUS_INSTALLATION_LAB.md](PREVIOUS_INSTALLATION_LAB.md), [PROJECT_STATE.md](PROJECT_STATE.md).
 
 # Scope update — 10 October 2026
 

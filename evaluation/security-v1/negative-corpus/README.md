@@ -6,7 +6,7 @@ The existing 94-case corpus in `../corpus/` remains unchanged. Its 14 official-s
 
 ## Ground truth and evidence
 
-[AgentTrap section 4](https://arxiv.org/html/2605.13940v1) describes its construction of benign utility cases. Each selected row in the [pinned case registry](https://github.com/zhmzm/AgentTrap/blob/613c37512d16a92731d6f145f67f735f1ced9d20/cases/cases.json) has `is_benign: true`, a user trigger, a pass condition, and a failure condition. The source labels predate SkillGate's evaluation and do not depend on its predictions.
+[AgentTrap section 4](https://arxiv.org/html/2605.13940v1) describes its construction of benign utility cases. Each selected row in the [pinned case registry](https://github.com/zhmzm/AgentTrap/blob/613c37512d16a92731d6f145f67f735f1ced9d20/cases/cases.json) has `is_benign: true`, a user trigger, a pass condition, and a failure condition. The source labels predate HoneySkill's evaluation and do not depend on its predictions.
 
 These labels mean **the externally authored case is intended to perform the published authorized utility task**. They do not mean that an independent reviewer has proven every behavior safe in every environment. Deletion, S3 backup, secret management, and broad database permissions can be legitimate under the published task; authorization is part of the label. The manifest retains the exact task conditions, source record pointer, and a copy of each selected record in `case-records.json`.
 
@@ -14,7 +14,7 @@ AgentTrap's source runtime judging uses a separate evaluation method; no source 
 
 ## Selection and fidelity
 
-The importer iterates externally labelled benign cases in ascending numeric ID. It requires a complete preserved skill directory and unique primary `SKILL.md` bytes, then stops at 20. It does not run SkillGate or select according to detector success.
+The importer iterates externally labelled benign cases in ascending numeric ID. It requires a complete preserved skill directory and unique primary `SKILL.md` bytes, then stops at 20. It does not run HoneySkill or select according to detector success.
 
 - Cases 102 and 108 are excluded for duplicate primary bytes.
 - Cases 110 and 111 are excluded in full because their XML companion files fall outside this importer's conservative text-file allowlist. This is an acquisition limitation, not evidence of a threat.
@@ -39,7 +39,7 @@ A bounded search found a stronger *method* but not usable public per-case assets
 
 [SkillTrustBench](https://huggingface.co/datasets/cuhk-zhuque/SkillTrustBench/blob/main/README.md) and [ATR's skill benchmark](https://huggingface.co/datasets/Agent-Threat-Rule/atr-skill-benchmark) offer negative pools, but the bounded inspection did not establish a public, per-case independent human-adjudication protocol adequate to upgrade those labels here. Source reputation or an unflagged scan alone is insufficient.
 
-The next defensible real-world FPR study needs exact public legitimate packages, a declared task/threat model, two reviewers blinded to SkillGate predictions, recorded rationales and disagreements, and a held-out split frozen before tuning. This external constructed cohort supplements that work; it does not replace it.
+The next defensible real-world FPR study needs exact public legitimate packages, a declared task/threat model, two reviewers blinded to HoneySkill predictions, recorded rationales and disagreements, and a held-out split frozen before tuning. This external constructed cohort supplements that work; it does not replace it.
 
 ## Reproducibility
 

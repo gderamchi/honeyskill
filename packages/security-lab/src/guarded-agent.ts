@@ -109,7 +109,7 @@ export async function runGuardedAgent(options: {
 /** Runnable model integration with an explicitly simulated effect world, never a real wallet. */
 export async function exerciseSkill(options: { source: string; policy: unknown; task: string; requiredCapabilities: string[]; apiKey?: string }) {
   const policy = compilePolicy(options.policy);
-  const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'skillgate-guarded-'));
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'honeyskill-guarded-'));
   try {
     const snapshot = path.join(temp, 'snapshot'), acquired = await acquire(options.source, snapshot);
     const inv = acquired.inventory;

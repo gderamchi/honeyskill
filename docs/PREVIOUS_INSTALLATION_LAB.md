@@ -1,6 +1,8 @@
-# SkillGate full installation laboratory
+> Historical operating guide for the published 0.5.0 release. It uses that release's original name and CLI commands; current HoneySkill documentation is in [README](../README.md) and [HANDOFF](HANDOFF.md).
 
-The latest user request combines three independent checks before a test installation. `skillgate try <source>` creates or reuses a dedicated marked directory, obtains an immutable snapshot, runs regex/static checks, asks GPT-6 Luna for a financial security review, and runs the unchanged SkillGuard-Lite agent on six tasks with and without the skill. It writes a unified report before any activation. Product output is English.
+# Previous 0.5.0 full installation laboratory
+
+The 0.5.0 release combined three independent checks before a test installation. `skillgate try <source>` creates or reuses a dedicated marked directory, obtains an immutable snapshot, runs regex/static checks, asks GPT-6 Luna for a financial security review, and runs the unchanged SkillGuard-Lite agent on six tasks with and without the skill. It writes a unified report before any activation. Product output is English.
 
 ## Quick start
 

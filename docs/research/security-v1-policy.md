@@ -6,7 +6,7 @@ The mediator now also uses the [replicated Progent static checker](security-v1-p
 
 ## Research basis and replication boundary
 
-[CaMeL, sections 5.2–5.4](https://arxiv.org/html/2503.18813v2) enforces tool policies outside the model, with capabilities and a provenance-tracking interpreter. SkillGate adopts the narrower enforcement boundary: an untrusted model may propose a typed action; trusted host code determines whether its exact parameters are authorized before dispatch. **This is not a CaMeL reimplementation.** There is no privileged/quarantined dual-model interpreter, no general value-level provenance graph, no information-flow proof and no reproduction of the paper's benchmark. The model does not compile its own authority.
+[CaMeL, sections 5.2–5.4](https://arxiv.org/html/2503.18813v2) enforces tool policies outside the model, with capabilities and a provenance-tracking interpreter. HoneySkill adopts the narrower enforcement boundary: an untrusted model may propose a typed action; trusted host code determines whether its exact parameters are authorized before dispatch. **This is not a CaMeL reimplementation.** There is no privileged/quarantined dual-model interpreter, no general value-level provenance graph, no information-flow proof and no reproduction of the paper's benchmark. The model does not compile its own authority.
 
 Financial checks follow primary protocol documentation:
 
@@ -14,7 +14,7 @@ Financial checks follow primary protocol documentation:
 - [ERC-20](https://eips.ethereum.org/EIPS/eip-20) defines allowance by token, spender and amount. The monitor requires exact authorization, denies maximum-uint256 approval, and reserves allowance exposure against the token budget. It does not solve allowance-update races on-chain or verify a token implementation.
 - [Uniswap v3 single-swap documentation](https://developers.uniswap.org/docs/protocols/v3/guides/swapping/single-hop-swapping) identifies input/output assets, recipient, deadline and minimum output as essential parameters, and warns that minimum output requires an independent price source. This policy accepts a quote only from its trusted caller, checks the absolute minimum and computes the slippage bound with integers. It neither fetches nor validates a market oracle and does not execute Uniswap contracts.
 
-These sources justify specific mechanisms. Their empirical results or guarantees are not results or guarantees of SkillGate.
+These sources justify specific mechanisms. Their empirical results or guarantees are not results or guarantees of HoneySkill.
 
 ## Trust boundary
 

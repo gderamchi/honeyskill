@@ -1,6 +1,6 @@
 > **Current branding update (11 October 2026):** active development is now HoneySkill. Read [the hackathon update](HONEYSKILL.md) for the new controlled payment demonstration and submission artifacts. The release and inspection evidence below are preserved.
 
-# SkillGate — start here when resuming
+# HoneySkill — start here when resuming
 
 Updated 2026-10-11 after the frozen security-v1 repair rerun and its independent before/after audit. Published 0.5.0 remains unchanged. An independent holdout and causal runtime-prevention evaluation remain outstanding; user instructions and applicable AGENTS.md take precedence.
 
@@ -9,7 +9,7 @@ Updated 2026-10-11 after the frozen security-v1 repair rerun and its independent
 1. [Root instructions](../AGENTS.md), then [behavioral package instructions](../packages/skillguard-lite/AGENTS.md) when working there.
 2. [Current project state](PROJECT_STATE.md): delivered work, validation, limitations and remaining decisions.
 3. [Security v1 runbook](SECURITY_V1.md): active experimental architecture, commands, hashes, evidence boundaries and next-run protocol.
-4. [Architecture decisions](adr/README.md): six retrospective release records plus ADR 0007 for the new scope. Read the [lab guide](SKILLGATE_LAB.md) for the preserved 0.5.0 workflow.
+4. [Architecture decisions](adr/README.md): six retrospective release records plus ADR 0007 for the new scope. Read the [preserved 0.5.0 lab workflow](PREVIOUS_INSTALLATION_LAB.md) for its historical commands and evidence.
 5. [Latest repair comparison](evidence/security-v1/repair-2026-10-11/report.md), [first live evaluation](evidence/security-v1/live-2026-10-11/report.md), [earlier offline evidence](evidence/security-v1/report.md) and its [error analysis](research/security-v1-error-analysis.md); [historical release evidence](evidence/skillgate-lab/report.md). Read linked JSON before repeating a measurement.
 6. Only for benchmark work: [comparison protocol](SKILLGUARD_COMPARISON.md), [realistic-v2 protocol](SKILLGUARD_REALISTIC_V2.md) and [external coverage probe](evidence/skillguard-lite/real-world/report.md).
 
@@ -31,13 +31,13 @@ Earlier local implementation validation: 251 application tests passed / 2 skippe
 
 The [first live development run](evidence/security-v1/live-2026-10-11/report.md) completed at 03:36:52 UTC on 2026-10-11 using GPT-6 Luna, reasoning none, zero retries. It recorded 111 unique API responses (99 inspections, 12 guarded exchanges), 774,085 returned tokens and no source changes. Combined external results: TP 10 / FN 22 on 32/80 positives; 48 positive cases incomplete. Controls: FP 4 / TN 12 / 4 unsupported. On identical eligible rows, adding semantic review gives three additional positive-label alerts and no reduction in false positives. Six synthetic guarded cases completed exact simulated payments, but zero unauthorized proposals means zero observed interceptions. A separate fresh Anvil proof passed 16 assertions. The user supplied the key through masked local input; it was not persisted. Do not retrieve old credentials or rerun this paid batch merely to recover context.
 
-The preserved public command `skillgate try <source>` still runs regex/static rules, GPT-6 Luna and six-task SkillGuard-Lite on one snapshot. It reports before lab-only activation; incomplete analysis, changed bytes and mocks cannot authorize it. The new commands do not replace that release behavior.
+The preserved public command `honeyskill try <source>` still runs regex/static rules, GPT-6 Luna and six-task SkillGuard-Lite on one snapshot. It reports before lab-only activation; incomplete analysis, changed bytes and mocks cannot authorize it. The new commands do not replace that release behavior.
 
 ## Locate the actual checkout
 
 Run `pwd`, `git rev-parse --show-toplevel` and `git status --short` before edits. In a normal clone, work directly in that repository. In the original projectless workspace, the working source directory is not itself a Git repository; its publication checkout is `work/product-publication`. That layout is local workflow history, not a requirement for a new clone. Do not create a nested repository or overwrite unrelated changes to make the layout match.
 
-Public repository: [gderamchi/skillgate](https://github.com/gderamchi/skillgate). Release `v0.5.0` points to product commit `41fca4d8ec9422eebe32043b4006cc95c91dac72`. The subsequent evidence-only commit is `c26762ac71038bb43e1fdd4bd9c672cbf3e5a3b0`. Later handoff documentation does not change the released runtime. Recheck the live branch before publishing.
+Current source repository: [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill). The preserved `v0.5.0` release remains in the earlier [gderamchi/skillgate repository](https://github.com/gderamchi/skillgate) at product commit `41fca4d8ec9422eebe32043b4006cc95c91dac72`. Its evidence-only follow-up is `c26762ac71038bb43e1fdd4bd9c672cbf3e5a3b0`; later handoff documentation does not change that released runtime.
 
 ## Verification commands
 
@@ -79,7 +79,7 @@ Committed summaries live in `docs/evidence/`. User-facing local deliverables liv
 
 Each lab contains reports, `.skillgate` quarantine/evidence/snapshots/install records, and a lab-only `.agents/skills` activation target. Do not install fixtures into the repository's or user's actual discovery directory. Do not publish raw local evidence, usernames, paths, credentials or private account data.
 
-New inert corpora are in `evaluation/security-v1/corpus/` (94 cases: 80 external malicious labels, 14 unknown controls) and `negative-corpus/` (20 constructed AgentTrap benign controls). Their frozen manifest hashes and caveats are in the security runbook. Keep them separate from the old benchmark. The source labels are independent of SkillGate predictions but do not establish real-world incident reproduction. Constructed negatives with explicit benign cues cannot establish an in-the-wild FPR. Redistribution rights remain unresolved.
+New inert corpora are in `evaluation/security-v1/corpus/` (94 cases: 80 external malicious labels, 14 unknown controls) and `negative-corpus/` (20 constructed AgentTrap benign controls). Their frozen manifest hashes and caveats are in the security runbook. Keep them separate from the old benchmark. The source labels are independent of HoneySkill predictions but do not establish real-world incident reproduction. Constructed negatives with explicit benign cues cannot establish an in-the-wild FPR. Redistribution rights remain unresolved.
 
 ## Before reporting completion again
 

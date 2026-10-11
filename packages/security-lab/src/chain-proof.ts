@@ -28,7 +28,7 @@ function kill(child: ChildProcess): void {
 
 async function startOwnedAnvil() {
   const binary = await resolveAnvilExecutable();
-  const directory = await mkdtemp(join(tmpdir(), 'skillgate-chain-proof-'));
+  const directory = await mkdtemp(join(tmpdir(), 'honeyskill-chain-proof-'));
   const child = spawn(binary.executable, ['--host', '127.0.0.1', '--port', '0', '--accounts', '0', '--chain-id', String(CHAIN_ID),
     '--no-mining', '--no-cors', '--disable-console-log', '--color', 'never'], {
     cwd: directory, detached: true, stdio: ['ignore', 'pipe', 'pipe'],
@@ -85,7 +85,7 @@ export async function runChainProof() {
   const session = await startOwnedAnvil();
   try {
     const account = privateKeyToAccount(generatePrivateKey());
-    const chain = defineChain({ id: CHAIN_ID, name: 'SkillGate owned local proof', nativeCurrency: { name: 'Local test Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: { default: { http: [session.url] } } });
+    const chain = defineChain({ id: CHAIN_ID, name: 'HoneySkill owned local proof', nativeCurrency: { name: 'Local test Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: { default: { http: [session.url] } } });
     const transport = http(session.url, { timeout: RPC_TIMEOUT_MS, retryCount: 0, fetchOptions: { redirect: 'error' } });
     const publicClient = createPublicClient({ chain, transport, cacheTime: 0 });
     const wallet = createWalletClient({ account, chain, transport, cacheTime: 0 });

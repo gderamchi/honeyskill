@@ -1,40 +1,29 @@
-# Threat model and limits
+# HoneySkill threat model and limits
 
-An adversary supplies misleading skill instructions, scripts or supporting files that could misuse financial access available to the host agent. SkillGate does not inspect real wallets, secrets, balances or accounts.
+HoneySkill addresses two related but distinct risks: a skill package can contain misleading instructions or suspicious supporting files, and an agent can propose a financial action that exceeds a user's explicit authorization. Inspection and transaction mediation have separate evidence and coverage.
 
-## Controlled boundary
+## Assets and adversary
 
-Checked installations and updates flow through SkillGate, directly or through supported wrappers. Manual copies, other installers, absolute binaries bypassing wrappers, post-install changes and processes with the same user's privileges remain outside this boundary. A terminal choice is not cryptographic proof of human presence.
+Assets include private keys held by the host wallet, funds, token approvals, recipient identity, transaction fees and the integrity of the user's payment intent. The adversary may control skill text, linked repository content or a model-generated action proposal. The model and skill are not trusted to define or widen the authorization policy.
 
-## Invariants
+## Inspection boundary
 
-- Never execute acquired scripts, hooks or dependency installers, or follow arbitrary links found in skill content.
-- Reject links, special files, unsafe paths and malformed or excessive archives.
-- Analyze the collected bytes in quarantine outside the active skill directory; verify their fingerprint again before activation.
-- Preserve the active version when an update is held or fails.
-- Never auto-install after incomplete analysis or a failed required provider.
-- Treat source excerpts as evidence, never instructions to the scanner.
+HoneySkill acquires a package into quarantine, records a snapshot and applies native checks, an optional pinned Cisco Skill Scanner profile and a modular semantic review. Acquired code, hooks and dependency installers are not executed. Coverage errors, unsupported files and incomplete model responses remain visible; incomplete analysis is not a clean result. A matching fingerprint establishes byte identity, not verdict correctness or package safety.
 
-## Acquisition
+Inspection can miss obfuscation, indirect behavior, unsupported formats, new attack patterns and behavior that requires execution. The imported malicious labels are external attributions, not independent adjudications. The current development corpus has informed tuning and is not an unseen holdout.
 
-Sources are local directories or public HTTPS GitHub repositories, optionally selecting a revision and subdirectory. GitHub uses public Git ref resolution and a SHA-pinned codeload archive, without REST API calls or credentials. URLs are restricted; unsafe archive entries and unsupported formats fail closed. Local archive paths remain unsupported.
+## Action-mediation boundary
 
-Network operations have deadlines. Archives are capped at 8 MiB compressed, 32 MiB expanded and 4096 entries. Selected packages retain limits of 256 files, 2 MiB total, 256 KiB per file and depth 12. A large repository may be rejected even if the desired skill is small. No failure falls back to an upstream skill installer.
+The financial monitor validates typed proposals against trusted host policy before dispatch through its configured adapter. The controlled demo exercised four authored scenarios and six native-send or minimal allowance-witness proposals on an owned local chain. It is not a production wallet integration. It does not protect actions sent through another adapter, direct wallet access, shell or arbitrary scripts. The demonstrated approval check is a local storage witness, not a complete ERC-20 implementation. The fixed recipient-substitution scenario is held; the replay does not replan.
 
-Removing REST calls avoids the anonymous REST quota encountered in 0.3.1. Git transport and codeload may still fail or throttle requests; errors must leave the skill inactive.
+Policy correctness, complete mediation and adapter integrity are trust assumptions. An attacker who can change the trusted policy or route around the adapter can invalidate the control. A denied or simulated action is not proof against every real agent attack.
 
-## Detection limits
+## Operator and data risks
 
-The engine uses finite text heuristics. It does not prove complete program data flow, decode every obfuscation or run a dynamic sandbox. Paraphrases, unsupported languages, aliases and indirect behavior may evade it. Negations and defensive quotations require local context; a skill's claim of approval or educational purpose is not trusted authorization.
+LLM review may send skill text to the configured provider when the operator explicitly enables that stage; apparent-secret redaction is heuristic. Use public or otherwise non-secret samples. Reports may contain excerpts, filenames, public source links, hashes and local decisions, and should be reviewed before sharing. Local records are editable by the operating-system account owner.
 
-`complete_for_supported_checks` means supported checks read the package within their limits. It is not a safety certificate. An address alone does not prove malicious intent; severity is not a calibrated probability. A requested broad spending approval may be legitimate and still carry financial risk.
+An explicit exception keeps the original findings visible and applies only to the exact analyzed snapshot and destination. It is not proof of human identity and does not cover later versions. HoneySkill cannot revoke a key, recover funds, reverse a public transaction or remediate a host after exposure.
 
-The original frozen benchmark has already informed development. Improvement on it is a regression measurement, not a fresh blind test. Additional challenge cases are synthetic and authored within the same team. Misses, false positives and acquisition errors remain visible.
+## Evaluation limits
 
-The optional model provider requires explicit consent and configuration. Apparent-secret redaction is imperfect. Mock tests do not establish detection quality with a real model; no paid provider execution is implied.
-
-## After activation
-
-SkillGate cannot revoke keys, recover funds, roll back transactions or constrain an installed skill. A missed threat or an accepted exception may still cause harm within host permissions. Keeping an older snapshot does not reverse an activated version's actions.
-
-Local reports and logs are not tamper-proof against the OS account owner. No telemetry, remote database, wallet or transaction firewall is part of this product.
+The local payment replay and package-inspection benchmark measure different units. The former uses six scripted actions; the latter contains external malicious labels, constructed controls and unknown cases with incomplete outcomes. Neither establishes universal detection, real-world attack prevention, production safety or comparative cost and accuracy against a normal AI system.

@@ -1,6 +1,6 @@
 # Public distribution and evidence availability
 
-This HoneySkill repository preserves the earlier published SkillGate Git history and adds the hackathon development code. Published SkillGate v0.5.0 remains available in the original [gderamchi/skillgate repository](https://github.com/gderamchi/skillgate). This is a separate HoneySkill development publication, not a rewritten release.
+This HoneySkill repository preserves the earlier product Git history and adds the hackathon development code. The earlier v0.5.0 release remains available in the original [gderamchi/skillgate repository](https://github.com/gderamchi/skillgate). This is a separate HoneySkill development publication, not a rewritten release.
 
 ## What is included
 

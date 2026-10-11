@@ -13,6 +13,7 @@ import { runHoneySkillDemo } from '../../../packages/security-lab/src/honeyskill
 export function registerSecurityCommands(program: Command): void {
   const security = program.command('security').description('Research-based package inspection and deterministic blockchain policy evidence. Never activates skills.');
   const emit = (value: unknown, message: string) => process.stdout.write(program.opts().json ? JSON.stringify(value, null, 2) + '\n' : sanitizeTerminal(message) + '\n');
+  const scannerBinary = (explicit?: string) => explicit ?? process.env.HONEYSKILL_CISCO_BIN ?? process.env.SKILLGATE_CISCO_BIN;
   program.command('payment-demo').description('Replay controlled payment proposals on an owned local Anvil chain. No model calls or acquired malware execution.')
     .requiredOption('--out <directory>', 'New output directory; existing results are never overwritten')
     .option('--local', 'Use local EVM only; do not attempt a public read-only Fuji fork')
@@ -32,12 +33,12 @@ export function registerSecurityCommands(program: Command): void {
     });
   security.command('inspect <source>').description('Quarantine → native + Cisco + batched security LLM review → compact report. No skill code execution.')
     .requiredOption('--out <directory>', 'New output directory; existing results are never overwritten')
-    .option('--scanner <absolute-path>', 'Pinned Cisco 2.2.2 executable (or SKILLGATE_CISCO_BIN)')
+    .option('--scanner <absolute-path>', 'Pinned Cisco 2.2.2 executable (or HONEYSKILL_CISCO_BIN; SKILLGATE_CISCO_BIN remains a compatibility alias)')
     .option('--offline', 'Run native and Cisco only; do not request semantic analysis')
     .option('--skill <name>', 'Select a skill from a multi-skill repository')
     .action(async (source, options) => {
       const output = path.resolve(options.out); await fs.mkdir(output, { recursive: false, mode: 0o700 });
-      const report = await reviewSecurity(source, { scannerBinary: options.scanner, semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, skill: options.skill });
+      const report = await reviewSecurity(source, { scannerBinary: scannerBinary(options.scanner), semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, skill: options.skill });
       await fs.writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2), { flag: 'wx', mode: 0o600 });
       await fs.writeFile(path.join(output, 'index.html'), securityReviewHtml(report), { flag: 'wx', mode: 0o600 });
       emit({ outcome: report.outcome, inspectionComplete: report.inspectionComplete, report: path.join(output, 'index.html') },
@@ -47,13 +48,13 @@ export function registerSecurityCommands(program: Command): void {
   security.command('benchmark <manifest>').description('Evaluate a pinned inert corpus; preserve every case and calculate separate confusion matrices.')
     .requiredOption('--out <directory>', 'New output directory')
     .option('--repository <directory>', 'Source checkout to freeze', process.cwd())
-    .option('--scanner <absolute-path>', 'Pinned Cisco 2.2.2 executable (or SKILLGATE_CISCO_BIN)')
+    .option('--scanner <absolute-path>', 'Pinned Cisco 2.2.2 executable (or HONEYSKILL_CISCO_BIN; SKILLGATE_CISCO_BIN remains a compatibility alias)')
     .option('--offline', 'Native + Cisco inspection only; no API calls')
     .option('--limit <count>', 'Run only the first N frozen cases (explicit pilot)', value => Number(value))
     .action(async (manifest, options) => {
       const output = path.resolve(options.out);
       const result = await runSecurityBenchmark(path.resolve(manifest), { repositoryRoot: path.resolve(options.repository), output,
-        semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, scannerBinary: options.scanner, limit: options.limit,
+        semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, scannerBinary: scannerBinary(options.scanner), limit: options.limit,
         progress: (done, total, id) => process.stderr.write(sanitizeTerminal(`[${done}/${total}] ${id}\n`)) });
       await fs.writeFile(path.join(output, 'index.html'), securityBenchmarkHtml(result), { flag: 'wx', mode: 0o600 });
       await fs.writeFile(path.join(output, 'summary.md'), securityBenchmarkMarkdown(result), { flag: 'wx', mode: 0o600 });

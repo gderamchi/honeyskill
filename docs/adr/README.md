@@ -14,4 +14,4 @@ ADRs 0001–0006 were recorded retrospectively on 2026-10-10 for the 0.5.0 hando
 
 | [0008](0008-honeyskill-controlled-payment-demo.md) | HoneySkill branding, compatibility, isolated payment replay and honest submission claims |
 
-Current development: [SECURITY_V1](../SECURITY_V1.md), [HANDOFF](../HANDOFF.md), [PROJECT_STATE](../PROJECT_STATE.md). Preserved release workflow: [lab guide](../SKILLGATE_LAB.md).
+Current development: [SECURITY_V1](../SECURITY_V1.md), [HANDOFF](../HANDOFF.md), [PROJECT_STATE](../PROJECT_STATE.md). Historical 0.5.0 workflow: [lab guide](../PREVIOUS_INSTALLATION_LAB.md).

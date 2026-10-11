@@ -1,6 +1,6 @@
 # Security laboratory v1: research and dependency choices
 
-Research checked on 2026-10-11. This document records implementation choices, not a new accuracy claim for SkillGate. The frozen SkillGuard-Lite protocols and historical results remain unchanged.
+Research checked on 2026-10-11. This document records implementation choices, not a new accuracy claim for HoneySkill. The frozen SkillGuard-Lite protocols and historical results remain unchanged.
 
 ## Selected implementation
 
@@ -10,7 +10,7 @@ The adapter in `packages/security-lab/src/cisco.ts` runs an explicitly supplied,
 
 The wrapper checks the exact scanner version, reported snapshot path, required analyzers, failures, rule-contract metadata, CEL incompleteness/suppression, coverage findings even at INFO, source paths and exact quotations. A snapshot digest before/after the process detects changed bytes. Symlinks, special files, `.git`, deep/oversized trees are unsupported by this adapter. Existing findings survive incomplete analysis; the wrapper never treats upstream `is_safe` as an installation authorization.
 
-A `complete` Cisco result means this bounded invocation returned all required engine evidence. It does not establish that every attack surface was inspected or that the package is safe. Upstream JSON lacks a comprehensive per-file/per-language completeness ledger; the overall SkillGate coverage layer must still identify missing resources and execution capabilities.
+A `complete` Cisco result means this bounded invocation returned all required engine evidence. It does not establish that every attack surface was inspected or that the package is safe. Upstream JSON lacks a comprehensive per-file/per-language completeness ledger; the overall HoneySkill coverage layer must still identify missing resources and execution capabilities.
 
 The first real CLI smoke revealed a YARA location expressed relative to the Markdown body: its exact quotation was on package line 6 while upstream reported line 2. The adapter preserves `upstreamLineNumber` and re-anchors only a unique exact quotation, marking it `relocated`. Missing, ambiguous or fabricated quotations cannot become verified citations.
 
@@ -34,14 +34,14 @@ The [primary-source ledger](security-v1-source-ledger.md) also records the imple
 
 | Source | Mechanism reused or informing the design | What it does not establish here |
 | --- | --- | --- |
-| [AgentDojo, NeurIPS 2024](https://arxiv.org/abs/2406.13352) | Stateful environments, deterministic task/security checks, separate legitimate utility and attacker success; extensible adaptive attacks | Its constructed scenarios are not an unchanged real-skill corpus. SkillGate does not claim to reproduce AgentDojo results. |
+| [AgentDojo, NeurIPS 2024](https://arxiv.org/abs/2406.13352) | Stateful environments, deterministic task/security checks, separate legitimate utility and attacker success; extensible adaptive attacks | Its constructed scenarios are not an unchanged real-skill corpus. HoneySkill does not claim to reproduce AgentDojo results. |
 | [CaMeL, version 2, 2025](https://arxiv.org/html/2503.18813v2) | Keep trusted policies/control flow separate from untrusted values; enforce capabilities at tool boundaries | A task contract is not the CaMeL interpreter. Policies, complete mediation and implementation correctness remain assumptions. The paper discusses side channels and future formal verification. |
 | [CaMeL reference code](https://github.com/google-research/camel-prompt-injection) | Inspectable research implementation | Upstream explicitly warns that the interpreter can contain bugs and is not supported as a product. No direct runtime dependency selected. |
 | [NVIDIA SkillSpector v2.12.0](https://github.com/NVIDIA/SkillSpector/releases/tag/v2.12.0) | Alternative Apache-2.0 scanner and explicit completeness reporting | A possible independent baseline, not a second required engine in this implementation. Its Python/LangGraph stack duplicates substantial functionality. |
 | [MaliciousSkillBench](https://github.com/ProtectSkills/MaliciousSkillBench) | Frozen hashes, provenance, structural families, source-disjoint splits and package manifests | Observed, constructed/injected and unresolved provenance must remain separate. Held-out source does not guarantee model-training novelty. Third-party artifacts retain upstream terms. |
 | [Are Firewalls All You Need, or Stronger Benchmarks?, 2025](https://arxiv.org/abs/2510.05244) | Audit evaluators and attack strength; measure legitimate utility as well as attack success | High benchmark scores alone do not imply universal prompt-injection resistance. The authors themselves demonstrate bypasses and benchmark defects. |
 
-Cisco publishes corpus-, model- and threshold-specific results, including low recall for rules alone, substantial LLM gains, false positives, incomplete-analysis failure modes and loss of recall from meta-review. These observations motivate retaining LLM modularity and independent fail-closed coverage, not importing any upstream accuracy number as a SkillGate measurement. See [upstream measured results](https://github.com/cisco-ai-defense/skill-scanner/blob/main/docs/reference/measured-results.md). Current upstream documentation may evolve after this research date.
+Cisco publishes corpus-, model- and threshold-specific results, including low recall for rules alone, substantial LLM gains, false positives, incomplete-analysis failure modes and loss of recall from meta-review. These observations motivate retaining LLM modularity and independent fail-closed coverage, not importing any upstream accuracy number as a HoneySkill measurement. See [upstream measured results](https://github.com/cisco-ai-defense/skill-scanner/blob/main/docs/reference/measured-results.md). Current upstream documentation may evolve after this research date.
 
 ## What was verified for this adapter
 

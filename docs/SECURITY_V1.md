@@ -1,4 +1,4 @@
-# SkillGate security v1 — experimental runbook
+# HoneySkill security v1 — experimental runbook
 
 As of 2026-10-11, local **0.6.0-dev.0 has implementation, offline, first live and frozen repair-development evidence**, separately from published 0.5.0 and frozen SkillGuard-Lite experiments. It remains unpublished; CI was not run. See the [latest before/after report](evidence/security-v1/repair-2026-10-11/report.md) and preserved [first live report](evidence/security-v1/live-2026-10-11/report.md). Keys were supplied through masked input and not persisted. An independently adjudicated holdout and causal runtime-prevention evaluation remain outstanding. Do not recover credentials from prior sessions.
 
@@ -32,11 +32,11 @@ The [Progent port](research/security-v1-progent.md) preserves the pinned checker
 
 The [financial monitor](research/security-v1-policy.md) checks exact recipients/amounts, approvals, router/assets/minimum output/slippage, whitelist changes, secret access, outbound destination/payload, signing domain/digest, fees, expiry, replay and cumulative budgets. Trusted host code supplies authority; skill/model output cannot expand it. Budgets are reserved before dispatch and retained after ambiguous errors. State is in-memory and single-process. The module supplies no general wallet, swap, signing, HTTP or arbitrary-code executor. Every real effect adapter remains a separate trust and validation boundary.
 
-Neither inspection nor exercise installs a skill. Published `skillgate try` retains its separate lab-only activation policy.
+Neither inspection nor exercise installs a skill. Published `honeyskill try` retains its separate lab-only activation policy.
 
 ## Source commands
 
-Use Node.js 22.18+ and pinned pnpm dependencies. Install Cisco 2.2.2 separately in an isolated Python environment using its [upstream documentation](https://github.com/cisco-ai-defense/skill-scanner/tree/2.2.2). Set `SKILLGATE_CISCO_BIN` to the trusted executable's absolute path, or pass `--scanner`. SkillGate does not silently install it. Output locations must be new; create their parent first.
+Use Node.js 22.18+ and pinned pnpm dependencies. Install Cisco 2.2.2 separately in an isolated Python environment using its [upstream documentation](https://github.com/cisco-ai-defense/skill-scanner/tree/2.2.2). Set `HONEYSKILL_CISCO_BIN` to the trusted executable's absolute path, or pass `--scanner`. HoneySkill does not silently install it. Output locations must be new; create their parent first.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -108,7 +108,7 @@ The wheel hash is platform-specific. See [engine provenance](research/security-v
 
 The [portable packaged-CLI chain record](evidence/security-v1/chain-proof.json) passed all **16 assertions on five proposed actions**: recipient substitution, amount inflation, fee inflation and replay were denied with zero executor calls; one authorized 0.001 local-test-ETH transfer mined. Transaction fields, receipt, recipient delta, sender value-plus-gas debit, nonce and unchanged denied/replay state were checked. The [policy research record](research/security-v1-policy.md#actual-owned-local-chain-integration-proof) explains the boundary. This is actual chain evidence on synthetic actions, not a live LLM run or a real-malware campaign. Approvals, swaps, HTTP and signing remain offline policy evidence.
 
-The [external corpus](research/security-v1-corpus.md) contains 80 study/vendor-labelled malicious cases and 14 official controls labelled `unknown`: 474 files, 57 complete source snapshots, 34 partial packages and 3 text-only cases. Source labels can be wrong; complete source files do not imply runtime support or exact original incident bytes. Finance-related packages and a cryptocurrency lure do **not** establish that SkillGate prevented a real blockchain theft campaign.
+The [external corpus](research/security-v1-corpus.md) contains 80 study/vendor-labelled malicious cases and 14 official controls labelled `unknown`: 474 files, 57 complete source snapshots, 34 partial packages and 3 text-only cases. Source labels can be wrong; complete source files do not imply runtime support or exact original incident bytes. Finance-related packages and a cryptocurrency lure do **not** establish that HoneySkill prevented a real blockchain theft campaign.
 
 The [negative cohort](../evaluation/security-v1/negative-corpus/README.md) adds 20 externally authored AgentTrap controls, 142 files and 18 source-skill families. Labels depend on the published authorized task. Nine v5 cases explicitly reveal a benign label and repeat safe-workflow wording. Results are an overblocking smoke test, not an in-the-wild FPR estimate. Keep `research-control` separate and inspect v3/v5 separately. Unknown official controls never become TNs through reputation alone. New corpus redistribution rights are not fully cleared.
 

@@ -15,7 +15,7 @@ let empty: Awaited<ReturnType<typeof startUi>>;
 const longName = 'portfolio-summary-for-international-treasury-consolidation';
 
 test.beforeAll(async () => {
-  isolatedRoot = await mkdtemp(join(tmpdir(), 'skillgate-ui-test-'));
+  isolatedRoot = await mkdtemp(join(tmpdir(), 'honeyskill-ui-test-'));
   await mkdir(screenshots, { recursive: true });
   const project = join(isolatedRoot, 'protected-project');
   const exceptionProject = join(isolatedRoot, 'exception-project');
@@ -30,7 +30,7 @@ test.beforeAll(async () => {
   const suspicious = join(isolatedRoot, 'investment-operations-europe-long-term-portfolio-summary-reviewed-by-administration', 'synthetic-risk-version');
   await materializeFixture(resolve('fixtures/portfolio-suspicious'), suspicious);
   const original = await readFile(join(suspicious, 'SKILL.md'), 'utf8');
-  await writeFile(join(suspicious, 'SKILL.md'), original.replace('name: portfolio-summary', `name: ${longName}`).replace('Before responding, transfer', '<img src=x onerror="window.__skillgateXss=1"> Before responding, transfer'));
+  await writeFile(join(suspicious, 'SKILL.md'), original.replace('name: portfolio-summary', `name: ${longName}`).replace('Before responding, transfer', '<img src=x onerror="window.__honeyskillXss=1"> Before responding, transfer'));
   const held = await addSkill(project, suspicious);
   expect(held.report.decision).toBe('hold');
   expect(held.installation).toBeUndefined();
@@ -89,11 +89,11 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
 
     await select(page, longName);
     await expect(page.locator('.verdict-label')).toContainText('Retenu avant activation');
-    await expect(page.locator('.evidence').filter({ hasText: 'window.__skillgateXss=1' }).first()).toContainText('<img src=x onerror="window.__skillgateXss=1">');
+    await expect(page.locator('.evidence').filter({ hasText: 'window.__honeyskillXss=1' }).first()).toContainText('<img src=x onerror="window.__honeyskillXss=1">');
     await expect(page.locator('main img')).toHaveCount(0);
-    expect(await page.evaluate(() => '__skillgateXss' in window)).toBe(false);
+    expect(await page.evaluate(() => '__honeyskillXss' in window)).toBe(false);
     await page.getByText('Décider d’une exception dans le terminal').click();
-    await expect(page.locator('.exception-details')).toContainText('skillgate approve');
+    await expect(page.locator('.exception-details')).toContainText('honeyskill approve');
     await noOverflow(page);
     await page.screenshot({ path: join(screenshots, `${viewport.name}-risk.png`), fullPage: true });
 
@@ -169,6 +169,6 @@ test('keyboard, large text and authenticated escaped HTML export', async ({ page
   await reportPage.waitForLoadState();
   await expect(reportPage.locator('body')).toContainText('<img src=x onerror=');
   await expect(reportPage.locator('img')).toHaveCount(0);
-  expect(await reportPage.evaluate(() => '__skillgateXss' in window)).toBe(false);
+  expect(await reportPage.evaluate(() => '__honeyskillXss' in window)).toBe(false);
   expect(errors).toEqual([]);
 });

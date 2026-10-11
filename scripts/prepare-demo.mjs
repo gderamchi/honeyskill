@@ -10,12 +10,12 @@ if (args.length && (args.length !== 2 || args[0] !== '--workspace')) throw new E
 const workspace = args[1] ? path.resolve(args[1]) : sourceRoot;
 const staging = path.join(workspace, 'work/demo-publication');
 const output = path.join(workspace, 'outputs');
-const archiveName = 'skillgate-demo-skills-v0.1.0.zip';
+const archiveName = 'honeyskill-demo-skills-v0.1.0.zip';
 const sha256 = data => createHash('sha256').update(data).digest('hex');
 const files = new Map();
-files.set('README.md', `# SkillGate demonstration skills
+files.set('README.md', `# HoneySkill demonstration skills
 
-Synthetic demonstration fixtures for SkillGate Finance's installation checks.
+Synthetic demonstration fixtures for HoneySkill's installation checks.
 They do not reproduce a named incident or measure a language model's behaviour.
 
 ## Sandbox only
@@ -37,20 +37,20 @@ not independent benchmark cases or a safety certification.
 
 ## Run after downloading and extracting
 
-With the SkillGate CLI installed, create a disposable project and initialize it:
+With HoneySkill installed, create a disposable project and initialize it:
 
 \`\`\`sh
 DEMO_ROOT="$(mktemp -d)"
-skillgate --project "$DEMO_ROOT" init --agent codex
-skillgate --project "$DEMO_ROOT" add /absolute/path/to/extracted/skills/portfolio-summary
-skillgate --project "$DEMO_ROOT" add /absolute/path/to/extracted/skills/portfolio-summary-trap
+honeyskill --project "$DEMO_ROOT" init --agent codex
+honeyskill --project "$DEMO_ROOT" add /absolute/path/to/extracted/skills/portfolio-summary
+honeyskill --project "$DEMO_ROOT" add /absolute/path/to/extracted/skills/portfolio-summary-trap
 \`\`\`
 
 The first skill should appear in the disposable project's .agents/skills. The
 second should remain outside that active folder unless an explicit exception is
 chosen. Cancelling is the default. Scan and installation are real local actions.
 
-Each actions.json is input for SkillGate's bounded deterministic ledger simulator:
+Each actions.json is input for HoneySkill's bounded deterministic ledger simulator:
 only read(demo-user) and transfer(demo-user, demo-external, integer amount 1–100,
 DEMOUSD) are supported, with at most ten actions. No shell or network is used by
 that simulator. Replaying this plan is a deterministic simulation, not execution

@@ -6,7 +6,7 @@ Evaluated on 10–11 October 2026. The final runs reproduce every preliminary ca
 
 These runs inspect preserved package files using the native rules and Cisco skill-scanner 2.2.2, with a MEDIUM-or-higher alert threshold. The combined detector is their logical OR, but only when all selected stages and package coverage are complete. Semantic review was **not requested**. Cisco's `--use-behavioral` stage is static code/data-flow analysis; acquired skill scripts were not executed. The separately tested action-policy mediator is outside these confusion matrices.
 
-Labels come from external source authors, not a fresh independent SkillGate reproduction. The 80 positive labels apply to source packages; the 20 negative controls are author-constructed, task-conditioned utility cases. Neither cohort is an untouched holdout. Label-bearing wording, shared families, and unknown model-training exposure prevent a claim of general real-world accuracy.
+Labels come from external source authors, not a fresh independent HoneySkill reproduction. The 80 positive labels apply to source packages; the 20 negative controls are author-constructed, task-conditioned utility cases. Neither cohort is an untouched holdout. Label-bearing wording, shared families, and unknown model-training exposure prevent a claim of general real-world accuracy.
 
 ## Same-cohort comparison
 
@@ -62,7 +62,7 @@ These conservative exclusions reduce measured coverage. Relaxing them after seei
 | v5 controls | 9 | 9 | 0 / 9 | 0 / 9 | 0 / 9 |
 | Total | 20 | 19 | 3 / 16 | 4 / 15 | 7 / 12 |
 
-v3 and v5 are source-cohort names, not SkillGate versions. The excluded v3 `xlsx` case contains unsupported XSD files. Zero false alerts on nine v5 controls is a small overblocking smoke result, not a zero-error guarantee. There are 18 stored family identifiers among the 20 cases: the two `mcp-builder` FPs belong to one family, while the two `skill-creator` variants produce one FP and one TN. The cases cannot be assumed independent for confidence claims.
+v3 and v5 are source-cohort names, not HoneySkill versions. The excluded v3 `xlsx` case contains unsupported XSD files. Zero false alerts on nine v5 controls is a small overblocking smoke result, not a zero-error guarantee. There are 18 stored family identifiers among the 20 cases: the two `mcp-builder` FPs belong to one family, while the two `skill-creator` variants produce one FP and one TN. The cases cannot be assumed independent for confidence claims.
 
 All 25 external misses, indexed by stored family:
 

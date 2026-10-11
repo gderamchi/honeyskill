@@ -8,11 +8,11 @@ import {
 } from '../../contracts/src/index.js';
 import { acquire, inventory, skillMetadata, finalizeCoverage, type Inventory } from './acquisition.js';
 import { analyzeNative, checkReferences, CORPUS_VERSION, decide, ENGINE_VERSION, POLICY_VERSION, RULES_VERSION } from './analysis.js';
-import { atomicJson, ensureDirectory, ensureState, exists, readJson, safeId, safeName, SkillGateError, stateDir, withTargetLock } from './storage.js';
+import { atomicJson, ensureDirectory, ensureState, exists, readJson, safeId, safeName, HoneySkillError, stateDir, withTargetLock } from './storage.js';
 
 export { LIMITS, inventory, safeRelative } from './acquisition.js';
 export { decide, ENGINE_VERSION, RULES_VERSION, POLICY_VERSION, CORPUS_VERSION } from './analysis.js';
-export { sanitizeTerminal, SkillGateError } from './storage.js';
+export { sanitizeTerminal, HoneySkillError } from './storage.js';
 export { OpenAIResponsesProvider, redactApparentSecrets } from './semantic.js';
 export * from '../../contracts/src/index.js';
 
@@ -35,7 +35,7 @@ export const exceptionConfirmation = (report: ScanReport): string => `INSTALL ${
 
 /** The marker authorizes a dedicated test directory, never a real agent profile or project root. */
 export async function assertLabRoot(projectRoot: string): Promise<void> {
-  const message = 'Full analysis requires a dedicated SkillGate lab directory. Run skillgate lab; real project and agent profile roots are refused.';
+  const message = 'Full analysis requires a dedicated HoneySkill lab directory. Run honeyskill lab; real project and agent profile roots are refused.';
   try {
     const stat = await fs.lstat(projectRoot), root = await fs.realpath(projectRoot);
     if (!stat.isDirectory() || stat.isSymbolicLink() || root === await fs.realpath(os.homedir()) || root.split(path.sep).some(part => ['.agents', '.codex', '.claude', '.cursor', '.openclaw'].includes(part))) throw new Error('Not a lab root.');
@@ -48,7 +48,7 @@ export async function assertLabRoot(projectRoot: string): Promise<void> {
     if (!markerStat.isFile() || markerStat.isSymbolicLink() || markerStat.nlink !== 1 || markerStat.size > 1024) throw new Error('Invalid lab marker.');
     const value = await readJson(marker) as { schemaVersion?: unknown; kind?: unknown };
     if (!value || value.schemaVersion !== 1 || value.kind !== 'skillgate-test-lab' || Object.keys(value).length !== 2) throw new Error('Invalid lab marker.');
-  } catch { throw new SkillGateError('LAB_REQUIRED', message); }
+  } catch { throw new HoneySkillError('LAB_REQUIRED', message); }
 }
 
 const behavioralTaskIds = ['pay-tom-small', 'pay-alice', 'move-to-savings', 'pay-explicit-address', 'pay-tom-large', 'pay-two-contacts'];
@@ -88,7 +88,7 @@ export async function initProject(projectRoot: string, options: Partial<Pick<Con
 }
 export async function loadConfig(projectRoot: string): Promise<Config> {
   const file = path.join(stateDir(projectRoot), 'config.json');
-  if (!await exists(file)) throw new SkillGateError('NOT_INITIALIZED', 'Configuration missing. Run skillgate init --agent codex.');
+  if (!await exists(file)) throw new HoneySkillError('NOT_INITIALIZED', 'Configuration missing. Run honeyskill init --agent codex.');
   await ensureState(projectRoot);
   return ConfigSchema.parse(await readJson(file));
 }
@@ -136,9 +136,9 @@ export async function scanSkill(projectRoot: string, source: string, options: Sc
   const id = `scan-${randomUUID()}`, directory = path.join(stateDir(projectRoot), 'quarantine', id, 'package');
   const acquired = await acquire(source, directory, options.skill), collected = acquired.inventory;
   const main = collected.texts.get('SKILL.md');
-  if (!main) throw new SkillGateError('INVALID_SKILL', 'SKILL.md is missing, too large, or unreadable.');
+  if (!main) throw new HoneySkillError('INVALID_SKILL', 'SKILL.md is missing, too large, or unreadable.');
   const metadata = skillMetadata(main);
-  if (options.skill && metadata.name !== options.skill) throw new SkillGateError('SKILL_MISMATCH', 'The name in SKILL.md does not match the requested skill.');
+  if (options.skill && metadata.name !== options.skill) throw new HoneySkillError('SKILL_MISMATCH', 'The name in SKILL.md does not match the requested skill.');
   options.progress?.('native', 'Checking package references and financial instruction patterns.');
   checkReferences(collected);
   if (config.profile === 'full') {
@@ -155,7 +155,7 @@ export async function scanSkill(projectRoot: string, source: string, options: Sc
     analyses: [{ engine: 'native', stage: 'native', status: 'completed', detail: 'Static analysis of the collected bytes; no scripts were executed.', durationMs: Math.round(performance.now() - nativeStarted) }],
     coverage: collected.coverage, findings: native.findings, risk: native.findings.length ? 'detected' : 'none', decision: 'review',
     capabilities: native.capabilities, durationMs: 0, manifest: collected.manifest,
-    limitations: ['Only installations and updates routed through SkillGate are checked.', 'No guarantee of complete safety; no transaction checks during subsequent real-agent use.', 'The actual financial environment and its permissions are not inspected.', 'The system owner can modify local snapshots and logs.', config.profile === 'static' ? 'Static analysis: heuristic rules, without external model reasoning.' : config.profile === 'hybrid' ? 'Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction.' : 'Full lab analysis: native patterns, external text review and behavioral execution. The behavioral model receives raw SKILL.md text; only use public or otherwise non-secret test skills.'],
+    limitations: ['Only installations and updates routed through HoneySkill are checked.', 'No guarantee of complete safety; no transaction checks during subsequent real-agent use.', 'The actual financial environment and its permissions are not inspected.', 'The system owner can modify local snapshots and logs.', config.profile === 'static' ? 'Static analysis: heuristic rules, without external model reasoning.' : config.profile === 'hybrid' ? 'Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction.' : 'Full lab analysis: native patterns, external text review and behavioral execution. The behavioral model receives raw SKILL.md text; only use public or otherwise non-secret test skills.'],
   };
   if (config.profile !== 'static') {
     options.progress?.('semantic', 'Reviewing package text for financial risks.');
@@ -176,7 +176,7 @@ export async function scanSkill(projectRoot: string, source: string, options: Sc
 export async function readReport(projectRoot: string, id: string): Promise<ScanReport> {
   await loadConfig(projectRoot);
   const file = reportPath(projectRoot, id);
-  if (!await exists(file)) throw new SkillGateError('REPORT_NOT_FOUND', 'Report not found.');
+  if (!await exists(file)) throw new HoneySkillError('REPORT_NOT_FOUND', 'Report not found.');
   return ScanReportSchema.parse(await readJson(file));
 }
 export async function listReports(projectRoot: string): Promise<ScanReport[]> {
@@ -204,12 +204,12 @@ async function recoverTarget(root: string, name: string): Promise<void> {
     const record = InstallRecordSchema.parse(transaction.record);
     if (record.name !== name) continue;
     const expected = path.join(path.resolve(root), '.agents/skills', safeName(name));
-    if (record.target !== expected || record.snapshot !== path.join(stateDir(root), 'snapshots', safeId(record.scanId))) throw new SkillGateError('INVALID_TRANSACTION', 'Inconsistent local transaction.');
+    if (record.target !== expected || record.snapshot !== path.join(stateDir(root), 'snapshots', safeId(record.scanId))) throw new HoneySkillError('INVALID_TRANSACTION', 'Inconsistent local transaction.');
     await ensureDirectory(path.dirname(expected));
     const stat = await fs.lstat(expected).catch(error => { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined; throw error; });
     if (stat?.isSymbolicLink() && await fs.readlink(expected) === record.snapshot) {
       const checked = await inventory(record.snapshot);
-      if (checked.fingerprint !== record.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'The snapshot of an interrupted installation has changed; manual recovery is required.');
+      if (checked.fingerprint !== record.fingerprint || checked.coverage.limitsReached.length) throw new HoneySkillError('SNAPSHOT_CHANGED', 'The snapshot of an interrupted installation has changed; manual recovery is required.');
       await atomicJson(recordPath(root, name), record);
       await atomicJson(path.join(transactions, file), { ...transaction, state: 'completed', recoveredAt: new Date().toISOString() });
     } else {
@@ -233,35 +233,35 @@ export async function installScan(projectRoot: string, scanId: string, exception
   const root = path.resolve(projectRoot), destination = path.join(root, config.target, safeName(report.name));
   return withTargetLock(root, report.name, async () => {
     await recoverTarget(root, report.name);
-    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config.profile) throw new SkillGateError('STALE_REPORT', 'Profile or engine changed. Scan the package again before installation.');
-    if (report.decision !== reportDecision(report)) throw new SkillGateError('INVALID_REPORT', 'Decision does not match the policy.');
-    if (config.profile === 'full' && report.behavioral?.kind === 'mocked-test') throw new SkillGateError('MOCK_EVIDENCE', 'Mocked behavioral evidence cannot authorize installation, including by exception. Run the actual lab analysis.');
-    if (config.profile === 'full' && (!config.semanticConsent || report.behavioral?.model !== config.model || !fullPipelineComplete(report))) throw new SkillGateError('PIPELINE_INCOMPLETE', 'All required analyses and supported execution coverage must be complete for this exact package. Missing, failed, or unsupported stages cannot be overridden.');
+    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config.profile) throw new HoneySkillError('STALE_REPORT', 'Profile or engine changed. Scan the package again before installation.');
+    if (report.decision !== reportDecision(report)) throw new HoneySkillError('INVALID_REPORT', 'Decision does not match the policy.');
+    if (config.profile === 'full' && report.behavioral?.kind === 'mocked-test') throw new HoneySkillError('MOCK_EVIDENCE', 'Mocked behavioral evidence cannot authorize installation, including by exception. Run the actual lab analysis.');
+    if (config.profile === 'full' && (!config.semanticConsent || report.behavioral?.model !== config.model || !fullPipelineComplete(report))) throw new HoneySkillError('PIPELINE_INCOMPLETE', 'All required analyses and supported execution coverage must be complete for this exact package. Missing, failed, or unsupported stages cannot be overridden.');
     // Preserve exception eligibility for complete packages in legacy French reports.
-    if (report.coverage.limitsReached.some(limit => !limit.startsWith('Semantic analysis') && !limit.startsWith('Analyse sémantique'))) throw new SkillGateError('PACKAGE_INCOMPLETE', 'Package collection was truncated. An exception cannot activate a package with missing files.');
+    if (report.coverage.limitsReached.some(limit => !limit.startsWith('Semantic analysis') && !limit.startsWith('Analyse sémantique'))) throw new HoneySkillError('PACKAGE_INCOMPLETE', 'Package collection was truncated. An exception cannot activate a package with missing files.');
     if (exception) {
       exception = ExceptionSchema.parse(exception);
-      if (exception.fingerprint !== report.fingerprint || path.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError('INVALID_EXCEPTION', 'Exception refused: report, fingerprint, destination, or confirmation does not match.');
-    } else if (report.decision !== 'allow') throw new SkillGateError('DECISION_REQUIRED', 'Installation held. Review the evidence or confirm an exception for this exact fingerprint.');
+      if (exception.fingerprint !== report.fingerprint || path.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new HoneySkillError('INVALID_EXCEPTION', 'Exception refused: report, fingerprint, destination, or confirmation does not match.');
+    } else if (report.decision !== 'allow') throw new HoneySkillError('DECISION_REQUIRED', 'Installation held. Review the evidence or confirm an exception for this exact fingerprint.');
     const quarantined = path.join(stateDir(root), 'quarantine', report.id, 'package');
     const current = await inventory(quarantined);
-    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'Files have changed since analysis. Installation refused; run the scan again.');
+    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new HoneySkillError('SNAPSHOT_CHANGED', 'Files have changed since analysis. Installation refused; run the scan again.');
     const previous = await readInstall(root, report.name);
     await ensureDirectory(path.dirname(destination));
     if (await exists(destination)) {
-      if (!previous || !(await fs.lstat(destination)).isSymbolicLink() || await fs.readlink(destination) !== previous.snapshot) throw new SkillGateError('UNMANAGED_TARGET', 'The target exists and is not an intact managed snapshot. No files were overwritten.');
-    } else if (previous) throw new SkillGateError('TARGET_CHANGED', 'The active skill was removed outside SkillGate. Manual review is required.');
+      if (!previous || !(await fs.lstat(destination)).isSymbolicLink() || await fs.readlink(destination) !== previous.snapshot) throw new HoneySkillError('UNMANAGED_TARGET', 'The target exists and is not an intact managed snapshot. No files were overwritten.');
+    } else if (previous) throw new HoneySkillError('TARGET_CHANGED', 'The active skill was removed outside HoneySkill. Manual review is required.');
     if (previous?.fingerprint === report.fingerprint && previous.scanId === report.id) return previous;
     const snapshot = path.join(stateDir(root), 'snapshots', report.id);
     if (!await exists(snapshot)) {
       const staged = `${snapshot}-${randomUUID()}.staging`;
       await ensureDirectory(staged);
       const copied = await inventory(quarantined, staged);
-      if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) { await fs.rm(staged, { recursive: true, force: true }); throw new SkillGateError('SNAPSHOT_CHANGED', 'A change was detected during preparation.'); }
+      if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) { await fs.rm(staged, { recursive: true, force: true }); throw new HoneySkillError('SNAPSHOT_CHANGED', 'A change was detected during preparation.'); }
       await fs.rename(staged, snapshot);
     }
     const prepared = await inventory(snapshot);
-    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError('SNAPSHOT_CHANGED', 'The prepared snapshot has changed.');
+    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new HoneySkillError('SNAPSHOT_CHANGED', 'The prepared snapshot has changed.');
     const at = new Date().toISOString(), record: InstallRecord = {
       schemaVersion: 1, name: report.name, target: destination, snapshot, scanId: report.id, fingerprint: report.fingerprint, source: report.source,
       status: exception ? 'installed_with_exception' : 'installed', installedAt: at,
@@ -278,7 +278,7 @@ export async function installScan(projectRoot: string, scanId: string, exception
       await atomicJson(recordPath(root, report.name), record);
       await atomicJson(transaction, { state: 'completed', record, previous: previous ?? null });
     } catch {
-      throw new SkillGateError('ACTIVATED_RECOVERY_REQUIRED', `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run skillgate list or skillgate doctor to recover.${previous ? ' The previous version remains stored in snapshots.' : ''}`);
+      throw new HoneySkillError('ACTIVATED_RECOVERY_REQUIRED', `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run honeyskill list or honeyskill doctor to recover.${previous ? ' The previous version remains stored in snapshots.' : ''}`);
     }
     return record;
   });
@@ -290,7 +290,7 @@ export async function addSkill(projectRoot: string, source: string, options: Sca
 export async function updateSkill(projectRoot: string, name: string, options: ScanOptions = {}): Promise<AddResult> {
   await loadConfig(projectRoot);
   const installed = await readInstall(projectRoot, safeName(name));
-  if (!installed) throw new SkillGateError('NOT_INSTALLED', 'This skill is not managed in this project.');
+  if (!installed) throw new HoneySkillError('NOT_INSTALLED', 'This skill is not managed in this project.');
   return addSkill(projectRoot, installed.source.locator, { ...options, skill: name });
 }
 /** Removes expired uninstalled reports and their quarantines. Active snapshots and evidence stay. */

@@ -23,7 +23,7 @@ export async function runBenchmark({projectRoot,command,split='evaluation'}:{pro
   if(all.some(c=>c.split==='evaluation'&&devGroups.has(c.group)))throw new Error('Evaluation and development origin groups overlap.');
   const cases=all.filter(c=>c.split===split);
   for(const c of cases)if(await fixtureFingerprint(join(assetRoot,c.fixture))!==c.fingerprint)throw new Error(`Frozen fixture changed: ${c.id}`);
-  const root=await mkdtemp(join(tmpdir(),'skillgate-benchmark-'));const project=join(root,'project');
+  const root=await mkdtemp(join(tmpdir(),'honeyskill-benchmark-'));const project=join(root,'project');
   await initProject(project,{profile:'static'});
   const startedAt=new Date().toISOString();const began=performance.now();
   const outputs=[];

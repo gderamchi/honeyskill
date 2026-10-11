@@ -26,12 +26,12 @@ const root=()=>resolve(program.opts().project);
 const machine=()=>Boolean(program.opts().json);
 const interactive=()=>!machine() && Boolean(process.stdin.isTTY && process.stdout.isTTY && process.stderr.isTTY);
 function emit(data:unknown,text?:string){process.stdout.write(machine()||!text?JSON.stringify(data,null,2)+'\n':sanitizeTerminal(text)+'\n');}
-program.command('lab').description('Create/check an isolated test lab (no model calls).').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').action(async options=>{
+program.command('lab').description('Create/check an isolated test lab (no model calls).').option('--lab <directory>','Dedicated lab directory (default: ./honeyskill-lab; reuses an existing legacy lab)').action(async options=>{
   const status=await labStatus(options.lab);
   emit(status,`Lab: ${status.root}\nModel: ${status.model}\nAnvil: ${status.anvil.available ? status.anvil.version : 'missing — install Foundry'}\nOpenAI key: ${status.apiKeyPresent ? 'available' : 'will be requested privately by try'}\nTry: honeyskill try good\nThen: honeyskill try trap\nOnly this lab can be activated. Each try uses paid API calls and disposable local funds.`);
   if(!status.anvil.available)process.exitCode=3;
 });
-program.command('try <source>').description('Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').option('--skill <name>','Select a skill from a multi-skill repository').action(async(source,options)=>{
+program.command('try <source>').description('Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.').option('--lab <directory>','Dedicated lab directory (default: ./honeyskill-lab; reuses an existing legacy lab)').option('--skill <name>','Select a skill from a multi-skill repository').action(async(source,options)=>{
   const result=await tryInstallation(source,{...options,json:machine(),interactive:interactive()});
   emit(result,result.installation ? `${result.installation.status==='installed_with_exception'?'Installed with exception; risks remain':'Installed automatically after all three checks'}: ${result.report.name}\nLab only: ${result.lab}\nSecurity report: ${result.reports.html}` : `${result.status==='unverified'?'UNVERIFIED: required checks or coverage are incomplete; override is unavailable':'HELD: risk detected; skill not installed'}.\nSecurity report: ${result.reports.html}`);
   if(!result.installation)process.exitCode=result.status==='unverified'?3:2;

@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { constants as osConstants } from 'node:os';
 import { realpath } from 'node:fs/promises';
 import { delimiter, join, resolve } from 'node:path';
-import { initProject, sanitizeTerminal, SkillGateError } from '../../../packages/core/src/index.js';
+import { initProject, sanitizeTerminal, HoneySkillError } from '../../../packages/core/src/index.js';
 import { prepareTerminal, terminalStatus } from './terminal.js';
 
 /** A temporary protected shell: parent shell configuration and startup files stay untouched. */
@@ -12,7 +12,7 @@ export async function startProtectedSession(
   options: { json?: boolean; nodePath?: string } = {},
 ): Promise<number> {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
-    throw Object.assign(new SkillGateError('TTY_REQUIRED', 'honeyskill on requires an interactive terminal, without --json.'), { exitCode: 2 });
+    throw Object.assign(new HoneySkillError('TTY_REQUIRED', 'honeyskill on requires an interactive terminal, without --json.'), { exitCode: 2 });
   }
   const projectRoot = await realpath(resolve(root));
   if ((await terminalStatus(projectRoot)).active) {
@@ -47,7 +47,7 @@ export async function startProtectedSession(
     process.on('SIGTERM', terminate);
     process.on('SIGHUP', terminate);
     child = spawn('/bin/bash', ['--noprofile', '--norc', '-i'], { cwd: projectRoot, env, stdio: 'inherit' });
-    child.once('error', error => { cleanup(); reject(new SkillGateError('SHELL_UNAVAILABLE', `Cannot start Bash: ${sanitizeTerminal(error.message)}`)); });
+    child.once('error', error => { cleanup(); reject(new HoneySkillError('SHELL_UNAVAILABLE', `Cannot start Bash: ${sanitizeTerminal(error.message)}`)); });
     child.once('exit', (code, signal) => { cleanup(); resolveExit(code ?? (signal ? 128 + osConstants.signals[signal] : 1)); });
   });
 }

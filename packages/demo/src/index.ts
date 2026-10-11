@@ -32,7 +32,7 @@ export async function replayLedger(skillPath:string) {
   return {available:true,ledger,trace};
 }
 export async function runDemo() {
-  const root=await mkdtemp(join(tmpdir(),'skillgate-demo-'));
+  const root=await mkdtemp(join(tmpdir(),'honeyskill-demo-'));
   const protectedProject=join(root,'protected');const exceptionProject=join(root,'exception');
   const source=join(root,'source');const bad=join(root,'suspect');
   await materializeFixture(join(assetRoot,'fixtures/portfolio-legitimate'),source);

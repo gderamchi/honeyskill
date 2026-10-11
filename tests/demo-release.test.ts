@@ -9,11 +9,11 @@ import { addSkill, initProject } from '../packages/core/src/index.js';
 import { replayLedger } from '../packages/demo/src/index.js';
 
 test('downloadable demo is reproducible; extracted good skill installs and trap stays quarantined', async () => {
-  const temporary = await mkdtemp(path.join(tmpdir(), 'skillgate-demo-release-'));
+  const temporary = await mkdtemp(path.join(tmpdir(), 'honeyskill-demo-release-'));
   try {
     const prepare = () => execFileSync(process.execPath, ['scripts/prepare-demo.mjs', '--workspace', temporary], { encoding: 'utf8' });
     prepare();
-    const archivePath = path.join(temporary, 'outputs/skillgate-demo-skills-v0.1.0.zip');
+    const archivePath = path.join(temporary, 'outputs/honeyskill-demo-skills-v0.1.0.zip');
     const first = await readFile(archivePath);
     prepare();
     assert.deepEqual(await readFile(archivePath), first, 'Identical input produces identical archive bytes');

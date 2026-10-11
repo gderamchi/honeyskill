@@ -33,7 +33,7 @@ Unsupported features are rejected: Python callable restrictions, regex-string sh
 
 ## Explicit hardening differences
 
-The reference permits unrestricted calls when the policy is `None`; this module rejects a missing policy. The reference skips an argument restriction when that argument is absent. This module validates required tool arguments before matching and denies a missing constrained argument. These are intentional stricter boundaries, not silently claimed parity. A local upstream test confirms the reference allows the missing-argument example and SkillGate rejects it.
+The reference permits unrestricted calls when the policy is `None`; this module rejects a missing policy. The reference skips an argument restriction when that argument is absent. This module validates required tool arguments before matching and denies a missing constrained argument. These are intentional stricter boundaries, not silently claimed parity. A local upstream test confirms the reference allows the missing-argument example and HoneySkill rejects it.
 
 No LLM can generate or update an active policy through this API. No human override is implemented in the checker. The trusted host remains responsible for correct policy definitions and complete tool mediation. Tool parameters that violate a schema are denied before an effect callback.
 

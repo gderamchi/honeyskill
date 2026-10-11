@@ -27927,11 +27927,11 @@ function sanitizeTerminal(value) {
   return value.replace(/\x1b\][^\x07]*(?:\x07|\x1b\\)/g, "").replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").replace(/[\x00-\x08\x0b-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069]/g, "");
 }
 function safeName(name2) {
-  if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(name2)) throw new SkillGateError("INVALID_NAME", "Invalid skill name: use 1 to 64 lowercase letters, digits, or hyphens.");
+  if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(name2)) throw new HoneySkillError("INVALID_NAME", "Invalid skill name: use 1 to 64 lowercase letters, digits, or hyphens.");
   return name2;
 }
 function safeId(id) {
-  if (!/^[a-z0-9-]{1,80}$/.test(id)) throw new SkillGateError("INVALID_ID", "Invalid report ID.");
+  if (!/^[a-z0-9-]{1,80}$/.test(id)) throw new HoneySkillError("INVALID_ID", "Invalid report ID.");
   return id;
 }
 async function exists(file2) {
@@ -27955,7 +27955,7 @@ async function ensureDirectory(directory) {
     }
     const stat5 = await fs2.lstat(current);
     const systemAlias = stat5.isSymbolicLink() && ["/var", "/tmp", "/etc"].includes(current) && (await fs2.realpath(current)).startsWith("/private/");
-    if ((!stat5.isDirectory() || stat5.isSymbolicLink()) && !systemAlias) throw new SkillGateError("UNSAFE_DIRECTORY", `Directory refused: ${sanitizeTerminal(current)}`);
+    if ((!stat5.isDirectory() || stat5.isSymbolicLink()) && !systemAlias) throw new HoneySkillError("UNSAFE_DIRECTORY", `Directory refused: ${sanitizeTerminal(current)}`);
   }
 }
 async function ensureState(root2) {
@@ -27966,7 +27966,7 @@ async function atomicJson(file2, value) {
   await ensureDirectory(path2.dirname(file2));
   if (await exists(file2)) {
     const stat5 = await fs2.lstat(file2);
-    if (!stat5.isFile() || stat5.nlink !== 1) throw new SkillGateError("UNSAFE_STATE", "State file is not a regular file or has multiple links.");
+    if (!stat5.isFile() || stat5.nlink !== 1) throw new HoneySkillError("UNSAFE_STATE", "State file is not a regular file or has multiple links.");
   }
   const temporary = `${file2}.${randomUUID()}.tmp`;
   const handle = await fs2.open(temporary, "wx", 384);
@@ -27992,7 +27992,7 @@ async function atomicJson(file2, value) {
 }
 async function readJson(file2) {
   const stat5 = await fs2.lstat(file2);
-  if (!stat5.isFile() || stat5.nlink !== 1 || stat5.size > 20 * 1024 * 1024) throw new SkillGateError("UNSAFE_STATE", "Invalid state file.");
+  if (!stat5.isFile() || stat5.nlink !== 1 || stat5.size > 20 * 1024 * 1024) throw new HoneySkillError("UNSAFE_STATE", "Invalid state file.");
   const handle = await fs2.open(file2, constants.O_RDONLY | constants.O_NOFOLLOW);
   try {
     return JSON.parse(await handle.readFile("utf8"));
@@ -28015,34 +28015,34 @@ async function withTargetLock(root2, name2, work, scope2 = "target") {
       if (error62.code !== "EEXIST") throw error62;
       try {
         const owner = await readJson(lock);
-        if (!Number.isInteger(owner.pid) || owner.pid < 1) throw new SkillGateError("LOCKED", "Invalid lock: manual review required.");
+        if (!Number.isInteger(owner.pid) || owner.pid < 1) throw new HoneySkillError("LOCKED", "Invalid lock: manual review required.");
         try {
           process.kill(owner.pid, 0);
         } catch (probe) {
           if (probe.code === "ESRCH") await fs2.unlink(lock);
         }
       } catch (probe) {
-        if (probe instanceof SkillGateError) throw probe;
+        if (probe instanceof HoneySkillError) throw probe;
       }
       await new Promise((resolve7) => setTimeout(resolve7, 30));
     }
   }
-  if (!acquired) throw new SkillGateError("LOCKED", "Another installation is using this target. Try again.");
+  if (!acquired) throw new HoneySkillError("LOCKED", "Another installation is using this target. Try again.");
   try {
     return await work();
   } finally {
     await fs2.rm(lock, { force: true });
   }
 }
-var SkillGateError, sha256, stateDir;
+var HoneySkillError, sha256, stateDir;
 var init_storage = __esm({
   "packages/core/src/storage.ts"() {
     "use strict";
-    SkillGateError = class extends Error {
+    HoneySkillError = class extends Error {
       constructor(code, message) {
         super(message);
         this.code = code;
-        this.name = "SkillGateError";
+        this.name = "HoneySkillError";
       }
       code;
     };
@@ -48838,13 +48838,13 @@ import { gunzipSync } from "node:zlib";
 var GITHUB_LIMITS = { compressedBytes: 8 * 1024 * 1024, archiveBytes: 32 * 1024 * 1024, entries: 4096 };
 function remainingTime(deadline) {
   const remaining = Math.ceil(deadline - performance.now());
-  if (remaining <= 0) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub collection timed out.");
+  if (remaining <= 0) throw new HoneySkillError("DOWNLOAD_TIMEOUT", "GitHub collection timed out.");
   return remaining;
 }
 async function resolveGithubRevision(owner, repo, reference, deadline) {
   remainingTime(deadline);
   if (/^[a-f0-9]{40}$/.test(reference)) return reference;
-  const directory = await realpath2(await mkdtemp(path3.join(tmpdir(), "skillgate-git-")));
+  const directory = await realpath2(await mkdtemp(path3.join(tmpdir(), "honeyskill-git-")));
   try {
     const refs = reference === "HEAD" ? ["HEAD"] : [`refs/heads/${reference}`, `refs/tags/${reference}`, `refs/tags/${reference}^{}`];
     const stdout = await new Promise((resolve7, reject) => {
@@ -48867,7 +48867,7 @@ async function resolveGithubRevision(owner, repo, reference, deadline) {
           reject(error62);
         } else resolve7(output3);
       };
-      const timer = setTimeout(() => finish(new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub reference resolution timed out.")), remainingTime(deadline));
+      const timer = setTimeout(() => finish(new HoneySkillError("DOWNLOAD_TIMEOUT", "GitHub reference resolution timed out.")), remainingTime(deadline));
       try {
         child = spawn("/usr/bin/git", ["-c", "credential.helper=", "-c", "core.askPass=", "-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", "-c", "http.extraHeader=", "-c", "http.proxy=", "-c", "http.followRedirects=false", "-c", "http.sslVerify=true", "-c", "protocol.allow=never", "-c", "protocol.https.allow=always", "ls-remote", "--exit-code", `https://github.com/${owner}/${repo}.git`, ...refs], {
           cwd: directory,
@@ -48876,35 +48876,35 @@ async function resolveGithubRevision(owner, repo, reference, deadline) {
           env: { PATH: "/usr/bin:/bin", HOME: directory, XDG_CONFIG_HOME: directory, GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_SYSTEM: "/dev/null", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CEILING_DIRECTORIES: path3.dirname(directory), GIT_TERMINAL_PROMPT: "0", GIT_ASKPASS: "/usr/bin/false", LC_ALL: "C" }
         });
       } catch {
-        finish(new SkillGateError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used."));
+        finish(new HoneySkillError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used."));
         return;
       }
       const countOutput = (chunk) => {
         bytes += Buffer.byteLength(chunk);
-        if (bytes > 64 * 1024) finish(new SkillGateError("GITHUB_REVISION", "GitHub reference response exceeds the size limit."));
+        if (bytes > 64 * 1024) finish(new HoneySkillError("GITHUB_REVISION", "GitHub reference response exceeds the size limit."));
       };
       child.stdout?.on("data", (chunk) => {
         countOutput(chunk);
         if (!settled) output2 += chunk.toString("utf8");
       });
       child.stderr?.on("data", countOutput);
-      child.once("error", () => finish(new SkillGateError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used.")));
+      child.once("error", () => finish(new HoneySkillError("GITHUB_REVISION", "Public GitHub revision could not be resolved. Git is required; no credentials were used.")));
       child.once("exit", (code, signal) => {
-        if (code !== 0 || signal) finish(new SkillGateError("GITHUB_REVISION", "GitHub reference process failed."));
+        if (code !== 0 || signal) finish(new HoneySkillError("GITHUB_REVISION", "GitHub reference process failed."));
       });
-      child.once("close", (code, signal) => finish(code === 0 && !signal ? void 0 : new SkillGateError("GITHUB_REVISION", "GitHub reference process failed."), output2));
+      child.once("close", (code, signal) => finish(code === 0 && !signal ? void 0 : new HoneySkillError("GITHUB_REVISION", "GitHub reference process failed."), output2));
     });
     remainingTime(deadline);
     const matches = /* @__PURE__ */ new Map();
     for (const line of stdout.trim().split("\n")) {
       const match = /^([a-f0-9]{40})\t(.+)$/.exec(line);
-      if (!match || !refs.includes(match[2]) || matches.has(match[2])) throw new SkillGateError("GITHUB_REVISION", "Unexpected GitHub reference response.");
+      if (!match || !refs.includes(match[2]) || matches.has(match[2])) throw new HoneySkillError("GITHUB_REVISION", "Unexpected GitHub reference response.");
       matches.set(match[2], match[1]);
     }
     const branch = matches.get(refs[0]), tag = matches.get(refs[2]) ?? matches.get(refs[1]);
-    if (branch && tag && branch !== tag) throw new SkillGateError("GITHUB_REVISION", "Branch and tag are ambiguous. Use a full commit SHA.");
+    if (branch && tag && branch !== tag) throw new HoneySkillError("GITHUB_REVISION", "Branch and tag are ambiguous. Use a full commit SHA.");
     const revision = branch ?? tag;
-    if (!revision) throw new SkillGateError("GITHUB_REVISION", "GitHub revision could not be resolved.");
+    if (!revision) throw new HoneySkillError("GITHUB_REVISION", "GitHub revision could not be resolved.");
     return revision;
   } finally {
     await rm2(directory, { recursive: true, force: true });
@@ -48913,16 +48913,16 @@ async function resolveGithubRevision(owner, repo, reference, deadline) {
 async function downloadGithubArchive(owner, repo, revision, deadline) {
   const signal = AbortSignal.timeout(remainingTime(deadline));
   try {
-    const response = await fetch(`https://codeload.github.com/${owner}/${repo}/tar.gz/${revision}`, { redirect: "error", signal, headers: { Accept: "application/x-gzip", "User-Agent": "skillgate-finance-local" } });
-    if (!response.ok) throw new SkillGateError("GITHUB_ERROR", `GitHub archive HTTP ${response.status}. Check the public repository and revision, or retry later.`);
-    if (!["application/x-gzip", "application/gzip", "application/octet-stream"].includes(response.headers.get("content-type")?.split(";")[0]?.trim() ?? "")) throw new SkillGateError("GITHUB_TYPE", "Unexpected GitHub archive response.");
+    const response = await fetch(`https://codeload.github.com/${owner}/${repo}/tar.gz/${revision}`, { redirect: "error", signal, headers: { Accept: "application/x-gzip", "User-Agent": "honeyskill-local" } });
+    if (!response.ok) throw new HoneySkillError("GITHUB_ERROR", `GitHub archive HTTP ${response.status}. Check the public repository and revision, or retry later.`);
+    if (!["application/x-gzip", "application/gzip", "application/octet-stream"].includes(response.headers.get("content-type")?.split(";")[0]?.trim() ?? "")) throw new HoneySkillError("GITHUB_TYPE", "Unexpected GitHub archive response.");
     const length = response.headers.get("content-length");
     if (length && (!/^\d+$/.test(length) || Number(length) > GITHUB_LIMITS.compressedBytes)) {
       await response.body?.cancel();
-      throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
+      throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
     }
     const reader = response.body?.getReader();
-    if (!reader) throw new SkillGateError("GITHUB_ERROR", "Empty GitHub archive response.");
+    if (!reader) throw new HoneySkillError("GITHUB_ERROR", "Empty GitHub archive response.");
     const chunks = [];
     let bytes = 0;
     try {
@@ -48931,7 +48931,7 @@ async function downloadGithubArchive(owner, repo, revision, deadline) {
         const chunk = await reader.read();
         if (chunk.done) break;
         bytes += chunk.value.length;
-        if (bytes > GITHUB_LIMITS.compressedBytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
+        if (bytes > GITHUB_LIMITS.compressedBytes) throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub compressed archive exceeds the size limit.");
         chunks.push(chunk.value);
       }
     } catch (error62) {
@@ -48944,19 +48944,19 @@ async function downloadGithubArchive(owner, repo, revision, deadline) {
     try {
       archive = gunzipSync(Buffer.concat(chunks), { maxOutputLength: GITHUB_LIMITS.archiveBytes });
     } catch (error62) {
-      throw new SkillGateError(error62.code === "ERR_BUFFER_TOO_LARGE" ? "DOWNLOAD_LIMIT" : "INVALID_ARCHIVE", "GitHub archive is invalid, truncated, or exceeds the decompressed size limit.");
+      throw new HoneySkillError(error62.code === "ERR_BUFFER_TOO_LARGE" ? "DOWNLOAD_LIMIT" : "INVALID_ARCHIVE", "GitHub archive is invalid, truncated, or exceeds the decompressed size limit.");
     }
     remainingTime(deadline);
     return archive;
   } catch (error62) {
-    if (signal.aborted) throw new SkillGateError("DOWNLOAD_TIMEOUT", "GitHub archive download timed out.");
-    if (error62 instanceof SkillGateError) throw error62;
-    throw new SkillGateError("GITHUB_ERROR", "GitHub archive download failed. No credentials were used.");
+    if (signal.aborted) throw new HoneySkillError("DOWNLOAD_TIMEOUT", "GitHub archive download timed out.");
+    if (error62 instanceof HoneySkillError) throw error62;
+    throw new HoneySkillError("GITHUB_ERROR", "GitHub archive download failed. No credentials were used.");
   }
 }
 function parseGithubArchive(archive, repo, revision, deadline) {
   const invalid = (message) => {
-    throw new SkillGateError("INVALID_ARCHIVE", message);
+    throw new HoneySkillError("INVALID_ARCHIVE", message);
   };
   const text2 = (bytes) => {
     const nul = bytes.indexOf(0);
@@ -48994,7 +48994,7 @@ function parseGithubArchive(archive, repo, revision, deadline) {
     const start = offset + 512, next = start + Math.ceil(size5 / 512) * 512;
     if (next > archive.length || !Number.isSafeInteger(next)) invalid("Truncated archive entry.");
     if (archive.subarray(start + size5, next).some((byte) => byte !== 0)) invalid("Nonzero archive entry padding.");
-    if (++entries > GITHUB_LIMITS.entries) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub archive contains too many entries.");
+    if (++entries > GITHUB_LIMITS.entries) throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub archive contains too many entries.");
     if (type === "g") {
       if (offset !== 0 || file2 !== "pax_global_header" || !archive.subarray(start, start + size5).equals(Buffer.from(`52 comment=${revision}
 `))) invalid("Unsupported archive metadata or mismatched commit SHA.");
@@ -49002,9 +49002,9 @@ function parseGithubArchive(archive, repo, revision, deadline) {
       offset = next;
       continue;
     }
-    if (!["0", "\0", "5"].includes(type) || text2(header.subarray(157, 257)) || mode & ~511) throw new SkillGateError("UNSAFE_ENTRY", "Archive links, special entries, extended path overrides, and special permissions are refused.");
+    if (!["0", "\0", "5"].includes(type) || text2(header.subarray(157, 257)) || mode & ~511) throw new HoneySkillError("UNSAFE_ENTRY", "Archive links, special entries, extended path overrides, and special permissions are refused.");
     const directory = type === "5", canonical2 = directory && file2.endsWith("/") ? file2.slice(0, -1) : file2;
-    if (!canonical2 || canonical2.length > 1024 || canonical2.normalize("NFC") !== canonical2 || /[\x00-\x1f\x7f:\\]/.test(canonical2) || canonical2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Unsafe or ambiguous archive path refused.");
+    if (!canonical2 || canonical2.length > 1024 || canonical2.normalize("NFC") !== canonical2 || /[\x00-\x1f\x7f:\\]/.test(canonical2) || canonical2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new HoneySkillError("UNSAFE_PATH", "Unsafe or ambiguous archive path refused.");
     const component = canonical2.split("/")[0];
     if (!component.endsWith(`-${revision}`) || component.slice(0, -41).toLowerCase() !== repo.toLowerCase() || archiveRoot !== void 0 && component !== archiveRoot) invalid("Archive root does not match the repository and commit SHA.");
     archiveRoot = component;
@@ -49020,7 +49020,7 @@ function parseGithubArchive(archive, repo, revision, deadline) {
     if (directory) {
       if (size5) invalid("Archive directory has unexpected content.");
     } else {
-      if (path3.posix.basename(canonical2) === ".gitmodules") throw new SkillGateError("UNSAFE_ENTRY", "Archives declaring Git submodules are unsupported.");
+      if (path3.posix.basename(canonical2) === ".gitmodules") throw new HoneySkillError("UNSAFE_ENTRY", "Archives declaring Git submodules are unsupported.");
       files.push({ path: canonical2.slice(root2.length + 1), content: archive.subarray(start, start + size5), executable: !!(mode & 73) });
     }
     offset = next;
@@ -49033,7 +49033,7 @@ function parseGithubArchive(archive, repo, revision, deadline) {
 var LIMITS = { files: 256, bytes: 2 * 1024 * 1024, fileBytes: 256 * 1024, depth: 12, durationMs: 2e4 };
 var textExtensions = /* @__PURE__ */ new Set([".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".py", ".sh", ".bash", ".zsh", ".ps1", ".csv", ".xml", ".html", ".css", ".sql", ".env", ".ini", ".cfg"]);
 function safeRelative(input2) {
-  if (!input2 || path4.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new SkillGateError("UNSAFE_PATH", "Absolute, ambiguous, or traversal path refused.");
+  if (!input2 || path4.isAbsolute(input2) || input2.includes("\\") || input2.normalize("NFC") !== input2 || /[\x00-\x1f\x7f:]/.test(input2) || input2.split("/").some((part) => !part || part === "." || part === ".." || /[. ]$/.test(part))) throw new HoneySkillError("UNSAFE_PATH", "Absolute, ambiguous, or traversal path refused.");
   return input2;
 }
 var freshCoverage = () => ({ status: "complete_for_supported_checks", inventoried: 0, read: 0, supported: 0, bytes: 0, ignored: [], unresolved: [], limitsReached: [], errors: [] });
@@ -49057,7 +49057,7 @@ async function inventory(directory, copyTo, deadline = performance.now() + LIMIT
       }
       const file2 = safeRelative(relative2 ? `${relative2}/${entry.name}` : entry.name);
       const full = path4.join(directory, file2), stat5 = await fs3.lstat(full);
-      if (stat5.isSymbolicLink() || !stat5.isDirectory() && !stat5.isFile() || stat5.isFile() && stat5.nlink !== 1) throw new SkillGateError("UNSAFE_ENTRY", `Link or special file refused: ${file2}`);
+      if (stat5.isSymbolicLink() || !stat5.isDirectory() && !stat5.isFile() || stat5.isFile() && stat5.nlink !== 1) throw new HoneySkillError("UNSAFE_ENTRY", `Link or special file refused: ${file2}`);
       if (stat5.isDirectory()) {
         await walk3(file2, depth + 1);
         continue;
@@ -49076,12 +49076,12 @@ async function inventory(directory, copyTo, deadline = performance.now() + LIMIT
       let content;
       try {
         const opened = await handle.stat();
-        if (opened.ino !== stat5.ino || opened.dev !== stat5.dev || opened.nlink !== 1 || !opened.isFile() || opened.size > LIMITS.fileBytes) throw new SkillGateError("SOURCE_CHANGED", "The source changed during collection.");
+        if (opened.ino !== stat5.ino || opened.dev !== stat5.dev || opened.nlink !== 1 || !opened.isFile() || opened.size > LIMITS.fileBytes) throw new HoneySkillError("SOURCE_CHANGED", "The source changed during collection.");
         content = Buffer.alloc(opened.size + 1);
         const { bytesRead } = await handle.read(content, 0, content.length, 0);
         content = content.subarray(0, bytesRead);
         const after = await handle.stat();
-        if (bytesRead !== opened.size || after.mtimeMs !== opened.mtimeMs || after.size !== opened.size) throw new SkillGateError("SOURCE_CHANGED", "The source changed during collection.");
+        if (bytesRead !== opened.size || after.mtimeMs !== opened.mtimeMs || after.size !== opened.size) throw new HoneySkillError("SOURCE_CHANGED", "The source changed during collection.");
       } finally {
         await handle.close();
       }
@@ -49106,7 +49106,7 @@ async function inventory(directory, copyTo, deadline = performance.now() + LIMIT
     }
   };
   const rootStat = await fs3.lstat(directory);
-  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "The source must be a regular directory without a symlink.");
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new HoneySkillError("UNSAFE_SOURCE", "The source must be a regular directory without a symlink.");
   await walk3("", 0);
   manifest.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
   finalizeCoverage(coverage);
@@ -49114,22 +49114,22 @@ async function inventory(directory, copyTo, deadline = performance.now() + LIMIT
 }
 function skillMetadata(text2) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(text2);
-  if (!match) throw new SkillGateError("INVALID_SKILL", "SKILL.md must contain YAML name and description metadata.");
+  if (!match) throw new HoneySkillError("INVALID_SKILL", "SKILL.md must contain YAML name and description metadata.");
   let value;
   try {
     value = (0, import_yaml.parse)(match[1], { maxAliasCount: 20 });
   } catch {
-    throw new SkillGateError("INVALID_SKILL", "Invalid YAML metadata.");
+    throw new HoneySkillError("INVALID_SKILL", "Invalid YAML metadata.");
   }
-  if (!value || typeof value !== "object" || !("name" in value) || !("description" in value) || typeof value.name !== "string" || typeof value.description !== "string" || value.description.length > 1024) throw new SkillGateError("INVALID_SKILL", "Name and description metadata are required.");
+  if (!value || typeof value !== "object" || !("name" in value) || !("description" in value) || typeof value.name !== "string" || typeof value.description !== "string" || value.description.length > 1024) throw new HoneySkillError("INVALID_SKILL", "Name and description metadata are required.");
   return { name: safeName(value.name), description: value.description };
 }
 async function chooseLocal(source, requested) {
   const absolute = path4.resolve(source);
-  if (/\.(?:zip|tar|tgz|gz|7z|rar)$/i.test(source)) throw new SkillGateError("ARCHIVE_UNSUPPORTED", "Archives are unsupported. Use a verified extracted directory or a public GitHub repository.");
-  if (!await exists(absolute)) throw new SkillGateError("SOURCE_NOT_FOUND", "Source directory not found.");
+  if (/\.(?:zip|tar|tgz|gz|7z|rar)$/i.test(source)) throw new HoneySkillError("ARCHIVE_UNSUPPORTED", "Archives are unsupported. Use a verified extracted directory or a public GitHub repository.");
+  if (!await exists(absolute)) throw new HoneySkillError("SOURCE_NOT_FOUND", "Source directory not found.");
   const rootStat = await fs3.lstat(absolute);
-  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new SkillGateError("UNSAFE_SOURCE", "The source must be a regular directory.");
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new HoneySkillError("UNSAFE_SOURCE", "The source must be a regular directory.");
   if (await exists(path4.join(absolute, "SKILL.md"))) return absolute;
   const choices = [];
   const search = async (directory, depth) => {
@@ -49148,11 +49148,11 @@ async function chooseLocal(source, requested) {
     if (matches.length === 1) return matches[0];
   }
   if (choices.length === 1 && !requested) return choices[0];
-  throw new SkillGateError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Multiple skills found. Specify --skill: ${choices.map((item) => path4.basename(item)).join(", ")}` : "No SKILL.md found in the source.");
+  throw new HoneySkillError(choices.length ? "AMBIGUOUS_SKILL" : "INVALID_SKILL", choices.length ? `Multiple skills found. Specify --skill: ${choices.map((item) => path4.basename(item)).join(", ")}` : "No SKILL.md found in the source.");
 }
 async function acquireGithub(input2, destination, requested) {
   const match = /^https:\/\/github\.com\/([^/?#]+)\/([^/?#]+)(?:\/tree\/([^/?#]+)(?:\/([^?#]*))?)?\/?$/i.exec(input2);
-  if (!match || input2.length > 2048 || /[\x00-\x20\x7f]/.test(input2)) throw new SkillGateError("SOURCE_FORBIDDEN", "Use a public https://github.com/owner/repo URL, optionally with /tree/revision/subdirectory.");
+  if (!match || input2.length > 2048 || /[\x00-\x20\x7f]/.test(input2)) throw new HoneySkillError("SOURCE_FORBIDDEN", "Use a public https://github.com/owner/repo URL, optionally with /tree/revision/subdirectory.");
   let owner, repo, reference, folder;
   try {
     owner = decodeURIComponent(match[1]);
@@ -49160,9 +49160,9 @@ async function acquireGithub(input2, destination, requested) {
     reference = decodeURIComponent(match[3] ?? "HEAD");
     folder = decodeURIComponent(match[4] ?? "").replace(/\/$/, "");
   } catch {
-    throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid encoding in the GitHub source URL.");
+    throw new HoneySkillError("SOURCE_FORBIDDEN", "Invalid encoding in the GitHub source URL.");
   }
-  if (![owner, repo].every((value) => /^[a-zA-Z0-9_.-]{1,100}$/.test(value) && ![".", ".."].includes(value)) || !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,199}$/.test(reference) || reference.includes("..") || reference.split("/").some((part) => !part || part.endsWith(".") || part.endsWith(".lock"))) throw new SkillGateError("SOURCE_FORBIDDEN", "Invalid GitHub repository or revision. Use a branch, tag, or full commit SHA.");
+  if (![owner, repo].every((value) => /^[a-zA-Z0-9_.-]{1,100}$/.test(value) && ![".", ".."].includes(value)) || !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,199}$/.test(reference) || reference.includes("..") || reference.split("/").some((part) => !part || part.endsWith(".") || part.endsWith(".lock"))) throw new HoneySkillError("SOURCE_FORBIDDEN", "Invalid GitHub repository or revision. Use a branch, tag, or full commit SHA.");
   if (folder) safeRelative(folder);
   if (requested) safeName(requested);
   const deadline = performance.now() + LIMITS.durationMs;
@@ -49172,15 +49172,15 @@ async function acquireGithub(input2, destination, requested) {
   const skillPaths = entries.filter((file2) => file2.path === "SKILL.md" || file2.path.endsWith("/SKILL.md")).map((file2) => path4.posix.dirname(file2.path)).filter((file2) => !folder || file2 === folder || file2.startsWith(`${folder}/`));
   if (!skillPaths.includes(folder || ".")) {
     const matches = requested ? skillPaths.filter((file2) => path4.posix.basename(file2) === requested) : skillPaths;
-    if (matches.length !== 1) throw new SkillGateError("AMBIGUOUS_SKILL", "Select a GitHub subdirectory containing SKILL.md or use --skill.");
+    if (matches.length !== 1) throw new HoneySkillError("AMBIGUOUS_SKILL", "Select a GitHub subdirectory containing SKILL.md or use --skill.");
     folder = matches[0] === "." ? "" : matches[0];
   }
   const files = entries.filter((file2) => !folder || file2.path.startsWith(`${folder}/`));
   let bytes = 0;
-  if (files.length > LIMITS.files) throw new SkillGateError("DOWNLOAD_LIMIT", "Too many files in the GitHub package.");
+  if (files.length > LIMITS.files) throw new HoneySkillError("DOWNLOAD_LIMIT", "Too many files in the GitHub package.");
   const selected = files.map((file2) => {
     const relative2 = safeRelative(folder ? file2.path.slice(folder.length + 1) : file2.path);
-    if (relative2.split("/").length > LIMITS.depth || file2.content.length > LIMITS.fileBytes || (bytes += file2.content.length) > LIMITS.bytes) throw new SkillGateError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
+    if (relative2.split("/").length > LIMITS.depth || file2.content.length > LIMITS.fileBytes || (bytes += file2.content.length) > LIMITS.bytes) throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
     return { ...file2, relative: relative2 };
   });
   for (const file2 of selected) {
@@ -49400,7 +49400,7 @@ var recordPath = (root2, name2) => path6.join(stateDir(root2), "installs", `${sa
 var reportPath = (root2, id) => path6.join(stateDir(root2), "reports", `${safeId(id)}.json`);
 var exceptionConfirmation = (report) => `INSTALL ${report.id} ${report.fingerprint}`;
 async function assertLabRoot(projectRoot) {
-  const message = "Full analysis requires a dedicated SkillGate lab directory. Run skillgate lab; real project and agent profile roots are refused.";
+  const message = "Full analysis requires a dedicated HoneySkill lab directory. Run honeyskill lab; real project and agent profile roots are refused.";
   try {
     const stat5 = await fs4.lstat(projectRoot), root2 = await fs4.realpath(projectRoot);
     if (!stat5.isDirectory() || stat5.isSymbolicLink() || root2 === await fs4.realpath(os.homedir()) || root2.split(path6.sep).some((part) => [".agents", ".codex", ".claude", ".cursor", ".openclaw"].includes(part))) throw new Error("Not a lab root.");
@@ -49414,7 +49414,7 @@ async function assertLabRoot(projectRoot) {
     const value = await readJson(marker2);
     if (!value || value.schemaVersion !== 1 || value.kind !== "skillgate-test-lab" || Object.keys(value).length !== 2) throw new Error("Invalid lab marker.");
   } catch {
-    throw new SkillGateError("LAB_REQUIRED", message);
+    throw new HoneySkillError("LAB_REQUIRED", message);
   }
 }
 var behavioralTaskIds = ["pay-tom-small", "pay-alice", "move-to-savings", "pay-explicit-address", "pay-tom-large", "pay-two-contacts"];
@@ -49444,7 +49444,7 @@ async function initProject(projectRoot, options = {}) {
 }
 async function loadConfig(projectRoot) {
   const file2 = path6.join(stateDir(projectRoot), "config.json");
-  if (!await exists(file2)) throw new SkillGateError("NOT_INITIALIZED", "Configuration missing. Run skillgate init --agent codex.");
+  if (!await exists(file2)) throw new HoneySkillError("NOT_INITIALIZED", "Configuration missing. Run honeyskill init --agent codex.");
   await ensureState(projectRoot);
   return ConfigSchema.parse(await readJson(file2));
 }
@@ -49495,9 +49495,9 @@ async function scanSkill(projectRoot, source, options = {}) {
   const id = `scan-${randomUUID2()}`, directory = path6.join(stateDir(projectRoot), "quarantine", id, "package");
   const acquired = await acquire(source, directory, options.skill), collected = acquired.inventory;
   const main = collected.texts.get("SKILL.md");
-  if (!main) throw new SkillGateError("INVALID_SKILL", "SKILL.md is missing, too large, or unreadable.");
+  if (!main) throw new HoneySkillError("INVALID_SKILL", "SKILL.md is missing, too large, or unreadable.");
   const metadata = skillMetadata(main);
-  if (options.skill && metadata.name !== options.skill) throw new SkillGateError("SKILL_MISMATCH", "The name in SKILL.md does not match the requested skill.");
+  if (options.skill && metadata.name !== options.skill) throw new HoneySkillError("SKILL_MISMATCH", "The name in SKILL.md does not match the requested skill.");
   options.progress?.("native", "Checking package references and financial instruction patterns.");
   checkReferences(collected);
   if (config2.profile === "full") {
@@ -49527,7 +49527,7 @@ async function scanSkill(projectRoot, source, options = {}) {
     capabilities: native.capabilities,
     durationMs: 0,
     manifest: collected.manifest,
-    limitations: ["Only installations and updates routed through SkillGate are checked.", "No guarantee of complete safety; no transaction checks during subsequent real-agent use.", "The actual financial environment and its permissions are not inspected.", "The system owner can modify local snapshots and logs.", config2.profile === "static" ? "Static analysis: heuristic rules, without external model reasoning." : config2.profile === "hybrid" ? "Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction." : "Full lab analysis: native patterns, external text review and behavioral execution. The behavioral model receives raw SKILL.md text; only use public or otherwise non-secret test skills."]
+    limitations: ["Only installations and updates routed through HoneySkill are checked.", "No guarantee of complete safety; no transaction checks during subsequent real-agent use.", "The actual financial environment and its permissions are not inspected.", "The system owner can modify local snapshots and logs.", config2.profile === "static" ? "Static analysis: heuristic rules, without external model reasoning." : config2.profile === "hybrid" ? "Hybrid analysis: reduced content and apparent secrets masked, without a guarantee of complete redaction." : "Full lab analysis: native patterns, external text review and behavioral execution. The behavioral model receives raw SKILL.md text; only use public or otherwise non-secret test skills."]
   };
   if (config2.profile !== "static") {
     options.progress?.("semantic", "Reviewing package text for financial risks.");
@@ -49551,7 +49551,7 @@ async function scanSkill(projectRoot, source, options = {}) {
 async function readReport(projectRoot, id) {
   await loadConfig(projectRoot);
   const file2 = reportPath(projectRoot, id);
-  if (!await exists(file2)) throw new SkillGateError("REPORT_NOT_FOUND", "Report not found.");
+  if (!await exists(file2)) throw new HoneySkillError("REPORT_NOT_FOUND", "Report not found.");
   return ScanReportSchema.parse(await readJson(file2));
 }
 async function listReports(projectRoot) {
@@ -49579,7 +49579,7 @@ async function recoverTarget(root2, name2) {
     const record3 = InstallRecordSchema.parse(transaction.record);
     if (record3.name !== name2) continue;
     const expected = path6.join(path6.resolve(root2), ".agents/skills", safeName(name2));
-    if (record3.target !== expected || record3.snapshot !== path6.join(stateDir(root2), "snapshots", safeId(record3.scanId))) throw new SkillGateError("INVALID_TRANSACTION", "Inconsistent local transaction.");
+    if (record3.target !== expected || record3.snapshot !== path6.join(stateDir(root2), "snapshots", safeId(record3.scanId))) throw new HoneySkillError("INVALID_TRANSACTION", "Inconsistent local transaction.");
     await ensureDirectory(path6.dirname(expected));
     const stat5 = await fs4.lstat(expected).catch((error62) => {
       if (error62.code === "ENOENT") return void 0;
@@ -49587,7 +49587,7 @@ async function recoverTarget(root2, name2) {
     });
     if (stat5?.isSymbolicLink() && await fs4.readlink(expected) === record3.snapshot) {
       const checked = await inventory(record3.snapshot);
-      if (checked.fingerprint !== record3.fingerprint || checked.coverage.limitsReached.length) throw new SkillGateError("SNAPSHOT_CHANGED", "The snapshot of an interrupted installation has changed; manual recovery is required.");
+      if (checked.fingerprint !== record3.fingerprint || checked.coverage.limitsReached.length) throw new HoneySkillError("SNAPSHOT_CHANGED", "The snapshot of an interrupted installation has changed; manual recovery is required.");
       await atomicJson(recordPath(root2, name2), record3);
       await atomicJson(path6.join(transactions, file2), { ...transaction, state: "completed", recoveredAt: (/* @__PURE__ */ new Date()).toISOString() });
     } else {
@@ -49611,23 +49611,23 @@ async function installScan(projectRoot, scanId, exception) {
   const root2 = path6.resolve(projectRoot), destination = path6.join(root2, config2.target, safeName(report.name));
   return withTargetLock(root2, report.name, async () => {
     await recoverTarget(root2, report.name);
-    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config2.profile) throw new SkillGateError("STALE_REPORT", "Profile or engine changed. Scan the package again before installation.");
-    if (report.decision !== reportDecision(report)) throw new SkillGateError("INVALID_REPORT", "Decision does not match the policy.");
-    if (config2.profile === "full" && report.behavioral?.kind === "mocked-test") throw new SkillGateError("MOCK_EVIDENCE", "Mocked behavioral evidence cannot authorize installation, including by exception. Run the actual lab analysis.");
-    if (config2.profile === "full" && (!config2.semanticConsent || report.behavioral?.model !== config2.model || !fullPipelineComplete(report))) throw new SkillGateError("PIPELINE_INCOMPLETE", "All required analyses and supported execution coverage must be complete for this exact package. Missing, failed, or unsupported stages cannot be overridden.");
-    if (report.coverage.limitsReached.some((limit2) => !limit2.startsWith("Semantic analysis") && !limit2.startsWith("Analyse s\xE9mantique"))) throw new SkillGateError("PACKAGE_INCOMPLETE", "Package collection was truncated. An exception cannot activate a package with missing files.");
+    if (report.engineVersion !== ENGINE_VERSION || report.rulesVersion !== RULES_VERSION || report.policyVersion !== POLICY_VERSION || report.corpusVersion !== CORPUS_VERSION || report.profile !== config2.profile) throw new HoneySkillError("STALE_REPORT", "Profile or engine changed. Scan the package again before installation.");
+    if (report.decision !== reportDecision(report)) throw new HoneySkillError("INVALID_REPORT", "Decision does not match the policy.");
+    if (config2.profile === "full" && report.behavioral?.kind === "mocked-test") throw new HoneySkillError("MOCK_EVIDENCE", "Mocked behavioral evidence cannot authorize installation, including by exception. Run the actual lab analysis.");
+    if (config2.profile === "full" && (!config2.semanticConsent || report.behavioral?.model !== config2.model || !fullPipelineComplete(report))) throw new HoneySkillError("PIPELINE_INCOMPLETE", "All required analyses and supported execution coverage must be complete for this exact package. Missing, failed, or unsupported stages cannot be overridden.");
+    if (report.coverage.limitsReached.some((limit2) => !limit2.startsWith("Semantic analysis") && !limit2.startsWith("Analyse s\xE9mantique"))) throw new HoneySkillError("PACKAGE_INCOMPLETE", "Package collection was truncated. An exception cannot activate a package with missing files.");
     if (exception) {
       exception = ExceptionSchema.parse(exception);
-      if (exception.fingerprint !== report.fingerprint || path6.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new SkillGateError("INVALID_EXCEPTION", "Exception refused: report, fingerprint, destination, or confirmation does not match.");
-    } else if (report.decision !== "allow") throw new SkillGateError("DECISION_REQUIRED", "Installation held. Review the evidence or confirm an exception for this exact fingerprint.");
+      if (exception.fingerprint !== report.fingerprint || path6.resolve(exception.destination) !== destination || exception.confirmation !== exceptionConfirmation(report)) throw new HoneySkillError("INVALID_EXCEPTION", "Exception refused: report, fingerprint, destination, or confirmation does not match.");
+    } else if (report.decision !== "allow") throw new HoneySkillError("DECISION_REQUIRED", "Installation held. Review the evidence or confirm an exception for this exact fingerprint.");
     const quarantined = path6.join(stateDir(root2), "quarantine", report.id, "package");
     const current = await inventory(quarantined);
-    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "Files have changed since analysis. Installation refused; run the scan again.");
+    if (current.fingerprint !== report.fingerprint || current.coverage.limitsReached.length || current.coverage.errors.length || current.coverage.inventoried !== report.manifest.length) throw new HoneySkillError("SNAPSHOT_CHANGED", "Files have changed since analysis. Installation refused; run the scan again.");
     const previous = await readInstall(root2, report.name);
     await ensureDirectory(path6.dirname(destination));
     if (await exists(destination)) {
-      if (!previous || !(await fs4.lstat(destination)).isSymbolicLink() || await fs4.readlink(destination) !== previous.snapshot) throw new SkillGateError("UNMANAGED_TARGET", "The target exists and is not an intact managed snapshot. No files were overwritten.");
-    } else if (previous) throw new SkillGateError("TARGET_CHANGED", "The active skill was removed outside SkillGate. Manual review is required.");
+      if (!previous || !(await fs4.lstat(destination)).isSymbolicLink() || await fs4.readlink(destination) !== previous.snapshot) throw new HoneySkillError("UNMANAGED_TARGET", "The target exists and is not an intact managed snapshot. No files were overwritten.");
+    } else if (previous) throw new HoneySkillError("TARGET_CHANGED", "The active skill was removed outside HoneySkill. Manual review is required.");
     if (previous?.fingerprint === report.fingerprint && previous.scanId === report.id) return previous;
     const snapshot = path6.join(stateDir(root2), "snapshots", report.id);
     if (!await exists(snapshot)) {
@@ -49636,12 +49636,12 @@ async function installScan(projectRoot, scanId, exception) {
       const copied = await inventory(quarantined, staged);
       if (copied.fingerprint !== report.fingerprint || copied.coverage.limitsReached.length || copied.coverage.inventoried !== report.manifest.length || (await inventory(staged)).fingerprint !== report.fingerprint) {
         await fs4.rm(staged, { recursive: true, force: true });
-        throw new SkillGateError("SNAPSHOT_CHANGED", "A change was detected during preparation.");
+        throw new HoneySkillError("SNAPSHOT_CHANGED", "A change was detected during preparation.");
       }
       await fs4.rename(staged, snapshot);
     }
     const prepared = await inventory(snapshot);
-    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new SkillGateError("SNAPSHOT_CHANGED", "The prepared snapshot has changed.");
+    if (prepared.fingerprint !== report.fingerprint || prepared.coverage.limitsReached.length || prepared.coverage.inventoried !== report.manifest.length) throw new HoneySkillError("SNAPSHOT_CHANGED", "The prepared snapshot has changed.");
     const at = (/* @__PURE__ */ new Date()).toISOString(), record3 = {
       schemaVersion: 1,
       name: report.name,
@@ -49670,7 +49670,7 @@ async function installScan(projectRoot, scanId, exception) {
       await atomicJson(recordPath(root2, report.name), record3);
       await atomicJson(transaction, { state: "completed", record: record3, previous: previous ?? null });
     } catch {
-      throw new SkillGateError("ACTIVATED_RECOVERY_REQUIRED", `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run skillgate list or skillgate doctor to recover.${previous ? " The previous version remains stored in snapshots." : ""}`);
+      throw new HoneySkillError("ACTIVATED_RECOVERY_REQUIRED", `The verified snapshot was activated, but its local record could not be finalized. Restore state file permissions and contents, then run honeyskill list or honeyskill doctor to recover.${previous ? " The previous version remains stored in snapshots." : ""}`);
     }
     return record3;
   });
@@ -49682,7 +49682,7 @@ async function addSkill(projectRoot, source, options = {}) {
 async function updateSkill(projectRoot, name2, options = {}) {
   await loadConfig(projectRoot);
   const installed = await readInstall(projectRoot, safeName(name2));
-  if (!installed) throw new SkillGateError("NOT_INSTALLED", "This skill is not managed in this project.");
+  if (!installed) throw new HoneySkillError("NOT_INSTALLED", "This skill is not managed in this project.");
   return addSkill(projectRoot, installed.source.locator, { ...options, skill: name2 });
 }
 async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
@@ -49852,7 +49852,7 @@ async function replayLedger(skillPath) {
   return { available: true, ledger, trace };
 }
 async function runDemo() {
-  const root2 = await mkdtemp2(join(tmpdir2(), "skillgate-demo-"));
+  const root2 = await mkdtemp2(join(tmpdir2(), "honeyskill-demo-"));
   const protectedProject = join(root2, "protected");
   const exceptionProject = join(root2, "exception");
   const source = join(root2, "source");
@@ -49912,7 +49912,7 @@ async function runBenchmark({ projectRoot, command, split: split2 = "evaluation"
   if (all.some((c) => c.split === "evaluation" && devGroups.has(c.group))) throw new Error("Evaluation and development origin groups overlap.");
   const cases = all.filter((c) => c.split === split2);
   for (const c of cases) if (await fixtureFingerprint(join2(assetRoot, c.fixture)) !== c.fingerprint) throw new Error(`Frozen fixture changed: ${c.id}`);
-  const root2 = await mkdtemp3(join2(tmpdir3(), "skillgate-benchmark-"));
+  const root2 = await mkdtemp3(join2(tmpdir3(), "honeyskill-benchmark-"));
   const project = join2(root2, "project");
   await initProject(project, { profile: "static" });
   const startedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -50017,7 +50017,7 @@ var binPath = (root2) => join3(stateDir(root2), "bin");
 var shellQuote = (value) => `'${value.replace(/'/g, `'"'"'`)}'`;
 async function readTerminalConfig(root2) {
   const config2 = TerminalConfigSchema.parse(await readJson(configPath(root2)));
-  if (await realpath4(config2.projectRoot) !== await realpath4(resolve2(root2))) throw new SkillGateError("TERMINAL_CONFIG", "Inconsistent terminal configuration; reactivate HoneySkill in this project.");
+  if (await realpath4(config2.projectRoot) !== await realpath4(resolve2(root2))) throw new HoneySkillError("TERMINAL_CONFIG", "Inconsistent terminal configuration; reactivate HoneySkill in this project.");
   return config2;
 }
 async function executable(path19) {
@@ -50040,7 +50040,7 @@ async function originalExecutable(command) {
 }
 async function prepareTerminal(root2, cliPath, nodePath = process.execPath) {
   const projectRoot = resolve2(root2);
-  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new SkillGateError("TERMINAL_RUNTIME", "Absolute paths to a compiled CLI and a Node executable are required.");
+  if (!isAbsolute(cliPath) || !isAbsolute(nodePath) || !await executable(nodePath)) throw new HoneySkillError("TERMINAL_RUNTIME", "Absolute paths to a compiled CLI and a Node executable are required.");
   await access(cliPath, fsConstants.R_OK);
   await ensureState(projectRoot);
   await ensureDirectory(binPath(projectRoot));
@@ -50103,7 +50103,7 @@ function run(executable2, args) {
   });
 }
 async function dispatchTerminal(root2, command, args) {
-  if (!terminalCommands.includes(command)) throw new SkillGateError("TERMINAL_COMMAND", "Unsupported terminal command.");
+  if (!terminalCommands.includes(command)) throw new HoneySkillError("TERMINAL_COMMAND", "Unsupported terminal command.");
   const invocation = parseInstallerArgv(command, args);
   if (invocation.kind === "reject") {
     process.stderr.write(`HoneySkill: ${invocation.reason}
@@ -50301,7 +50301,7 @@ import { realpath as realpath5 } from "node:fs/promises";
 import { delimiter as delimiter2, join as join5, resolve as resolve4 } from "node:path";
 async function startProtectedSession(root2, cliPath, options = {}) {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
-    throw Object.assign(new SkillGateError("TTY_REQUIRED", "honeyskill on requires an interactive terminal, without --json."), { exitCode: 2 });
+    throw Object.assign(new HoneySkillError("TTY_REQUIRED", "honeyskill on requires an interactive terminal, without --json."), { exitCode: 2 });
   }
   const projectRoot = await realpath5(resolve4(root2));
   if ((await terminalStatus(projectRoot)).active) {
@@ -50341,7 +50341,7 @@ async function startProtectedSession(root2, cliPath, options = {}) {
     child = spawn3("/bin/bash", ["--noprofile", "--norc", "-i"], { cwd: projectRoot, env, stdio: "inherit" });
     child.once("error", (error62) => {
       cleanup();
-      reject(new SkillGateError("SHELL_UNAVAILABLE", `Cannot start Bash: ${sanitizeTerminal(error62.message)}`));
+      reject(new HoneySkillError("SHELL_UNAVAILABLE", `Cannot start Bash: ${sanitizeTerminal(error62.message)}`));
     });
     child.once("exit", (code, signal) => {
       cleanup();
@@ -83740,7 +83740,9 @@ function fullReportHtml(report) {
 var marker = ".skillgate-lab.json";
 var model = "gpt-6-luna";
 async function initializeLab(directory, cwd = process.cwd()) {
-  const root2 = resolve5(directory ?? (await exists(join7(cwd, marker)) ? cwd : join7(cwd, "skillgate-lab")));
+  const legacyDefault = join7(cwd, "skillgate-lab");
+  const defaultRoot = await exists(join7(cwd, marker)) ? cwd : await exists(join7(legacyDefault, marker)) ? legacyDefault : join7(cwd, "honeyskill-lab");
+  const root2 = resolve5(directory ?? defaultRoot);
   if (root2 === homedir2() || root2 === sep || root2.split(sep).some((part) => [".agents", ".codex", ".claude", ".cursor", ".openclaw"].includes(part)) || [process.env.CODEX_HOME, process.env.CLAUDE_CONFIG_DIR].some((value) => value && (root2 === resolve5(value) || root2.startsWith(resolve5(value) + sep)))) {
     throw new Error("Use a dedicated lab directory outside real agent profiles.");
   }
@@ -84464,8 +84466,8 @@ async function snapshotDigest(root2) {
 }
 async function scanCisco(snapshotFolder, options = {}) {
   const started = performance.now();
-  const binary = options.binary ?? process.env.SKILLGATE_CISCO_BIN;
-  if (!binary || !path12.isAbsolute(binary)) return empty("unsupported", "Set SKILLGATE_CISCO_BIN to the absolute path of the pinned skill-scanner 2.2.2 executable.");
+  const binary = options.binary ?? process.env.HONEYSKILL_CISCO_BIN ?? process.env.SKILLGATE_CISCO_BIN;
+  if (!binary || !path12.isAbsolute(binary)) return empty("unsupported", "Set HONEYSKILL_CISCO_BIN to the absolute path (legacy SKILLGATE_CISCO_BIN is also accepted) of the pinned skill-scanner 2.2.2 executable.");
   const timeoutMs = options.timeoutMs ?? 12e4;
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 6e5) return empty("error", "Cisco timeout must be between 1 and 600000 milliseconds.");
   let temp;
@@ -84480,7 +84482,7 @@ async function scanCisco(snapshotFolder, options = {}) {
     } catch {
       return empty("unsupported", "Cisco requires a bounded regular-file snapshot without symlinks or .git entries.");
     }
-    temp = await fs6.mkdtemp(path12.join(os2.tmpdir(), "skillgate-cisco-"));
+    temp = await fs6.mkdtemp(path12.join(os2.tmpdir(), "honeyskill-cisco-"));
     const checked = await run2(binary, ["--version"], temp, Math.min(timeoutMs, 3e4));
     const match = /^skill-scanner (\d+\.\d+\.\d+)\s*$/.exec(checked.stdout);
     version5 = match?.[1] ?? null;
@@ -84739,7 +84741,7 @@ var mapFinding = (finding, engine) => ({
 var gapsOf = (input2) => [...input2.coverage.errors, ...input2.coverage.limitsReached, ...input2.coverage.ignored.map((item) => `${item.file}: ${item.reason}`)];
 async function reviewSecurity(source, options = {}) {
   const started = performance.now(), startedAt = (/* @__PURE__ */ new Date()).toISOString(), id = `security-${randomUUID5()}`;
-  const temporary = await fs7.mkdtemp(path14.join(os3.tmpdir(), "skillgate-inspection-"));
+  const temporary = await fs7.mkdtemp(path14.join(os3.tmpdir(), "honeyskill-inspection-"));
   try {
     const snapshot = path14.join(temporary, "snapshot");
     const acquired = await acquire(source, snapshot, options.skill), input2 = acquired.inventory;
@@ -84980,7 +84982,7 @@ async function runSecurityBenchmark(manifestPath, options) {
     metrics: {},
     limitations: [
       "Development external evaluation, not a blind holdout or an independent replication.",
-      "Source-study malware labels are independent of SkillGate; authenticity to original incident bytes can remain unverified.",
+      "Source-study malware labels are independent of HoneySkill; authenticity to original incident bytes can remain unverified.",
       "Complete preserved package snapshots only enter TP/FP/TN/FN; partial packages, errors and missing selected engines remain separate.",
       "Official upstream controls with unknown labels do not count as true negatives.",
       "Family/source groups are not necessarily independent campaigns. Model training contamination is unknown.",
@@ -84994,7 +84996,7 @@ async function runSecurityBenchmark(manifestPath, options) {
   const worker = async () => {
     while (cursor < selected.length) {
       const index2 = cursor++, sample = selected[index2];
-      const temporary = await fs8.mkdtemp(path15.join(os4.tmpdir(), "skillgate-corpus-"));
+      const temporary = await fs8.mkdtemp(path15.join(os4.tmpdir(), "honeyskill-corpus-"));
       let item;
       try {
         await materializeSample(path15.dirname(manifestPath), sample, temporary);
@@ -85779,7 +85781,7 @@ ${JSON.stringify(options.policy)}`
 }
 async function exerciseSkill(options) {
   const policy = compilePolicy(options.policy);
-  const temp = await fs9.mkdtemp(path16.join(os5.tmpdir(), "skillgate-guarded-"));
+  const temp = await fs9.mkdtemp(path16.join(os5.tmpdir(), "honeyskill-guarded-"));
   try {
     const snapshot = path16.join(temp, "snapshot"), acquired = await acquire(options.source, snapshot);
     const inv = acquired.inventory;
@@ -85853,7 +85855,7 @@ function kill(child) {
 }
 async function startOwnedAnvil() {
   const binary = await resolveAnvilExecutable();
-  const directory = await mkdtemp9(join8(tmpdir6(), "skillgate-chain-proof-"));
+  const directory = await mkdtemp9(join8(tmpdir6(), "honeyskill-chain-proof-"));
   const child = spawn7(binary.executable, [
     "--host",
     "127.0.0.1",
@@ -85949,7 +85951,7 @@ async function runChainProof() {
   const session = await startOwnedAnvil();
   try {
     const account = privateKeyToAccount(generatePrivateKey());
-    const chain = defineChain({ id: CHAIN_ID, name: "SkillGate owned local proof", nativeCurrency: { name: "Local test Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [session.url] } } });
+    const chain = defineChain({ id: CHAIN_ID, name: "HoneySkill owned local proof", nativeCurrency: { name: "Local test Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [session.url] } } });
     const transport = http(session.url, { timeout: RPC_TIMEOUT_MS2, retryCount: 0, fetchOptions: { redirect: "error" } });
     const publicClient = createPublicClient({ chain, transport, cacheTime: 0 });
     const wallet2 = createWalletClient({ account, chain, transport, cacheTime: 0 });
@@ -86526,6 +86528,7 @@ async function runHoneySkillDemo(options = {}) {
 function registerSecurityCommands(program3) {
   const security = program3.command("security").description("Research-based package inspection and deterministic blockchain policy evidence. Never activates skills.");
   const emit2 = (value, message) => process.stdout.write(program3.opts().json ? JSON.stringify(value, null, 2) + "\n" : sanitizeTerminal(message) + "\n");
+  const scannerBinary = (explicit) => explicit ?? process.env.HONEYSKILL_CISCO_BIN ?? process.env.SKILLGATE_CISCO_BIN;
   program3.command("payment-demo").description("Replay controlled payment proposals on an owned local Anvil chain. No model calls or acquired malware execution.").requiredOption("--out <directory>", "New output directory; existing results are never overwritten").option("--local", "Use local EVM only; do not attempt a public read-only Fuji fork").action(async (options) => {
     const output2 = path18.resolve(options.out);
     await fs10.mkdir(output2, { recursive: false, mode: 448 });
@@ -86545,10 +86548,10 @@ Evidence: ${evidence2}`
     );
     if (!result.passed) process.exitCode = 3;
   });
-  security.command("inspect <source>").description("Quarantine \u2192 native + Cisco + batched security LLM review \u2192 compact report. No skill code execution.").requiredOption("--out <directory>", "New output directory; existing results are never overwritten").option("--scanner <absolute-path>", "Pinned Cisco 2.2.2 executable (or SKILLGATE_CISCO_BIN)").option("--offline", "Run native and Cisco only; do not request semantic analysis").option("--skill <name>", "Select a skill from a multi-skill repository").action(async (source, options) => {
+  security.command("inspect <source>").description("Quarantine \u2192 native + Cisco + batched security LLM review \u2192 compact report. No skill code execution.").requiredOption("--out <directory>", "New output directory; existing results are never overwritten").option("--scanner <absolute-path>", "Pinned Cisco 2.2.2 executable (or HONEYSKILL_CISCO_BIN; SKILLGATE_CISCO_BIN remains a compatibility alias)").option("--offline", "Run native and Cisco only; do not request semantic analysis").option("--skill <name>", "Select a skill from a multi-skill repository").action(async (source, options) => {
     const output2 = path18.resolve(options.out);
     await fs10.mkdir(output2, { recursive: false, mode: 448 });
-    const report = await reviewSecurity(source, { scannerBinary: options.scanner, semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, skill: options.skill });
+    const report = await reviewSecurity(source, { scannerBinary: scannerBinary(options.scanner), semantic: !options.offline, apiKey: process.env.OPENAI_API_KEY, skill: options.skill });
     await fs10.writeFile(path18.join(output2, "report.json"), JSON.stringify(report, null, 2), { flag: "wx", mode: 384 });
     await fs10.writeFile(path18.join(output2, "index.html"), securityReviewHtml(report), { flag: "wx", mode: 384 });
     emit2(
@@ -86559,14 +86562,14 @@ No runtime execution or activation. No alert is not a safety verdict.`
     );
     process.exitCode = !report.inspectionComplete ? 3 : report.outcome === "risk_detected" ? 2 : 0;
   });
-  security.command("benchmark <manifest>").description("Evaluate a pinned inert corpus; preserve every case and calculate separate confusion matrices.").requiredOption("--out <directory>", "New output directory").option("--repository <directory>", "Source checkout to freeze", process.cwd()).option("--scanner <absolute-path>", "Pinned Cisco 2.2.2 executable (or SKILLGATE_CISCO_BIN)").option("--offline", "Native + Cisco inspection only; no API calls").option("--limit <count>", "Run only the first N frozen cases (explicit pilot)", (value) => Number(value)).action(async (manifest, options) => {
+  security.command("benchmark <manifest>").description("Evaluate a pinned inert corpus; preserve every case and calculate separate confusion matrices.").requiredOption("--out <directory>", "New output directory").option("--repository <directory>", "Source checkout to freeze", process.cwd()).option("--scanner <absolute-path>", "Pinned Cisco 2.2.2 executable (or HONEYSKILL_CISCO_BIN; SKILLGATE_CISCO_BIN remains a compatibility alias)").option("--offline", "Native + Cisco inspection only; no API calls").option("--limit <count>", "Run only the first N frozen cases (explicit pilot)", (value) => Number(value)).action(async (manifest, options) => {
     const output2 = path18.resolve(options.out);
     const result = await runSecurityBenchmark(path18.resolve(manifest), {
       repositoryRoot: path18.resolve(options.repository),
       output: output2,
       semantic: !options.offline,
       apiKey: process.env.OPENAI_API_KEY,
-      scannerBinary: options.scanner,
+      scannerBinary: scannerBinary(options.scanner),
       limit: options.limit,
       progress: (done, total, id) => process.stderr.write(sanitizeTerminal(`[${done}/${total}] ${id}
 `))
@@ -86644,7 +86647,7 @@ var interactive = () => !machine() && Boolean(process.stdin.isTTY && process.std
 function emit(data, text2) {
   process.stdout.write(machine() || !text2 ? JSON.stringify(data, null, 2) + "\n" : sanitizeTerminal(text2) + "\n");
 }
-program2.command("lab").description("Create/check an isolated test lab (no model calls).").option("--lab <directory>", "Dedicated lab directory (default: ./skillgate-lab)").action(async (options) => {
+program2.command("lab").description("Create/check an isolated test lab (no model calls).").option("--lab <directory>", "Dedicated lab directory (default: ./honeyskill-lab; reuses an existing legacy lab)").action(async (options) => {
   const status = await labStatus(options.lab);
   emit(status, `Lab: ${status.root}
 Model: ${status.model}
@@ -86655,7 +86658,7 @@ Then: honeyskill try trap
 Only this lab can be activated. Each try uses paid API calls and disposable local funds.`);
   if (!status.anvil.available) process.exitCode = 3;
 });
-program2.command("try <source>").description("Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.").option("--lab <directory>", "Dedicated lab directory (default: ./skillgate-lab)").option("--skill <name>", "Select a skill from a multi-skill repository").action(async (source, options) => {
+program2.command("try <source>").description("Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.").option("--lab <directory>", "Dedicated lab directory (default: ./honeyskill-lab; reuses an existing legacy lab)").option("--skill <name>", "Select a skill from a multi-skill repository").action(async (source, options) => {
   const result = await tryInstallation(source, { ...options, json: machine(), interactive: interactive() });
   emit(result, result.installation ? `${result.installation.status === "installed_with_exception" ? "Installed with exception; risks remain" : "Installed automatically after all three checks"}: ${result.report.name}
 Lab only: ${result.lab}
