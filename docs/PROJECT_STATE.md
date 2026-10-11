@@ -2,7 +2,7 @@
 
 # HoneySkill — current project state
 
-As of 2026-10-11. Read [HANDOFF.md](HANDOFF.md) first. Published 0.5.0 and its measured results remain unchanged; local `0.6.0-dev.0` is experimental security-v1 development.
+As of 2026-10-11. Read [HANDOFF.md](HANDOFF.md) first. Published 0.5.0 and its measured results remain unchanged; local `0.6.0-dev.1` is experimental security-v1 development.
 
 ## Active security-v1 development
 
@@ -74,3 +74,7 @@ There is no known unfinished item from the delivered 0.5.0 laboratory request. T
 `pnpm benchmark` is the frozen text-only versus behavioral experiment. `pnpm guard security benchmark` is the new package-inspection evaluator, with separate provenance and completeness accounting. The full installation LLM stage checks broader financial patterns and is not the old comparator. `pnpm run audit` is behavioral-only; `pnpm audit` is pnpm's unrelated dependency audit. Legacy static scores, ledger simulations and videos are not new live-model evidence.
 
 Maintain this file after a meaningful delivery. Preserve old evidence and add a dated measurement when rerunning; do not edit past results into a better outcome.
+
+## Persistent Codex setup, 11 October 2026
+
+`honeyskill setup --agent codex` now configures the native project hook by default, pins the compiled installer and preserves optional terminal activation. Codex requires initial `/hooks` trust; later sessions use the same configured hook. Static/hybrid installation coverage and host failure boundaries are documented in [PERSISTENT_CODEX_SETUP](PERSISTENT_CODEX_SETUP.md). Full `try` remains lab-only; historical benchmarks are unchanged.

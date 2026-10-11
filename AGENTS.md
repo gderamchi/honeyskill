@@ -1,6 +1,6 @@
 # HoneySkill hackathon development
 
-On 2026-10-11 the user renamed the active product HoneySkill and requested a controlled Avalanche payment demo, branding and Secure Horizons Track 1 submission assets. Read `docs/HONEYSKILL.md`. The development version remains 0.6.0-dev.0 and the compatibility binary `skillgate` remains available. Schema/storage/environment identifiers and all historical releases/evidence are preserved. Product/docs stay English; communicate with the user in French.
+On 2026-10-11 the user renamed the active product HoneySkill and requested a controlled Avalanche payment demo, branding and Secure Horizons Track 1 submission assets. Read `docs/HONEYSKILL.md`. The development version remains 0.6.0-dev.1 and the compatibility binary `skillgate` remains available. Schema/storage/environment identifiers and all historical releases/evidence are preserved. Product/docs stay English; communicate with the user in French.
 
 `honeyskill payment-demo` adds an explicitly authored proposal replay. It records exact local-chain effects with and without the existing financial policy on the same snapshots. A verified owned Fuji-fork run passed 36 checks, blocked 3 unauthorized actions and preserved 3 authorized payments. This establishes narrow deterministic containment, not model-generated attack resistance or unseen-skill accuracy. Normal-AI comparative performance is unmeasured. The old inspection failures remain visible. Never fabricate benchmark results or remove fixture provenance to imply real-world origins.
 
@@ -8,7 +8,7 @@ On 2026-10-11 the user renamed the active product HoneySkill and requested a con
 
 As of 2026-10-11, the user authorized a new security/evaluation scope: concise evidence reports, documented malicious-skill packages, established research implementations and deterministic blockchain checks. Read `docs/SECURITY_V1.md` and ADR 0007 in addition to the handoff/state below. This is development in progress, not a new release or proof of broad real-world effectiveness.
 
-Local version `0.6.0-dev.0` and its source `security` commands are separate from published 0.5.0 and frozen SkillGuard-Lite protocols. Name actual Cisco 2.2.2 and the declared Progent static-checker subset accurately. Static AST/dataflow analysis is not execution; this is not a CaMeL reimplementation. Distinguish inspection, typed-action mediation, simulated effects, actual local-chain evidence and live-model evidence. `chain-proof` is implemented and locally validated on fresh Anvil genesis 31337; it uses an in-memory throwaway key and no public RPC. No acquired script/dependency execution, real wallet, public signed transaction or real-profile activation.
+Local version `0.6.0-dev.1` and its source `security` commands are separate from published 0.5.0 and frozen SkillGuard-Lite protocols. Name actual Cisco 2.2.2 and the declared Progent static-checker subset accurately. Static AST/dataflow analysis is not execution; this is not a CaMeL reimplementation. Distinguish inspection, typed-action mediation, simulated effects, actual local-chain evidence and live-model evidence. `chain-proof` is implemented and locally validated on fresh Anvil genesis 31337; it uses an in-memory throwaway key and no public RPC. No acquired script/dependency execution, real wallet, public signed transaction or real-profile activation.
 
 The imported corpus is development data. Preserve exact hashes/provenance; official controls remain unknown, and AgentTrap negatives are constructed task-conditioned controls with visible label cues. Keep unsupported/partial/error/unknown outcomes outside TP/FP/TN/FN. Do not alter frozen experiments or choose cases based on detector success. No publication is implied for new artifacts with unresolved redistribution rights.
 
@@ -49,3 +49,7 @@ Protection before installing financial-agent skills; no wallet or transaction fi
 - No commits/pushes required. Keep evidence in `outputs/`; intermediate artifacts in `work/`. Preserve unrelated work.
 
 - Short public install: `npm i -g gderamchi/skillgate`; activation: `skillgate on`. The GitHub package ships committed dist/ and has no install/build lifecycle hook; use build:cli for source builds. Never add a root script named build/prepare/prepack/install, which makes npm rebuild Git dependencies.
+
+## Persistent Codex integration, 2026-10-11
+
+`honeyskill setup` (compatible with `enable`) now always configures the project Codex hook and pins the bundled static/hybrid installer. Initial human `/hooks` trust is required. No claim of universal interception: manual file writes, other agents and Codex skip/failure behavior remain outside the guarantee. Full behavioral activation remains lab-only. Read `docs/PERSISTENT_CODEX_SETUP.md` and ADR 0009. The credential-free Codex smoke uses an explicit isolated mock and test-only trust bypass; never call it live-model or persisted-trust proof.

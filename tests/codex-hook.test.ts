@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, symlink, writeFile, access } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, symlink, writeFile, access, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { prepareCodexHook, processHook } from '../apps/cli/src/codex-hook.js';
+import { prepareCodexHook, processHook, pinCliRuntime, codexHookStatus } from '../apps/cli/src/codex-hook.js';
 
 const root = '/tmp/skillgate-hook-project';
-const cli = '/opt/skillgate/cli.js';
+const cli = join(await mkdtemp(join(tmpdir(), 'honeyskill-hook-cli-')), 'cli.js');
+await writeFile(cli, '// Authored unit-test runtime.\n');
 const quote = (value: string) => `'${value.replace(/'/g, `'\\''`)}'`;
 const event = (command: string) => ({ hook_event_name: 'PreToolUse', tool_name: 'Bash', cwd: root, tool_input: { command } });
 const run = (command: string) => processHook(event(command), root, cli, process.execPath)?.hookSpecificOutput;
@@ -32,10 +33,14 @@ test('Codex hook configuration preserves other hooks and is idempotent', async (
   assert.equal(result.hooks.PreToolUse[1].matcher, '^Bash$');
   const handler = result.hooks.PreToolUse[1].hooks[0];
   assert.equal(handler.type, 'command'); assert.equal(handler.timeout, 10);
-  assert.match(handler.command, /'--project'.*'hook'$/);
+  assert.ok(handler.command.includes(cli));
+  assert.equal(first.persistent, true);
+  assert.equal(first.runtimeFailureDecision, 'deny');
+  assert.equal((await codexHookStatus(project)).configured, true);
   assert.equal((await prepareCodexHook(project, cli, process.execPath)).changed, false);
   assert.equal(await readFile(file, 'utf8'), bytes);
-  await prepareCodexHook(project, '/opt/new CLI/cli.js', process.execPath);
+  const newCli = join(project, 'new CLI.js'); await writeFile(newCli, '// Updated authored runtime.\n');
+  await prepareCodexHook(project, newCli, process.execPath);
   const changed = JSON.parse(await readFile(file, 'utf8'));
   assert.equal(changed.hooks.PreToolUse.length, 2);
   assert.match(changed.hooks.PreToolUse[1].hooks[0].command, /new CLI/);
@@ -147,6 +152,36 @@ test('recognized installs cannot silently change project or explicit command wor
     { ...input, tool_input: { ...input.tool_input, cwd: '/tmp/other-project' } },
   ]) assert.equal(processHook(overridden, root, cli, process.execPath)?.hookSpecificOutput.permissionDecision, 'deny');
   assert.equal(processHook(input, root, '/tmp/invalid\ncli.js', process.execPath)?.hookSpecificOutput.permissionDecision, 'deny');
+});
+
+test('project hooks also protect commands run from project subdirectories', async () => {
+  const project = await mkdtemp(join(tmpdir(), 'honeyskill-hook-subdirectory-'));
+  await mkdir(join(project, 'src'));
+  const input = { ...event('npx skills add owner/repo'), cwd: project, tool_input: { command: 'npx skills add owner/repo', workdir: join(project, 'src') } };
+  assert.equal(processHook(input, project, cli, process.execPath)?.hookSpecificOutput.permissionDecision, 'allow');
+  input.tool_input.workdir = project + '-outside';
+  assert.equal(processHook(input, project, cli, process.execPath)?.hookSpecificOutput.permissionDecision, 'deny');
+});
+
+test('pinned runtime survives global removal; missing, changed and failing runtimes deny', async () => {
+  for (const scenario of ['removed-global', 'missing-pinned', 'changed', 'crash', 'invalid-output', 'missing-node', 'timeout']) {
+    const project = await mkdtemp(join(tmpdir(), 'honeyskill-hook-runtime-'));
+    const source = join(project, 'global.js');
+    const output = { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: 'Authored valid unit response' } };
+    await writeFile(source, scenario === 'crash' ? 'process.exit(1);' : scenario === 'invalid-output' ? 'console.log("not JSON");' : scenario === 'timeout' ? 'setInterval(()=>{},1000);' : `console.log(${JSON.stringify(JSON.stringify(output))});`);
+    const pinned = await pinCliRuntime(project, source);
+    assert.equal(await pinCliRuntime(project, source), pinned);
+    await prepareCodexHook(project, pinned, scenario === 'missing-node' ? '/missing/honeyskill-node' : process.execPath);
+    await rm(source);
+    if (scenario === 'missing-pinned') await rm(pinned);
+    if (scenario === 'changed') await writeFile(pinned, 'process.exit(0);');
+    const config = JSON.parse(await readFile(join(project, '.codex/hooks.json'), 'utf8'));
+    const result = spawnSync('/bin/sh', ['-c', config.hooks.PreToolUse[0].hooks[0].command], { input: JSON.stringify(event('npx skills add owner/repo')), encoding: 'utf8', timeout: 8000 });
+    assert.equal(result.status, 0, `${scenario}: ${result.stderr}`);
+    const decision = JSON.parse(result.stdout).hookSpecificOutput;
+    assert.equal(decision.permissionDecision, 'deny', scenario);
+    assert.match(decision.permissionDecisionReason, scenario === 'removed-global' ? /Authored valid/ : /unavailable or its runtime changed/, scenario);
+  }
 });
 
 test('hook rewrites preserve literal argv without shell injection in project, CLI or source paths', async () => {

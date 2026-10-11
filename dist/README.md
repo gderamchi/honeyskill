@@ -6,21 +6,31 @@
 
 HoneySkill inspects agent skills and checks proposed financial actions against explicit user authorization before they reach the execution adapter. The hackathon PoC replays six scripted action proposals, including a changed recipient, hidden charge and unrequested unlimited approval, through a real local transaction adapter.
 
-This is **0.6.0-dev.0**, the HoneySkill development release for Secure Horizons, Track 1 — Guardians of Value. HoneySkill source is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill). The previous public `v0.5.0` release and its evidence remain available in the earlier repository. A compatibility command remains available for existing installations.
+This is **0.6.0-dev.1**, the HoneySkill development release for Secure Horizons, Track 1 — Guardians of Value. HoneySkill source is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill). The previous public `v0.5.0` release and its evidence remain available in the earlier repository. A compatibility command remains available for existing installations.
 
 ## Start here
 
 Install the published development release directly from GitHub. Requires **Node.js 22.18+** and [Foundry Anvil](https://getfoundry.sh/getting-started/installation) on your `PATH` (or an absolute `ANVIL_BIN` path).
 
 ```sh
-npm install --global 'git+https://github.com/gderamchi/honeyskill.git#v0.6.0-dev.0'
+npm install --global 'git+https://github.com/gderamchi/honeyskill.git#v0.6.0-dev.1'
 honeyskill --help
 honeyskill payment-demo --local --out ./honeyskill-demo
 ```
 
 Open the HTML report in the output directory to review each proposal, the policy decision and the actual local-chain effects. `--local` runs entirely on a disposable local chain and needs no OpenAI key. Omit `--local` to attempt a read-only Avalanche Fuji fork. Choose a new output directory for each run.
 
-The compiled package is also available as a [release download](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/gderamchi-honeyskill-0.6.0-dev.0.tgz). The package is distributed through GitHub; it has not been published to the npm registry. If an older global installation owns the compatibility binary, use an isolated npm prefix.
+The compiled package is also available as a [release download](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.1/gderamchi-honeyskill-0.6.0-dev.1.tgz). The package is distributed through GitHub; it has not been published to the npm registry. If an older global installation owns the compatibility binary, use an isolated npm prefix.
+
+## Set up automatic Codex installation checks
+
+Run once in each agent repository:
+
+```sh
+honeyskill setup --agent codex
+```
+
+Open `/hooks` in Codex and review/trust the project hook once. Later Codex sessions automatically check supported skill installer calls without `eval` or another setup. The installer is pinned locally, so removing the global npm package does not remove it. Default: static inspection; optional hybrid semantic review requires explicit consent and an authorized API key. Runtime failure denies; Codex can still skip untrusted/disabled hooks. Manual copies and arbitrary installer scripts are outside this boundary. [Commands, jury demonstration, evidence and limits](docs/PERSISTENT_CODEX_SETUP.md).
 
 ## Demo and hackathon deliverables
 
@@ -54,7 +64,7 @@ To produce an installable archive:
 
 ```sh
 pnpm pack:local
-npm i -g ./outputs/gderamchi-honeyskill-0.6.0-dev.0.tgz
+npm i -g ./outputs/gderamchi-honeyskill-0.6.0-dev.1.tgz
 honeyskill payment-demo --out outputs/payment-demo-installed
 honeyskill --help
 ```

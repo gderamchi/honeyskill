@@ -4,7 +4,7 @@ Updated 11 October 2026. The user requested the HoneySkill name, honey-jar ident
 
 ## Product
 
-Primary CLI: `honeyskill`. Package: `@gderamchi/honeyskill`, version `0.6.0-dev.0`. Existing storage and schema identifiers remain stable. The previous v0.5.0 release and its historical evidence remain available. Root README covers the active product; the earlier-overview file preserves the previous workflow.
+Primary CLI: `honeyskill`. Package: `@gderamchi/honeyskill`, version `0.6.0-dev.1`. Existing storage and schema identifiers remain stable. The previous v0.5.0 release and its historical evidence remain available. Root README covers the active product; the earlier-overview file preserves the previous workflow.
 
 `honeyskill payment-demo --out outputs/payment-demo` runs four authored scenarios: checkout, settlement routing, service fee, wallet approval. Source fixture instructions are inert; an author-scripted replay supplies six typed proposals. The same proposals run from identical owned-local snapshots, with direct execution versus the financial monitor. This is separate from `try` and from every frozen inspection or model benchmark.
 
@@ -25,3 +25,7 @@ Verified [candidate guide](https://app.notion.com/p/Candidate-Guide-Track-Guidan
 Product capability, public availability and actual external submission must be reported separately. A prepared dossier does not mean an organizer received it. Local artifact paths and raw logs must not appear in a public submission.
 
 Recorded artifacts: [interactive payment proof](evidence/honeyskill-demo/payment-demo.html), [native JSON](evidence/honeyskill-demo/evidence/payment-demo.json), and [independent consistency recomputation](evidence/honeyskill-demo/evidence/independent-validation.json). The latter checks exported data; it is not third-party attestation.
+
+## Persistent Codex setup, 11 October 2026
+
+`honeyskill setup --agent codex` now configures the native project hook by default, pins the compiled installer and preserves optional terminal activation. Codex requires initial `/hooks` trust; later sessions use the same configured hook. Static/hybrid installation coverage and host failure boundaries are documented in [PERSISTENT_CODEX_SETUP](PERSISTENT_CODEX_SETUP.md). Full `try` remains lab-only; historical benchmarks are unchanged.
