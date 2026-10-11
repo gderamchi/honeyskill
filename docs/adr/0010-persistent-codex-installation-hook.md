@@ -1,4 +1,4 @@
-# ADR 0009: Persistent project integration for Codex
+# ADR 0010: Persistent project integration for Codex
 
 Date: 2026-10-11. Status: accepted for 0.6.0-dev.1.
 

@@ -13,6 +13,6 @@ ADRs 0001–0006 were recorded retrospectively on 2026-10-10 for the 0.5.0 hando
 | [0007](0007-research-based-security-development.md) | Separate experimental security lane: actual external scanner, bounded Progent port, financial mediation and independent evidence categories |
 
 | [0008](0008-honeyskill-controlled-payment-demo.md) | HoneySkill branding, compatibility, isolated payment replay and honest submission claims |
-| [0009](0009-persistent-codex-installation-hook.md) | Once-per-project Codex setup, pinned installer, runtime denial and explicit host boundaries |
+| [0010](0010-persistent-codex-installation-hook.md) | Once-per-project Codex setup, pinned installer, runtime denial and explicit host boundaries |
 
 Current development: [SECURITY_V1](../SECURITY_V1.md), [HANDOFF](../HANDOFF.md), [PROJECT_STATE](../PROJECT_STATE.md). Historical 0.5.0 workflow: [lab guide](../PREVIOUS_INSTALLATION_LAB.md).
