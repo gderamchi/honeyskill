@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-11T09:31:08.124625+00:00",
+  "release": "https://github.com/gderamchi/honeyskill/releases/tag/v0.6.0-dev.1",
+  "platform": "Darwin",
+  "shellIntegration": "POSIX; Windows not verified",
+  "packageSha256": "da22af9cc84e974f837a6d3defb79d69a6d9d8e73164526679ed7efad395ef6c",
+  "publicArchiveByteIdenticalToTestedPackage": true,
+  "publicArchiveInstallation": {
+    "status": "passed",
+    "freshPrefix": true,
+    "freshNpmCache": true,
+    "offlineAfterDownload": true,
+    "version": "0.6.0-dev.1",
+    "recordedCommands": 14,
+    "protectedTerminalCases": 7,
+    "upstreamInstallerInvoked": false,
+    "cliNetworkAttempts": 0
+  },
+  "publicGitInstallation": {
+    "status": "passed",
+    "source": "git+https://github.com/gderamchi/honeyskill.git#v0.6.0-dev.1",
+    "version": "0.6.0-dev.1",
+    "cliSha256": "734ff8429402cf94e7530fe08ee3cec99e706983aeff4d0f77cd293071b35c83",
+    "freshPrefix": true,
+    "freshCache": true,
+    "lifecycleScripts": false,
+    "credentialsProvided": false,
+    "setupPersistent": true,
+    "hostTrustVerified": false,
+    "priorHarnessFailure": "Initial npm invocation used the same empty config path for user and global configuration; npm refused before installing. Corrected to distinct empty files; no product change."
+  },
+  "paidProviderCalls": 0,
+  "persistedHumanHookTrustTested": false,
+  "frozenBenchmarksChanged": false,
+  "runtimeCommit": "d6533bc",
+  "publication": "GitHub prerelease; not npm registry",
+  "hostBoundary": "Manual copies, other agents, arbitrary scripts and host skip/failure are not covered."
+}

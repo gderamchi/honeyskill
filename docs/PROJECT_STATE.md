@@ -78,3 +78,5 @@ Maintain this file after a meaningful delivery. Preserve old evidence and add a 
 ## Persistent Codex setup, 11 October 2026
 
 `honeyskill setup --agent codex` now configures the native project hook by default, pins the compiled installer and preserves optional terminal activation. Codex requires initial `/hooks` trust; later sessions use the same configured hook. Static/hybrid installation coverage and host failure boundaries are documented in [PERSISTENT_CODEX_SETUP](PERSISTENT_CODEX_SETUP.md). Full `try` remains lab-only; historical benchmarks are unchanged.
+
+Fresh integration verification: 267 application tests passed (4 skipped), 74 behavioral tests passed (1 skipped), typecheck/build/package smoke passed. One setup served three independent actual Codex CLI sessions using a deterministic local mock; no paid model calls or persisted human trust were tested. Fresh public GitHub archive and tag installations passed. [Sanitized integration and distribution evidence](evidence/persistent-codex-2026-10-11/report.md).

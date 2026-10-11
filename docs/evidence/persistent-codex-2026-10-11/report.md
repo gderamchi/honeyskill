@@ -22,3 +22,7 @@ The provider was a deterministic Responses SSE mock on loopback, supplying presc
 Hook trust was bypassed explicitly for each isolated smoke invocation, with a temporary HOME/CODEX_HOME and an isolated test sandbox. Persisted human `/hooks` trust was not tested or forged. Production use requires the user to trust the project hook once. Codex can skip untrusted/disabled hooks or fail open before the guard runs; manual file writes and other agents are not covered. Full `try` activation remains lab-only. Frozen benchmark outputs and previous release assets remain unchanged.
 
 Raw logs are intentionally private and are not included here. The JSON contains only allowlisted public fixture findings, hashes and outcomes. Hashes support integrity/recomputation; they are not independent third-party attestation.
+
+## Public distribution follow-up
+
+Fresh public release-archive and Git-tag installations passed with new npm prefixes and caches. Installed CLI hashes match the locally verified runtime. The downloaded archive is byte-identical to the packed archive; its installed-package smoke passed again. An initial Git-install harness configuration error (duplicate empty npm config paths) failed before installation and was corrected without a product change. See [sanitized distribution receipt](public-install.json). This evidence-only follow-up does not alter the tag or package. POSIX integration was tested on macOS; Windows was not verified.
