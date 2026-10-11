@@ -2,25 +2,26 @@
 
 HoneySkill 0.6.0-dev.1 adds a project-local setup. Run it once in each agent repository. It pins the bundled installer inside `.skillgate/runtime/` and registers `.codex/hooks.json`. Removing or upgrading the global npm package does not remove that pinned installer. No shell activation is required for later Codex sessions.
 
+From the agent repository, one command downloads HoneySkill and configures it. No global install or `--agent codex` flag is required:
+
 ```sh
-npm install --global 'git+https://github.com/gderamchi/honeyskill.git#v0.6.0-dev.1'
-cd /path/to/your-agent-repository
-honeyskill setup --agent codex
-codex
+npx -y gderamchi/honeyskill#v0.6.0-dev.1 setup
 ```
+
+Then start Codex normally. The pinned runtime remains available after the npx cache is removed. This exact command passed with an isolated home and fresh npm cache; see [one-command setup evidence](evidence/persistent-codex-2026-10-11/one-line-setup.json).
 
 In Codex, open `/hooks`, review and trust the HoneySkill project hook. Codex requires this initial human trust step; HoneySkill does not forge or bypass it. Start a new Codex session after setup. Later sessions load the same trusted project hook automatically. Changing the hook definition, moving the repository or updating the pinned runtime can require another review.
 
 Now ask Codex to install a skill normally, for example with `npx skills add owner/repository --skill skill-name`. Supported `npx skills`, `pnpm dlx skills`, `skills` and explicit project-targeted native Codex installer calls are replaced before execution with HoneySkill's guarded installer. Commands from repository subdirectories are covered. Known ambiguous, global or unsupported installer forms are denied rather than run upstream. A noninteractive risky result stays held. Every scan saves a JSON report before activation in `.skillgate/reports/`.
 
-`honeyskill doctor` reports the configured hook and analysis profile. It does **not** establish that Codex trusted, loaded or enabled the hook; check `/hooks` and an actual intercepted installation. `honeyskill enable` remains an alias-compatible setup command. Its stdout still contains optional shell exports for existing `eval "$(honeyskill enable)"` callers. `honeyskill on` remains a temporary protected terminal.
+When globally installed, `honeyskill doctor` reports the configured hook and analysis profile. With npx, use `npx -y gderamchi/honeyskill#v0.6.0-dev.1 doctor`. It does **not** establish that Codex trusted, loaded or enabled the hook; check `/hooks` and an actual intercepted installation. `honeyskill enable` remains an alias-compatible setup command. Its stdout still contains optional shell exports for existing `eval "$(honeyskill enable)"` callers. `honeyskill on` remains a temporary protected terminal.
 
 ## Which checks run
 
 The default is local static analysis. To require the modular semantic reviewer too, explicitly consent and select the model:
 
 ```sh
-honeyskill setup --agent codex --profile hybrid --semantic-consent --model gpt-6-luna
+npx -y gderamchi/honeyskill#v0.6.0-dev.1 setup --profile hybrid --semantic-consent --model gpt-6-luna
 ```
 
 The authorized OpenAI key must be supplied through the environment of the Codex process. HoneySkill does not store it. Missing credentials, failed semantic analysis or incomplete supported coverage do not auto-install. Hybrid checks spend API credits. Static/hybrid inspection is separate from the three-stage `try` pipeline; full behavioral activation remains restricted to a dedicated marked laboratory. Do not present this integration test as full-pipeline or unseen-malware accuracy evidence.
@@ -35,7 +36,7 @@ git -C /tmp/honeyskill-jury/agent init
 curl -fsSL https://raw.githubusercontent.com/gderamchi/honeyskill/v0.6.0-dev.1/fixtures/portfolio-legitimate/SKILL.md.fixture -o /tmp/honeyskill-jury/clean/SKILL.md
 curl -fsSL https://raw.githubusercontent.com/gderamchi/honeyskill/v0.6.0-dev.1/fixtures/portfolio-suspicious/SKILL.md.fixture -o /tmp/honeyskill-jury/trap/SKILL.md
 cd /tmp/honeyskill-jury/agent
-honeyskill setup --agent codex
+npx -y gderamchi/honeyskill#v0.6.0-dev.1 setup
 codex
 ```
 

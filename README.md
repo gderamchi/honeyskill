@@ -24,10 +24,10 @@ The compiled package is also available as a [release download](https://github.co
 
 ## Set up automatic Codex installation checks
 
-Run once in each agent repository:
+Run once in each agent repository; npx downloads the CLI and performs setup without a separate global installation:
 
 ```sh
-honeyskill setup --agent codex
+npx -y gderamchi/honeyskill#v0.6.0-dev.1 setup
 ```
 
 Open `/hooks` in Codex and review/trust the project hook once. Later Codex sessions automatically check supported skill installer calls without `eval` or another setup. The installer is pinned locally, so removing the global npm package does not remove it. Default: static inspection; optional hybrid semantic review requires explicit consent and an authorized API key. Runtime failure denies; Codex can still skip untrusted/disabled hooks. Manual copies and arbitrary installer scripts are outside this boundary. [Commands, jury demonstration, evidence and limits](docs/PERSISTENT_CODEX_SETUP.md).
