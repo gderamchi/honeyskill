@@ -8,6 +8,35 @@ HoneySkill inspects agent skills and checks proposed financial actions against e
 
 Formerly SkillGate. This is **0.6.0-dev.0**, local development for Secure Horizons, Track 1 — Guardians of Value. HoneySkill source is published at [gderamchi/honeyskill](https://github.com/gderamchi/honeyskill); the original [SkillGate repository](https://github.com/gderamchi/skillgate), published `v0.5.0` and its evidence remain unchanged. The `skillgate` command is retained as a compatibility alias.
 
+## Start here
+
+Install the published development release directly from GitHub. Requires **Node.js 22.18+** and [Foundry Anvil](https://getfoundry.sh/getting-started/installation) on your `PATH` (or an absolute `ANVIL_BIN` path).
+
+```sh
+npm install --global 'git+https://github.com/gderamchi/honeyskill.git#v0.6.0-dev.0'
+honeyskill --help
+honeyskill payment-demo --local --out ./honeyskill-demo
+```
+
+Open the HTML report in the output directory to review each proposal, the policy decision and the actual local-chain effects. `--local` runs entirely on a disposable local chain and needs no OpenAI key. Omit `--local` to attempt a read-only Avalanche Fuji fork. Choose a new output directory for each run.
+
+The compiled package is also available as a [release download](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/gderamchi-honeyskill-0.6.0-dev.0.tgz). The package is distributed through GitHub; it has not been published to the npm registry. If an existing global SkillGate installation owns the compatibility binary, use an isolated npm prefix.
+
+## Demo and hackathon deliverables
+
+Everything needed to review the prototype is public in the [development release](https://github.com/gderamchi/honeyskill/releases/tag/v0.6.0-dev.0).
+
+| Deliverable | Open or download |
+| --- | --- |
+| Complete submission dossier | [ZIP](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/HoneySkill-submission.zip) — extract it and open `index.html` |
+| Narrated demonstration, 2 minutes 30 seconds | [Video](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/HoneySkill-demo.mp4) |
+| Eight-slide pitch | [PDF](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/HoneySkill-pitch.pdf) · [editable PowerPoint](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/HoneySkill-pitch.pptx) |
+| One-page defense sheet | [PDF](https://github.com/gderamchi/honeyskill/releases/download/v0.6.0-dev.0/HoneySkill-defense-sheet.pdf) |
+| Payment execution evidence | [HTML report](docs/evidence/honeyskill-demo/payment-demo.html) · [JSON](docs/evidence/honeyskill-demo/evidence/payment-demo.json) |
+| Inspection benchmark, including failures | [Before/after report](docs/evidence/security-v1/repair-2026-10-11/report-public.md) · [114-case explorer](docs/evidence/security-v1/repair-2026-10-11/cases-public.html) |
+
+The ZIP also includes the response playbook, pitch scripts, regulatory design mapping, brand assets, and an integrity manifest. Download HTML reports to view them in a browser; GitHub's source view does not render them. The video shows a recorded controlled replay; the command above lets you rerun it locally.
+
 ## Run the payment demonstration
 
 Requires Node.js 22.18+, pnpm and [Foundry Anvil](https://getfoundry.sh/getting-started/installation). From this source checkout:
@@ -87,3 +116,7 @@ pnpm smoke:package
 ```
 
 Read [AGENTS.md](AGENTS.md), [handoff](docs/HANDOFF.md), [current state](docs/PROJECT_STATE.md), and [ADRs](docs/adr/README.md) before modifying the project. Preserve frozen protocols, evidence, third-party provenance and redistribution restrictions. Never commit credentials, private logs or workstation paths.
+
+## Team
+
+Ismael Meguenni · Guillaume Deramchi · Allan Debert — **42**.
