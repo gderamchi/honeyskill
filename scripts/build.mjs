@@ -9,15 +9,20 @@ for (const name of ['good', 'trap']) await readFile(`packages/skillguard-lite/la
 await rm('dist',{recursive:true,force:true});
 await mkdir('dist', {recursive:true});
 const result=await build({entryPoints:['apps/cli/src/index.ts'], bundle:true, platform:'node', target:'node22',format:'esm',outfile:'dist/cli.js',banner:{js:'#!/usr/bin/env node\nimport { createRequire as __sgCreateRequire } from "node:module"; const require = __sgCreateRequire(import.meta.url);'}, sourcemap:true,metafile:true});
-for(const path of ['research','fixtures','evaluation/cases.json','evaluation/freeze.json']) {
+for(const path of ['research','fixtures','evaluation/cases.json','evaluation/freeze.json','public-demo']) {
   await cp(path, `dist/${path}`, {recursive:true});
 }
+await mkdir('dist/assets/honeyskill', { recursive: true });
+await cp('assets/honeyskill/logo.png', 'dist/assets/honeyskill/logo.png');
 await cp('packages/skillguard-lite/data', 'dist/skillguard-lite/data', { recursive: true });
 for (const name of ['good', 'trap']) {
   await mkdir(`dist/lab-skills/${name}`, { recursive: true });
   await cp(`packages/skillguard-lite/lab-fixtures/${name}/SKILL.md.fixture`, `dist/lab-skills/${name}/SKILL.md.fixture`);
 }
-let notices='SkillGate Finance — bundled third-party licenses\n';
+let notices='HoneySkill — bundled third-party licenses\n';
+// The Progent checker is an attributed source port, not an npm dependency, so
+// esbuild's dependency-package traversal cannot discover its required notice.
+notices += `\n\n${await readFile('packages/security-policy/PROGENT_LICENSE.txt', 'utf8')}\n`;
 const packages = new Map();
 const directories = new Map();
 async function owningPackage(directory) {
@@ -50,5 +55,6 @@ for (const [name, { directory, pkg }] of [...packages.entries()].sort(([a], [b])
 }
 await writeFile('dist/THIRD_PARTY_NOTICES.txt',notices.trimEnd()+'\n');
 await cp('README.md','dist/README.md');
-await writeFile('dist/package.json', JSON.stringify({name:manifest.name,version:manifest.version,description:'Financial-risk checks before agent skill installation. Local CLI prototype.',type:'module',bin:{skillgate:'cli.js'},engines:manifest.engines,repository:{type:'git',url:'https://github.com/gderamchi/skillgate.git'},homepage:'https://github.com/gderamchi/skillgate',files:['cli.js','cli.js.map','research','fixtures','evaluation','skillguard-lite','lab-skills','README.md','THIRD_PARTY_NOTICES.txt'],license:'UNLICENSED'},null,2));
-console.log(`SkillGate ${manifest.version}: CLI, lab examples and behavioral data bundled into dist/ (${packages.size} dependency notices; no web server or UI).`);
+await cp('README-SKILLGATE-HISTORY.md','dist/README-SKILLGATE-HISTORY.md');
+await writeFile('dist/package.json', JSON.stringify({name:manifest.name,version:manifest.version,description:'Agent-skill inspection and financial-action mediation in an isolated laboratory.',type:'module',bin:{honeyskill:'cli.js',skillgate:'cli.js'},engines:manifest.engines,repository:{type:'git',url:'https://github.com/gderamchi/honeyskill.git'},homepage:'https://github.com/gderamchi/honeyskill',files:['cli.js','cli.js.map','research','fixtures','evaluation','skillguard-lite','lab-skills','public-demo','assets/honeyskill/logo.png','README.md','README-SKILLGATE-HISTORY.md','THIRD_PARTY_NOTICES.txt'],license:'UNLICENSED'},null,2));
+console.log(`HoneySkill ${manifest.version}: CLI, lab examples and behavioral data bundled into dist/ (${packages.size} dependency notices; no web server or UI).`);

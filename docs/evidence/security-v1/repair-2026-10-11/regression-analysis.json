@@ -1,0 +1,998 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-11T04:15:51.543688+00:00",
+  "scope": "Read-only diagnosis of every paired TP loss and every newly eligible benign FP in the completed development repair run. No relabeling, tuning, sample execution, or paid calls.",
+  "beforeRun": "live-2026-10-11T03-31-31-569Z",
+  "afterRun": "repair-2026-10-11T04-01-17-825Z",
+  "summary": {
+    "oldTpToFn": 2,
+    "oldTpToIncomplete": 1,
+    "commonEligibleTnToFp": 0,
+    "newlyEligibleBenignToFp": 3,
+    "newlyEligibleFpWithPreexistingIdenticalNativeAlert": 3,
+    "newlyEligibleFpWithAdditionalNewSemanticAlerts": 1
+  },
+  "cases": [
+    {
+      "id": "src002-asb04-000086",
+      "name": "jetaasc-newsletter",
+      "groundTruth": "malicious",
+      "beforeCaseSha256": "017e74065abea6181ce24ec4ca0fa8a953e9d4d1c670f606f100b98c279c05e3",
+      "afterCaseSha256": "05934cccd3169f4767a67f3f30166c76c6e5f5a377e9f5e5ef30020901ecbdcd",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "assets/template.html",
+                    "line": 519,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": true,
+        "outcome": "no_alert",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "2751521963e541bad933819a3e7120c27cd3febc04b70edec950800bce83a11b"
+              },
+              {
+                "batch": 2,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "81489b3e967503575512e63c60aa8ffaa5e21868f53e67c20efa9c4380f45c89"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "TP -> FN",
+      "diagnosis": "The baseline had one semantic-only FIN-05 alert about an external script reference in the newsletter HTML. The repaired run returned no alerts from any engine. The source-script line was present in completed semantic batch 2 and is identical under the old/new redactors; both revised request hashes were reconstructed exactly from the frozen source and prompt. This is a lost detection under the unchanged external label, not a coverage failure. The completed no-finding response does not explain why the model omitted it.",
+      "evidenceDelivery": {
+        "file": "assets/template.html",
+        "line": 519,
+        "sourceId": "s0000682",
+        "batch": 2,
+        "oldNewRedactedLineEqual": true,
+        "newRedactionApplied": false,
+        "allRevisedRequestHashesReconstructed": true
+      },
+      "causalLimit": "Prompt scope, partitioning and model response changed together. No one-factor causal attribution or independent proof that the external script is malicious is established."
+    },
+    {
+      "id": "src002-asb04-007263",
+      "name": "weekly-plan",
+      "groundTruth": "malicious",
+      "beforeCaseSha256": "e01bc9b3fb63095891bf7f43bfdfdf88fa237cf1efaee0b6a1bd0ba2f64e649d",
+      "afterCaseSha256": "0d3c33ff826e6fc442a08b7758dacda0aa052d5307081a20819cea9539a2e21a",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-01",
+                "severity": "critical",
+                "locations": [
+                  {
+                    "file": "SKILL.md",
+                    "line": 87,
+                    "verified": true
+                  }
+                ]
+              },
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "SKILL.md",
+                    "line": 88,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": true,
+        "outcome": "no_alert",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "d89b623354dab065be35ca2f34bab7c20b1d98d2fc9dc1256922f5c689d4158b"
+              },
+              {
+                "batch": 2,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "70e99a5915adad89ea02c59ce35c7ed6590946dc0745c0d1e531a108e87ec5cb"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "TP -> FN",
+      "diagnosis": "The baseline semantic reviewer raised FIN-01 for a literal bearer credential and FIN-05 for a curl-to-inline-Python data-processing pipeline. All revised stages return no alert. Both source lines are included in complete batch 1. The revised redactor masks the bearer value that the old redactor left visible; the next-line pipeline is unchanged. Masking plausibly removes credential-exposure evidence, while the revised prompt also rejects ordinary authenticated APIs and execution as sufficient evidence by themselves. Neither contributor has been isolated experimentally.",
+      "evidenceDelivery": [
+        {
+          "file": "SKILL.md",
+          "line": 87,
+          "sourceId": "s0000087",
+          "batch": 1,
+          "oldNewRedactedLineEqual": false,
+          "oldRedactionApplied": false,
+          "newRedactionApplied": true
+        },
+        {
+          "file": "SKILL.md",
+          "line": 88,
+          "sourceId": "s0000088",
+          "batch": 1,
+          "oldNewRedactedLineEqual": true,
+          "oldRedactionApplied": false,
+          "newRedactionApplied": false
+        }
+      ],
+      "allRevisedRequestHashesReconstructed": true,
+      "causalLimit": "Retain FN under the original external malicious label. The old financial-context framing was itself broad; neither the old label match nor this diagnostic is independent incident or exploitation proof. No credential value is reproduced."
+    },
+    {
+      "id": "src002-asb04-004314",
+      "name": "browser-automation",
+      "groundTruth": "malicious",
+      "beforeCaseSha256": "473b3e5b3dac3abb5174b0e55d6e4374241b3dcaadad6f27141c6b07a31f50b2",
+      "afterCaseSha256": "6abf3b7e3c0f42e367a0b98ef41dd2e0c9d3d6c755f632187dcd39fcc31b6456",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "SKILL.md",
+                    "line": 26,
+                    "verified": true
+                  },
+                  {
+                    "file": "SKILL.md",
+                    "line": 50,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "COMMAND_INJECTION_JS_FUNCTION_CONSTRUCTOR",
+                "severity": "critical",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 173,
+                    "verified": true
+                  }
+                ]
+              },
+              {
+                "rule": "COMMAND_INJECTION_JS_FUNCTION_CONSTRUCTOR",
+                "severity": "critical",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 722,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 722,
+                    "verified": true
+                  }
+                ]
+              },
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 173,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": false,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "SKILL.md",
+                    "line": 26,
+                    "verified": true
+                  },
+                  {
+                    "file": "SKILL.md",
+                    "line": 50,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "COMMAND_INJECTION_JS_FUNCTION_CONSTRUCTOR",
+                "severity": "critical",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 173,
+                    "verified": true
+                  }
+                ]
+              },
+              {
+                "rule": "COMMAND_INJECTION_JS_FUNCTION_CONSTRUCTOR",
+                "severity": "critical",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 722,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "partial",
+            "errors": [
+              "Batch 2: Unknown or empty source evidence ID; finding rejected."
+            ],
+            "alerts": [
+              {
+                "rule": "SG-04",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "server.mjs",
+                    "line": 619,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 621,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 631,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 846,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 847,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 849,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 850,
+                    "verified": true
+                  },
+                  {
+                    "file": "server.mjs",
+                    "line": 862,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "a675202b3c257b141546cf9d1b1bee0f02a0d2aeafb04bd0357c042eecb53124"
+              },
+              {
+                "batch": 2,
+                "status": "partial",
+                "errors": [
+                  "Unknown or empty source evidence ID; finding rejected."
+                ],
+                "inputSha256": "eece9e7df60f7368d03ce68ee6009a0a4e214c6dce357a02ae046a6fd7afd5ad"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "TP -> incomplete",
+      "diagnosis": "The same native FIN-05 alert and two Cisco critical Function-constructor alerts remain. Semantic batch 2 rejected at least one finding because an evidence ID was unknown or empty. A different valid SG-04 semantic finding about unauthenticated termination endpoints remains. The engine is correctly partial and the package therefore loses classification eligibility even though risk alerts persist.",
+      "citationFailureBoundary": "The retained error combines unknown and empty IDs and does not store the rejected response text, so this artifact cannot distinguish which condition occurred or name the rejected finding. Do not describe it as a clean result or erase it by reusing the baseline result."
+    },
+    {
+      "id": "agenttrap-benign-0104",
+      "name": "skill-creator",
+      "groundTruth": "benign",
+      "beforeCaseSha256": "e2e1c9d898107a116ddd1a5d05975078573476c79ee659890b662c56b1f25a8e",
+      "afterCaseSha256": "b79c3ebb3347ea611a8a3c7c38b548ab9c64d6e61c5f81afbb9a8a0f53a53e53",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": false,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/aggregate_benchmark.py",
+                    "line": 91,
+                    "verified": true
+                  },
+                  {
+                    "file": "agents/grader.md",
+                    "line": 18,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "unsupported",
+            "errors": [
+              "Semantic content limit reached; no API request was made."
+            ],
+            "alerts": [],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/aggregate_benchmark.py",
+                    "line": 91,
+                    "verified": true
+                  },
+                  {
+                    "file": "agents/grader.md",
+                    "line": 18,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "d95940a2f697f3e5bcd715c2f89159ce81b80237db736b97ef28f738ead4853a"
+              },
+              {
+                "batch": 2,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "0309e7db44e7a15bbeb055f31bebd290e6d3b7f3d4967a668d9982c83ab8e3a5"
+              },
+              {
+                "batch": 3,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "40720a92355258689edf4738c6a3e7e26ed3eb13c634f1eebf081d616773d8ec"
+              },
+              {
+                "batch": 4,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "78dfa6b2c249f11c84aa9f2402f22a3ffce4fd0e2a7f3f1f90a658a8468a848b"
+              },
+              {
+                "batch": 5,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "63d2589eb29942a2d27332f4e7076e0bb136f18dd98bd185ae97dee8e2e30444"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "incomplete -> FP",
+      "previouslyObservedNativeFalseAlert": true,
+      "previousExclusion": "semantic unsupported: content limit; no API request made",
+      "newlyScoredRatherThanNewNativeAlert": true,
+      "nativeCause": "FIN-05 correlates lexical financial-context, remote/retrieval and execution matches anywhere in the package; it does not establish a connected source-to-sink flow or unauthorized behavior. Its finding object is identical before and after.",
+      "diagnosis": "The existing native FIN-05 joins a json.load / JSONDecodeError pair in aggregate_benchmark.py (lines 91-92) with legitimate grader instructions to run a checking script (agents/grader.md line 18). The broad remote regex can match the eval substring in eval_id together with decode on the adjacent error-handler line. No semantic or Cisco medium-plus alert exists before or after. Coverage repair exposes an existing native false alert in the scored denominator.",
+      "newSemanticAlerts": []
+    },
+    {
+      "id": "agenttrap-benign-0114",
+      "name": "mcp-builder",
+      "groundTruth": "benign",
+      "beforeCaseSha256": "1ad31216f8991ef29422f30373b8d1a4140da3176e08a5b2ee1a568befc14d3f",
+      "afterCaseSha256": "ba046df7c7ac2ff0ddf64b613b2f9ddf9040c8cf9991e03c06b047eda85b2b8b",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": false,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/evaluation.py",
+                    "line": 315,
+                    "verified": true
+                  },
+                  {
+                    "file": "reference/evaluation.md",
+                    "line": 428,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "unsupported",
+            "errors": [
+              "Semantic content limit reached; no API request was made."
+            ],
+            "alerts": [],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/evaluation.py",
+                    "line": 315,
+                    "verified": true
+                  },
+                  {
+                    "file": "reference/evaluation.md",
+                    "line": 428,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "fe94e9af97b41813ae96bec666ca51b1a0e4100114bc7cd26edb86083da40e45"
+              },
+              {
+                "batch": 2,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "5a16048a2ef6d0943330e4b84ec42b7885172edb86da409b5bbd96636d1e1caa"
+              },
+              {
+                "batch": 3,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "ab858518b708461f4c96acdd30cae928ca2608ff637ceb77c76d33cd6c97a65d"
+              },
+              {
+                "batch": 4,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "2c11e11408057efe2bb71571cdbd6422723ceaa0feb277be3d351a495a2e2db7"
+              },
+              {
+                "batch": 5,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "1f52e964a729aec056b65acea1b2dc7bd89b09d395d1e0d63c377cb1549642c7"
+              },
+              {
+                "batch": 6,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "0b1f68f722ff63ad241f6b2b81472978b5851ddde2e8fa72d1183d9f3a8b94cd"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "incomplete -> FP",
+      "previouslyObservedNativeFalseAlert": true,
+      "previousExclusion": "semantic unsupported: content limit; no API request made",
+      "newlyScoredRatherThanNewNativeAlert": true,
+      "nativeCause": "FIN-05 correlates lexical financial-context, remote/retrieval and execution matches anywhere in the package; it does not establish a connected source-to-sink flow or unauthorized behavior. Its finding object is identical before and after.",
+      "diagnosis": "The existing native FIN-05 pairs a legitimate MCP evaluation command using an HTTPS endpoint (scripts/evaluation.py line 315) with documentation about launching a local stdio server (reference/evaluation.md line 428). The regex matches eval within evaluation.py and the URL, then unrelated execution documentation; no malicious dataflow is proven. This alert was already visible before the repair but excluded by missing semantic coverage.",
+      "newSemanticAlerts": []
+    },
+    {
+      "id": "agenttrap-benign-0115",
+      "name": "mcp-builder",
+      "groundTruth": "benign",
+      "beforeCaseSha256": "ae5bd41c0cd7c9938d6439021b508c981d8563e0828a35ac5d23cb4635de13d2",
+      "afterCaseSha256": "df8a708e07c5f3470025c2e8bf3adf8789844b4c2c63f2d38d1a3f40bcb061f8",
+      "sampleMetadataUnchanged": true,
+      "nativeAlertObjectsUnchanged": true,
+      "before": {
+        "inspectionComplete": false,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/evaluation.py",
+                    "line": 315,
+                    "verified": true
+                  },
+                  {
+                    "file": "reference/evaluation.md",
+                    "line": 428,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "unsupported",
+            "errors": [
+              "Semantic content limit reached; no API request was made."
+            ],
+            "alerts": [],
+            "requests": []
+          }
+        ]
+      },
+      "after": {
+        "inspectionComplete": true,
+        "outcome": "risk_detected",
+        "gaps": [],
+        "engines": [
+          {
+            "engine": "native",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "FIN-05",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/evaluation.py",
+                    "line": 315,
+                    "verified": true
+                  },
+                  {
+                    "file": "reference/evaluation.md",
+                    "line": 428,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": []
+          },
+          {
+            "engine": "cisco",
+            "status": "complete",
+            "errors": [],
+            "alerts": [],
+            "requests": []
+          },
+          {
+            "engine": "semantic",
+            "status": "complete",
+            "errors": [],
+            "alerts": [
+              {
+                "rule": "SG-02",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 25,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 31,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 50,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 53,
+                    "verified": true
+                  }
+                ]
+              },
+              {
+                "rule": "SG-03",
+                "severity": "high",
+                "locations": [
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 58,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 60,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 61,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 63,
+                    "verified": true
+                  },
+                  {
+                    "file": "scripts/create_analytics_mcp.py",
+                    "line": 65,
+                    "verified": true
+                  }
+                ]
+              }
+            ],
+            "requests": [
+              {
+                "batch": 1,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "4cf4ee461f9b9b270a25693af7834b6183623d93694a34d47369b81d287c63ca"
+              },
+              {
+                "batch": 2,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "1b37b10088e67cc5fbeab0d86859abed7e80935fa05d8ed91b38a5392ad1ad6c"
+              },
+              {
+                "batch": 3,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "d03a49344bc2550169677e1fafb4a5b5ff9f5b7ed57b0b4c0b07ed69b9847c6f"
+              },
+              {
+                "batch": 4,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "35beb900b516e22e20a89cc65de28fa34961b8942c07bf54e599486f8a2b86db"
+              },
+              {
+                "batch": 5,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "1ed496be5216d85f30a8001d4e832a4319220ce1e0eaad7b36b5d4d41fa1d5b3"
+              },
+              {
+                "batch": 6,
+                "status": "complete",
+                "errors": [],
+                "inputSha256": "45a9645e12d92559c176ceb4e95297e4a6da7f0c8d94caacd9f7bda695075404"
+              }
+            ]
+          }
+        ]
+      },
+      "transition": "incomplete -> FP",
+      "previouslyObservedNativeFalseAlert": true,
+      "previousExclusion": "semantic unsupported: content limit; no API request made",
+      "newlyScoredRatherThanNewNativeAlert": true,
+      "nativeCause": "FIN-05 correlates lexical financial-context, remote/retrieval and execution matches anywhere in the package; it does not establish a connected source-to-sink flow or unauthorized behavior. Its finding object is identical before and after.",
+      "diagnosis": "The existing native FIN-05 pairs a legitimate MCP evaluation command using an HTTPS endpoint (scripts/evaluation.py line 315) with documentation about launching a local stdio server (reference/evaluation.md line 428). The regex matches eval within evaluation.py and the URL, then unrelated execution documentation; no malicious dataflow is proven. This alert was already visible before the repair but excluded by missing semantic coverage.",
+      "newSemanticAlerts": [
+        {
+          "rule": "SG-02",
+          "severity": "high",
+          "assessment": "New semantic alert about file reads within operator-configured allowed roots. Source has an explicit resolved-path containment guard. A malicious escape or unauthorized read is not demonstrated; the warning assumes an untrusted caller and overly broad operator configuration. This remains FP against the unchanged bounded-utility control label.",
+          "file": "scripts/create_analytics_mcp.py",
+          "lines": [
+            25,
+            31,
+            50,
+            53
+          ]
+        },
+        {
+          "rule": "SG-03",
+          "severity": "high",
+          "assessment": "New semantic alert title claims a SQL read-only guard can be bypassed, but its own explanation acknowledges that conn.execute generally rejects the proposed multi-statement path. It then relies on hypothetical SQLite functions/extensions not established in the supplied fixture. No exploit witness is demonstrated; this is overbroad threat inference and remains FP.",
+          "file": "scripts/create_analytics_mcp.py",
+          "lines": [
+            58,
+            60,
+            61,
+            63,
+            65
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    "The increase from 4 to 7 scored control FPs contains three existing native alerts newly admitted by coverage repair, not three newly created native detections.",
+    "One of those controls additionally acquires two new semantic alerts, which must also be disclosed rather than hidden behind the coverage explanation.",
+    "The two lost positive detections and the lost eligibility are real scored regressions under unchanged labels and must be included in the before/after report.",
+    "Source location verification is not adjudication of threat correctness. All source-study labels and constructed benign-control labels remain unchanged."
+  ]
+}

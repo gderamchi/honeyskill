@@ -1,0 +1,142 @@
+{
+  "kind": "derived-public-evidence-subset",
+  "originalArtifactsPreserved": true,
+  "all114CaseOutcomesRetained": true,
+  "withheldFiles": [
+    "diagnosis.html",
+    "final-report-ui/cases-1280.png",
+    "final-report-ui/cases-320.png",
+    "final-report-ui/cases-partial-1280.png",
+    "final-report-ui/cases-partial-320.png",
+    "final-report-ui/diagnosis-1280.png",
+    "final-report-ui/diagnosis-320.png",
+    "final-report-ui/index-1280.png",
+    "final-report-ui/index-320-large-text.png",
+    "final-report-ui/index-320.png",
+    "fn-after-analysis.json",
+    "fn-after-analysis.md",
+    "fn-before-analysis.json"
+  ],
+  "files": [
+    {
+      "path": "REPRODUCE.md",
+      "sha256": "438c5c32447d0a5028af95766a19132d1fca17a6eea238a1ca3e534ba3905294"
+    },
+    {
+      "path": "SHA256SUMS.json",
+      "sha256": "2aaeb6ee2604a8867b26cd484903dbd3370ec5602a2cad6310b2917acca9a26b"
+    },
+    {
+      "path": "availability.html",
+      "sha256": "19c156c2b8204f87c95c048f53082f9bd28ef4f4493a354c881eb2a472fbcb93"
+    },
+    {
+      "path": "case-results.json",
+      "sha256": "189daf4e5a48f0569cdd14fc2e940f876056e40348cd68e9cf362404d4ad206b"
+    },
+    {
+      "path": "cases-public.html",
+      "sha256": "0b990db9ec7579ae362fecfce7eac9e4c6804831360aaef037d8ec1f6a49a0d9"
+    },
+    {
+      "path": "cases.html",
+      "sha256": "b3f19947e73fb1f236acfee3f57b00932bd38e89c9b7eac3361558ce748681b1"
+    },
+    {
+      "path": "comparison.json",
+      "sha256": "c23db8c288a74ad4e0a090155aaac018d33a50b9b8e8898a14856aa8fd00413d"
+    },
+    {
+      "path": "comparison.md",
+      "sha256": "a9991aaee8084bb57eda0cfe2fd7e31c998b101dfbd5289c152229c6856396f5"
+    },
+    {
+      "path": "controls-verification.json",
+      "sha256": "7d2dfb3db777efa1a5164e29a440921182bba4a205899e3543db8dbcaace9cc5"
+    },
+    {
+      "path": "coverage-plan-audit.json",
+      "sha256": "587bbf1d412592c20e5130faf81a6137e941dd78cedfcb51f3f53e2cac1060db"
+    },
+    {
+      "path": "external-verification.json",
+      "sha256": "7d2dfb3db777efa1a5164e29a440921182bba4a205899e3543db8dbcaace9cc5"
+    },
+    {
+      "path": "final-code-validation.json",
+      "sha256": "ffacc3a7ae176adefb6ce8ea3edeb87e3858c598df5239fb4fe3df34b4691b1e"
+    },
+    {
+      "path": "final-report-ui-validation.json",
+      "sha256": "91124994dafb44ddcff739beabcd7cef50243314d3dd85c4d51e54a675576120"
+    },
+    {
+      "path": "final-source-coverage-audit.json",
+      "sha256": "94a4307926f76ae58a234b7334762b2dca988d82adc14e975201f946bae5ad16"
+    },
+    {
+      "path": "incomplete-cases.json",
+      "sha256": "4dafd073e525c58dff22fa478ce3913b492de7d5878a58db61e26fda5c11bb95"
+    },
+    {
+      "path": "incomplete-cases.md",
+      "sha256": "f1570dd7869d1aa090f4356fb52095a3c1798010dfbead8b777921d082c46e92"
+    },
+    {
+      "path": "index-public.html",
+      "sha256": "f36f21c022005343c1ce12e04060f7696517ae252eb2b3eedbb66a95f45ccccc"
+    },
+    {
+      "path": "index.html",
+      "sha256": "f196a4480e1d72af3ad30d7653458b56d50ceb7a7875a70227461f74fbb93055"
+    },
+    {
+      "path": "metrics.json",
+      "sha256": "e9444d52007158ce3f6051eed30c9557b225fce7e6e0dfc2b7a329814f0b946e"
+    },
+    {
+      "path": "portable-safety-check.json",
+      "sha256": "4d381057f5632bf6e30e0cebce8fb2c55e962ef92bc67d9148929348b15aa2ab"
+    },
+    {
+      "path": "product-report-ui-validation.json",
+      "sha256": "ba556f7cd57c1544c2ba5ac04732b7d9aa1c4e6e60a436a884448ef5d94b739d"
+    },
+    {
+      "path": "protocol.json",
+      "sha256": "6b4a3f28a68c02b61d623bcbe227c2d69827c77b2f82663f824714e93baf6921"
+    },
+    {
+      "path": "protocol.md",
+      "sha256": "aa1c63237b7510884ef6b13fe200d095d4621306d58fbe44f537eb4565c2ae70"
+    },
+    {
+      "path": "regression-analysis.json",
+      "sha256": "0ca6d2480c60164935110ca9020a7688d384e21ff6bfd421012bac75170c54cf"
+    },
+    {
+      "path": "report-public.md",
+      "sha256": "866f3e352f6a37858c975630c72b275b4cec97aba6f7751ff4f912bc58e31e8b"
+    },
+    {
+      "path": "report.md",
+      "sha256": "7ec6ac15a6369b0cfbc3b028cb3aef568f5b19311cbfbd7e399f65a1ee55aec2"
+    },
+    {
+      "path": "request-ledger.json",
+      "sha256": "f728b049d82ba1c3730c4bc2defd7fd5396ec932a47837a0b63db228ce9a8cf1"
+    },
+    {
+      "path": "run-summary.json",
+      "sha256": "eac44fe3c28a4d63548dfab8729d7b5ec398193b8d9ae843ee647d27b4e88ce8"
+    },
+    {
+      "path": "validation.json",
+      "sha256": "388398a229c2f762c696f05cefda227adbb55d9b1c6694da366716da3d583852"
+    },
+    {
+      "path": "verify-comparison.py",
+      "sha256": "8a0c233955c16b410b77af87c0ef4612f85b2672afdf70068ba130c02201aee2"
+    }
+  ]
+}

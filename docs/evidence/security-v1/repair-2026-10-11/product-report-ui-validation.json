@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "harnessAttempts": [
+    {
+      "status": "setup-error",
+      "reason": "Initial invocation pointed to scratch script before it was moved to requested chat directory; no browser or provider call."
+    },
+    {
+      "status": "harness-error",
+      "reason": "Initial filter check assumed an INCOMPLETE option; product uses its actual caseClassification categories. Corrected harness to exercise observed classifications; no product change."
+    },
+    {
+      "status": "completed",
+      "reason": "This validation records final full browser run."
+    }
+  ],
+  "checkedAt": "2026-10-11T04:11:29.551Z",
+  "scope": "Read-only Chromium QA of the frozen product HTML renderer and saved real revised evidence. No acquired skill execution, no paid requests, no product-source changes. Generated individual pages use unchanged actual case JSON; external cohort page is the run-generated index.html.",
+  "browser": {
+    "engine": "Chromium",
+    "playwrightVersion": "1.64.0"
+  },
+  "source": {
+    "reportModule": "packages/security-lab/src/report.ts",
+    "sha256": "f45a079df9190275e3ffc0bc2021d7f56f1dbad50ed13f46c206b1404a9ad298",
+    "benchmark": "work/security-runs/repair-2026-10-11T04-01-17-825Z/external/benchmark.json",
+    "benchmarkSha256": "dc8f9da5e942c4a026cb5fcfaa3bb52b851fcc83994f6711c19140149d6acce9"
+  },
+  "fixtures": [
+    {
+      "name": "single-batch",
+      "id": "src002-asb04-000790",
+      "json": "work/security-runs/repair-2026-10-11T04-01-17-825Z/external/src002-asb04-000790.json",
+      "jsonSha256": "acc697ea18f2903457e5a2fe835981890b2139854870069d9d8a635dc8ea2d23",
+      "html": "product-report-ui/single-batch.html",
+      "htmlSha256": "0194537a24c2923aa10577fb4f3af6edcfe94a7a2cbb43706f92c204bec7b72e",
+      "requestCount": 1
+    },
+    {
+      "name": "partial",
+      "id": "src002-asb04-003489",
+      "json": "work/security-runs/repair-2026-10-11T04-01-17-825Z/external/src002-asb04-003489.json",
+      "jsonSha256": "4187ebfa63f91d7e312889d038f6b2b4c929498bae691e24f9b89f470d01b44a",
+      "html": "product-report-ui/partial.html",
+      "htmlSha256": "67afb52fb00a56e9534e50a7e1ac3c12be27af0173d44a879703343f8d184e20",
+      "requestCount": 2
+    },
+    {
+      "name": "large-ledger",
+      "id": "src002-asb04-003205",
+      "json": "work/security-runs/repair-2026-10-11T04-01-17-825Z/external/src002-asb04-003205.json",
+      "jsonSha256": "ba21660812e7a85cca7fcff2bdbfd1490bf259f1b3fd7af3c0c51d3b28a29306",
+      "html": "product-report-ui/large-ledger.html",
+      "htmlSha256": "0de977451dcb8d8a1de7ccef1f945ad049c25253bf7042acb43b0ebf024bcad0",
+      "requestCount": 56
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 900
+    },
+    {
+      "width": 1280,
+      "height": 900
+    }
+  ],
+  "checks": [
+    {
+      "name": "single-batch 320: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "single-batch 320: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 1,
+        "expectedRows": 1
+      }
+    },
+    {
+      "name": "single-batch 320: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "single-batch 320: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "single-batch 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "partial 320: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "partial 320: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 2,
+        "expectedRows": 2
+      }
+    },
+    {
+      "name": "partial 320: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "partial 320: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "partial 320: retained error displayed",
+      "pass": true
+    },
+    {
+      "name": "partial 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "large-ledger 320: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 320: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 56,
+        "expectedRows": 56
+      }
+    },
+    {
+      "name": "large-ledger 320: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 320: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "cohort 320: all original cases exist",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: initial visible count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "cohort 320: TP filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: FN filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: PARTIAL_ANALYSIS filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: PARTIAL_PACKAGE filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: COVERAGE_GAP filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: UNLABELLED filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: empty search state",
+      "pass": true
+    },
+    {
+      "name": "cohort 320: case ID search",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 320: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 320: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 2,
+        "expectedRows": 2
+      }
+    },
+    {
+      "name": "cohort selected partial 320: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "single-batch 1280: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "single-batch 1280: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 1,
+        "expectedRows": 1
+      }
+    },
+    {
+      "name": "single-batch 1280: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "single-batch 1280: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "single-batch 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "partial 1280: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "partial 1280: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 2,
+        "expectedRows": 2
+      }
+    },
+    {
+      "name": "partial 1280: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "partial 1280: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "partial 1280: retained error displayed",
+      "pass": true
+    },
+    {
+      "name": "partial 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "large-ledger 1280: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 1280: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 56,
+        "expectedRows": 56
+      }
+    },
+    {
+      "name": "large-ledger 1280: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 1280: inspection status displayed",
+      "pass": true
+    },
+    {
+      "name": "large-ledger 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "cohort 1280: all original cases exist",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: initial visible count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "cohort 1280: TP filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: FN filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: PARTIAL_ANALYSIS filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: PARTIAL_PACKAGE filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: COVERAGE_GAP filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: UNLABELLED filter count",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: empty search state",
+      "pass": true
+    },
+    {
+      "name": "cohort 1280: case ID search",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 1280: completed/planned disclosure",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 1280: every displayed ledger cell equals JSON",
+      "pass": true,
+      "details": {
+        "displayedRows": 2,
+        "expectedRows": 2
+      }
+    },
+    {
+      "name": "cohort selected partial 1280: total tokens equals JSON",
+      "pass": true
+    },
+    {
+      "name": "cohort selected partial 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "partial 320: 200% root font no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "no outside network requests attempted",
+      "pass": true,
+      "details": {
+        "attempts": 0
+      }
+    },
+    {
+      "name": "no browser page/console errors",
+      "pass": true,
+      "details": {
+        "count": 0
+      }
+    },
+    {
+      "name": "frozen product renderer unchanged",
+      "pass": true
+    },
+    {
+      "name": "partial 320: horizontal mouse wheel reveals right ledger columns",
+      "pass": true,
+      "details": {
+        "scrollLeft": 162,
+        "clientWidth": 266,
+        "scrollWidth": 428,
+        "tokensHeaderVisible": true
+      }
+    },
+    {
+      "name": "horizontal-scroll check: no network or console errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "screenshots": [
+    "product-report-ui/partial-320.png",
+    "product-report-ui/large-ledger-320.png",
+    "product-report-ui/cohort-320.png",
+    "product-report-ui/partial-1280.png",
+    "product-report-ui/large-ledger-1280.png",
+    "product-report-ui/cohort-1280.png",
+    "product-report-ui/partial-320-large-text.png",
+    "product-report-ui/partial-320-scrolled-right.png"
+  ],
+  "passed": true,
+  "limitations": [
+    "This verifies presentation and recorded ledger correspondence, not semantic relevance of model citations or malware correctness.",
+    "Multi-column tables deliberately use local horizontal scrolling at narrow widths; no document-level overflow is allowed.",
+    "No original JSON was altered; no synthetic attack text or dev toggle was inserted in the product.",
+    "Dark mode and RTL are not product features and were not tested.",
+    "Only the external cohort plus three representative actual review states were exercised; root separately validates its user-facing comparison page."
+  ],
+  "visualReview": {
+    "inspectedScreenshots": [
+      "product-report-ui/partial-320.png",
+      "product-report-ui/partial-1280.png",
+      "product-report-ui/large-ledger-1280.png",
+      "product-report-ui/partial-320-scrolled-right.png"
+    ],
+    "observations": [
+      "At 1280px, partial status, completed/planned count, both request rows, response IDs, tokens and the rejected-ID failure are readable.",
+      "At 320px, the ledger stays inside its container; the multi-column table needs horizontal scrolling and has tall rows from wrapped response IDs. This is usable but less compact than desktop.",
+      "The 56-request actual record renders as a complete table with a 56/56 disclosure and recorded aggregate tokens; no records were truncated.",
+      "Horizontal wheel interaction at 320px reveals response IDs and token counts, verified in a separate screenshot."
+    ],
+    "productChanges": "none"
+  }
+}

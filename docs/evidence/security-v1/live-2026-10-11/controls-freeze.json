@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "version": "skillgate-security-v1",
+  "id": "benchmark-68b61e5f-51a0-4145-9e34-f62a90afb073",
+  "startedAt": "2026-10-11T03:35:42.514Z",
+  "durationMs": 0,
+  "corpusId": "security-v1-agenttrap-negative-controls",
+  "corpusSha256": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a",
+  "configuration": {
+    "semantic": true,
+    "threshold": "medium",
+    "scannerVersion": "2.2.2",
+    "retries": 0
+  },
+  "freeze": {
+    "files": [
+      {
+        "path": "packages/security-lab/src/benchmark.ts",
+        "sha256": "33b454deb446e22a8a2f8d99c93eefba17e9532a9c3e19c7144938b234d19690"
+      },
+      {
+        "path": "packages/security-lab/src/chain-proof.ts",
+        "sha256": "51d06eeb465a569a4e99e7a0afd026ce71dd499d337b480144bdaee8dcc4702d"
+      },
+      {
+        "path": "packages/security-lab/src/cisco.ts",
+        "sha256": "2b44df6b42e80155e58002013b578f06c1765b83ccfcdf78528adfae3136a1be"
+      },
+      {
+        "path": "packages/security-lab/src/guarded-agent.ts",
+        "sha256": "f828fbbdd90555885bfd568320dc6e310f9ee16c77203fffad7f75bd4afc125e"
+      },
+      {
+        "path": "packages/security-lab/src/report.ts",
+        "sha256": "cfa5ee5ddede9580d8f52b4ef5b3516a1ebd44e86955f894a65a54a326c7d4a3"
+      },
+      {
+        "path": "packages/security-lab/src/review.ts",
+        "sha256": "6bae55a2ee9f5d2df6e62f7ebbb63f2e6b0b3c0c47a9928c340b8a16f99f36cb"
+      },
+      {
+        "path": "packages/security-lab/src/types.ts",
+        "sha256": "255a2dd3ab20239c412066c90bef567aa154052cfa2ce0c52ce53bbfdf682882"
+      },
+      {
+        "path": "packages/security-policy/src/benchmark.ts",
+        "sha256": "24ec04e19447562159433ec316f277d42d0155129f3f3e7e5e0f1ee181801ff6"
+      },
+      {
+        "path": "packages/security-policy/src/index.ts",
+        "sha256": "2b6553c2ec2ec280a89f3084da9b04f44ec739965143c7d3cb65c9eb9aa2b20a"
+      },
+      {
+        "path": "packages/security-policy/src/progent.ts",
+        "sha256": "bb39d7c1b8db41eb8e4597472161eae33c15481de3004bb03f74501261f351ec"
+      },
+      {
+        "path": "packages/core/src/acquisition.ts",
+        "sha256": "637885fa5665c0f2eb41ea66437021bf0c9cad6e97e10bc4d5d0c972d2e11a2f"
+      },
+      {
+        "path": "packages/core/src/analysis.ts",
+        "sha256": "4ec3fcc041d6491c826385f8244e76083b14a2b661b0b70917af74198fe2d6f6"
+      },
+      {
+        "path": "packages/core/src/github-archive.ts",
+        "sha256": "44207cfba9f109c94c3d4015e66dd711fd5b7a0f78cc48e2e28dc9b9e57da731"
+      },
+      {
+        "path": "packages/core/src/index.ts",
+        "sha256": "08ed2d1426c6512cad29906e92dbd15a15d6f6efe0be1b033da4113f64ce0e5a"
+      },
+      {
+        "path": "packages/core/src/semantic.ts",
+        "sha256": "5b376b34eafe71154b465cea8cc968e021ac57ae3c631ecbb691203f5cc09883"
+      },
+      {
+        "path": "packages/core/src/storage.ts",
+        "sha256": "e2f8739e402c7d6b0af55cdd1fb68793b6ce932dc9eef937ee20c88022bad2be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "32936ab9aa3056ca0930453848167dd9bea2d95f38044fa1ff65d627e805681c"
+      },
+      {
+        "path": "package.json",
+        "sha256": "b6f8ad9318f458b7a73cbe313696d97c72209a925d328826a803eaa3b271fb0d"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "af52ff5be6fc47b347a4a74015b482291285f361ba52ba455bbcdc814f85813a"
+      },
+      {
+        "path": "apps/cli/src/security.ts",
+        "sha256": "85d31b7d5260d0870f61a637cfcde77ba05638b9e5d70cfbd80a8c8bbbfc7f37"
+      },
+      {
+        "path": "packages/skillguard-lite/src/agent.ts",
+        "sha256": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c"
+      }
+    ],
+    "sha256": "0b40338c6dcee29e3e234f6c966f677b3e8e5d97510ea88e3a3fdb4af19ddcf2"
+  },
+  "limitations": [
+    "Development external evaluation, not a blind holdout or an independent replication.",
+    "Source-study malware labels are independent of SkillGate; authenticity to original incident bytes can remain unverified.",
+    "Complete preserved package snapshots only enter TP/FP/TN/FN; partial packages, errors and missing selected engines remain separate.",
+    "Official upstream controls with unknown labels do not count as true negatives.",
+    "Family/source groups are not necessarily independent campaigns. Model training contamination is unknown.",
+    "Static package inspection; no acquired scripts, real wallets, malware endpoints or public signed transactions were executed.",
+    "Runtime prevention is evaluated separately on typed actions. These inspection scores do not measure prevention."
+  ],
+  "selectedIds": [
+    "agenttrap-benign-0101",
+    "agenttrap-benign-0103",
+    "agenttrap-benign-0104",
+    "agenttrap-benign-0105",
+    "agenttrap-benign-0106",
+    "agenttrap-benign-0107",
+    "agenttrap-benign-0109",
+    "agenttrap-benign-0112",
+    "agenttrap-benign-0113",
+    "agenttrap-benign-0114",
+    "agenttrap-benign-0115",
+    "agenttrap-benign-6101",
+    "agenttrap-benign-6102",
+    "agenttrap-benign-6103",
+    "agenttrap-benign-6104",
+    "agenttrap-benign-6105",
+    "agenttrap-benign-6106",
+    "agenttrap-benign-6107",
+    "agenttrap-benign-6108",
+    "agenttrap-benign-6109"
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-11T04:10:42.314451+00:00",
+  "kind": "independent-offline-read-only-frozen-code-review",
+  "frozenFileCheck": {
+    "readySha256": "7bee9eadb36b2a5fbb2ce3d10ce6a7f10db5d652c2b4e97b04002da5efed8798",
+    "checked": 29,
+    "matched": 29,
+    "mismatches": [],
+    "files": [
+      {
+        "path": "packages/security-lab/src/benchmark.ts",
+        "expected": "33b454deb446e22a8a2f8d99c93eefba17e9532a9c3e19c7144938b234d19690",
+        "actual": "33b454deb446e22a8a2f8d99c93eefba17e9532a9c3e19c7144938b234d19690",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/chain-proof.ts",
+        "expected": "51d06eeb465a569a4e99e7a0afd026ce71dd499d337b480144bdaee8dcc4702d",
+        "actual": "51d06eeb465a569a4e99e7a0afd026ce71dd499d337b480144bdaee8dcc4702d",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/cisco.ts",
+        "expected": "df316d645b63a54e649f555b2e929807e1cb5610c5f081411e6ac7feaf3d5bf9",
+        "actual": "df316d645b63a54e649f555b2e929807e1cb5610c5f081411e6ac7feaf3d5bf9",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/guarded-agent.ts",
+        "expected": "f828fbbdd90555885bfd568320dc6e310f9ee16c77203fffad7f75bd4afc125e",
+        "actual": "f828fbbdd90555885bfd568320dc6e310f9ee16c77203fffad7f75bd4afc125e",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/redaction.ts",
+        "expected": "65da0eab66577f18c6f6d7df9ad8e37aed7d08b5f53ff59b60a933eb9097c2eb",
+        "actual": "65da0eab66577f18c6f6d7df9ad8e37aed7d08b5f53ff59b60a933eb9097c2eb",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/report.ts",
+        "expected": "f45a079df9190275e3ffc0bc2021d7f56f1dbad50ed13f46c206b1404a9ad298",
+        "actual": "f45a079df9190275e3ffc0bc2021d7f56f1dbad50ed13f46c206b1404a9ad298",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/review.ts",
+        "expected": "36fa3ad3c945f7e4f56add9a46e045cce2832afd74604e8ced1509d85dd5202e",
+        "actual": "36fa3ad3c945f7e4f56add9a46e045cce2832afd74604e8ced1509d85dd5202e",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/semantic.ts",
+        "expected": "9e8aae48dac9057ae838c56e6dd0ac2eaa0dbb95b1d4c917cc7f0117812af498",
+        "actual": "9e8aae48dac9057ae838c56e6dd0ac2eaa0dbb95b1d4c917cc7f0117812af498",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/text-inventory.ts",
+        "expected": "45c7cb871a489f645a7cc567ce3b13a80029f4b34e28d0c9ab006ae33aa02c9c",
+        "actual": "45c7cb871a489f645a7cc567ce3b13a80029f4b34e28d0c9ab006ae33aa02c9c",
+        "matches": true
+      },
+      {
+        "path": "packages/security-lab/src/types.ts",
+        "expected": "997a521a150388c6d2b0d918f443d5f468bbc7e90b5fb60b90bf1cada26aacea",
+        "actual": "997a521a150388c6d2b0d918f443d5f468bbc7e90b5fb60b90bf1cada26aacea",
+        "matches": true
+      },
+      {
+        "path": "packages/security-policy/src/benchmark.ts",
+        "expected": "24ec04e19447562159433ec316f277d42d0155129f3f3e7e5e0f1ee181801ff6",
+        "actual": "24ec04e19447562159433ec316f277d42d0155129f3f3e7e5e0f1ee181801ff6",
+        "matches": true
+      },
+      {
+        "path": "packages/security-policy/src/index.ts",
+        "expected": "2b6553c2ec2ec280a89f3084da9b04f44ec739965143c7d3cb65c9eb9aa2b20a",
+        "actual": "2b6553c2ec2ec280a89f3084da9b04f44ec739965143c7d3cb65c9eb9aa2b20a",
+        "matches": true
+      },
+      {
+        "path": "packages/security-policy/src/progent.ts",
+        "expected": "bb39d7c1b8db41eb8e4597472161eae33c15481de3004bb03f74501261f351ec",
+        "actual": "bb39d7c1b8db41eb8e4597472161eae33c15481de3004bb03f74501261f351ec",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/acquisition.ts",
+        "expected": "637885fa5665c0f2eb41ea66437021bf0c9cad6e97e10bc4d5d0c972d2e11a2f",
+        "actual": "637885fa5665c0f2eb41ea66437021bf0c9cad6e97e10bc4d5d0c972d2e11a2f",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/analysis.ts",
+        "expected": "4ec3fcc041d6491c826385f8244e76083b14a2b661b0b70917af74198fe2d6f6",
+        "actual": "4ec3fcc041d6491c826385f8244e76083b14a2b661b0b70917af74198fe2d6f6",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/github-archive.ts",
+        "expected": "44207cfba9f109c94c3d4015e66dd711fd5b7a0f78cc48e2e28dc9b9e57da731",
+        "actual": "44207cfba9f109c94c3d4015e66dd711fd5b7a0f78cc48e2e28dc9b9e57da731",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/index.ts",
+        "expected": "08ed2d1426c6512cad29906e92dbd15a15d6f6efe0be1b033da4113f64ce0e5a",
+        "actual": "08ed2d1426c6512cad29906e92dbd15a15d6f6efe0be1b033da4113f64ce0e5a",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/semantic.ts",
+        "expected": "5b376b34eafe71154b465cea8cc968e021ac57ae3c631ecbb691203f5cc09883",
+        "actual": "5b376b34eafe71154b465cea8cc968e021ac57ae3c631ecbb691203f5cc09883",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/storage.ts",
+        "expected": "e2f8739e402c7d6b0af55cdd1fb68793b6ce932dc9eef937ee20c88022bad2be",
+        "actual": "e2f8739e402c7d6b0af55cdd1fb68793b6ce932dc9eef937ee20c88022bad2be",
+        "matches": true
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "expected": "32936ab9aa3056ca0930453848167dd9bea2d95f38044fa1ff65d627e805681c",
+        "actual": "32936ab9aa3056ca0930453848167dd9bea2d95f38044fa1ff65d627e805681c",
+        "matches": true
+      },
+      {
+        "path": "package.json",
+        "expected": "b6f8ad9318f458b7a73cbe313696d97c72209a925d328826a803eaa3b271fb0d",
+        "actual": "b6f8ad9318f458b7a73cbe313696d97c72209a925d328826a803eaa3b271fb0d",
+        "matches": true
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "expected": "af52ff5be6fc47b347a4a74015b482291285f361ba52ba455bbcdc814f85813a",
+        "actual": "af52ff5be6fc47b347a4a74015b482291285f361ba52ba455bbcdc814f85813a",
+        "matches": true
+      },
+      {
+        "path": "apps/cli/src/security.ts",
+        "expected": "52bdc9d370d768f04cb0759e0cbee2540ee39cf283dd315c550847ca44f9a593",
+        "actual": "52bdc9d370d768f04cb0759e0cbee2540ee39cf283dd315c550847ca44f9a593",
+        "matches": true
+      },
+      {
+        "path": "packages/skillguard-lite/src/agent.ts",
+        "expected": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c",
+        "actual": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c",
+        "matches": true
+      },
+      {
+        "path": "evaluation/security-v1/corpus/manifest.json",
+        "expected": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+        "actual": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+        "matches": true
+      },
+      {
+        "path": "evaluation/security-v1/negative-corpus/manifest.json",
+        "expected": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a",
+        "actual": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a",
+        "matches": true
+      },
+      {
+        "path": "work/security-repair-20261011/run.ts",
+        "expected": "9dc2fa8dce96b3b69d816540f788bd57f9a29c88541d4b7d60d96555cca0cc50",
+        "actual": "9dc2fa8dce96b3b69d816540f788bd57f9a29c88541d4b7d60d96555cca0cc50",
+        "matches": true
+      },
+      {
+        "path": "work/security-repair-20261011/protocol.md",
+        "expected": "aa1c63237b7510884ef6b13fe200d095d4621306d58fbe44f537eb4565c2ae70",
+        "actual": "aa1c63237b7510884ef6b13fe200d095d4621306d58fbe44f537eb4565c2ae70",
+        "matches": true
+      },
+      {
+        "path": "work/security-repair-20261011/compare.py",
+        "expected": "8a0c233955c16b410b77af87c0ef4612f85b2672afdf70068ba130c02201aee2",
+        "actual": "8a0c233955c16b410b77af87c0ef4612f85b2672afdf70068ba130c02201aee2",
+        "matches": true
+      }
+    ]
+  },
+  "historicalPreservation": {
+    "referenceCommit": "84ab6c499a52ed1e4371fe809b684373417f71b5",
+    "trackedFilesChecked": 61,
+    "mismatches": [],
+    "untrackedSkillguardFiles": [],
+    "scope": [
+      "packages/core/src/semantic.ts",
+      "packages/skillguard-lite/**"
+    ]
+  },
+  "corpusIntegrity": [
+    {
+      "path": "evaluation/security-v1/corpus/manifest.json",
+      "manifestSha256": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+      "cases": 94,
+      "files": 474,
+      "mismatches": []
+    },
+    {
+      "path": "evaluation/security-v1/negative-corpus/manifest.json",
+      "manifestSha256": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a",
+      "cases": 20,
+      "files": 142,
+      "mismatches": []
+    }
+  ],
+  "recordedTestLogs": {
+    "application-tests.log": {
+      "sha256": "c76f1ebfe5481e89a8300f8a93c45ce01f9064b5926b354eeb9334ca2562e0a5",
+      "counts": {
+        "tests": 266,
+        "pass": 264,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 2,
+        "todo": 0
+      },
+      "source": "existing local log, not rerun in this audit",
+      "summaryConsistent": true
+    },
+    "behavioral-tests.log": {
+      "sha256": "2c829daa0cbfa5b9dfcde9bf92fc5e8cfb6fa4d8c24641035108f32702ed875e",
+      "counts": {
+        "tests": 75,
+        "pass": 74,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0
+      },
+      "source": "existing local log, not rerun in this audit",
+      "summaryConsistent": true
+    },
+    "targeted-tests.log": {
+      "sha256": "d691eeef7635d3a223d42d3da08d9ea5ab94a860c11c31e7b83d6229e2346efc",
+      "counts": {
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "source": "existing local log, not rerun in this audit",
+      "summaryConsistent": true
+    },
+    "final-targeted-tests.log": {
+      "sha256": "ccde8ddc2fb4ca19493851f523cb31aace34b56535579ec0e8c7c79f7fd3c4d4",
+      "counts": {
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "source": "existing local log, not rerun in this audit",
+      "summaryConsistent": true
+    }
+  },
+  "additionalExistingLogs": {
+    "typecheck.log": {
+      "sha256": "dd15ce1adf19553e291335f0cfe6f5765ea92664b345623dc83bc00fc8cc943c",
+      "observation": "No TypeScript diagnostics recorded"
+    },
+    "runner-typecheck.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "observation": "No TypeScript diagnostics recorded"
+    },
+    "build.log": {
+      "sha256": "9f4d624d86426e6fbb6c8badc7bf45757f9c5253e4e4c5059aa1048b4ab93a42",
+      "observation": "Success message recorded; not rerun in this audit"
+    },
+    "pack.log": {
+      "sha256": "9d6f7bae5d1d4c9abb82312e85f3b14686d42250463179e82c6ade2ca76a762b",
+      "observation": "Success message recorded; not rerun in this audit"
+    },
+    "package-smoke.log": {
+      "sha256": "d40ed9d95ddaccf3fc9ce6169caf53d78029b8c01fa38fd7df93040644c1a280",
+      "observation": "Success message recorded; not rerun in this audit"
+    }
+  },
+  "knownResidualLimitations": [
+    {
+      "kind": "source-completeness",
+      "detail": "36 baseline-positive packages are incomplete preserved snapshots; all missing content remains missing and excluded. One case also has preserved files outside its chosen skill root."
+    },
+    {
+      "kind": "Cisco-citations",
+      "detail": "Prior actual repair diagnostic retained five malformed-manifest loader failures and three ambiguous repeated pipeline citations. These remain incomplete; no synthetic frontmatter or first-match guessing was used."
+    },
+    {
+      "kind": "source-format",
+      "detail": "Only a bounded allowlist of additional UTF-8 text extensions was added. Binary/unknown extensions, unsupported source, symlinks, changed bytes and acquisition limits are not complete coverage."
+    },
+    {
+      "kind": "semantic-context",
+      "detail": "Source is partitioned after credential masking. The inherited masking can remove the rest of a credential-assignment line and long token-shaped strings, potentially hiding relevant encoded payload or inline execution context. Cross-batch interactions can also be missed."
+    },
+    {
+      "kind": "evidence-meaning",
+      "detail": "Host IDs and Cisco citation verification prove the cited source location/transformation. They do not independently prove a finding interpretation, malicious intent, exploitability, or source-study ground truth."
+    },
+    {
+      "kind": "measurement",
+      "detail": "Model reasoning is not deterministic proof despite fixed model/temperature. Prompt scope, batching and workload changed together; whole-pipeline differences are not a causal component ablation."
+    },
+    {
+      "kind": "scope",
+      "detail": "This is static plus semantic package inspection, not acquired-script execution or runtime-prevention evidence. The repaired corpus was used for development; no independent holdout, wild FPR or general malware safety guarantee follows."
+    }
+  ],
+  "auditActions": {
+    "paidRequests": 0,
+    "sourceEdits": 0,
+    "fullTestsRerun": false,
+    "rawSourceExcerptsPrinted": false,
+    "credentialRecovery": false,
+    "freshTypecheck": {
+      "command": "pnpm typecheck",
+      "exitCode": 0,
+      "diagnostics": 0
+    }
+  },
+  "runStatusWhenChecked": {
+    "outputRelative": "work/security-runs/repair-2026-10-11T04-01-17-825Z",
+    "status": "finished"
+  }
+}

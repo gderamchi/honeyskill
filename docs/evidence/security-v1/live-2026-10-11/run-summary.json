@@ -1,0 +1,99 @@
+{
+  "status": "finished",
+  "completedAt": "2026-10-11T03:36:52.460Z",
+  "packageCohorts": [
+    {
+      "cohort": "external",
+      "metrics": {
+        "tp": 10,
+        "fp": 0,
+        "tn": 0,
+        "fn": 22,
+        "unknown": 12,
+        "incomplete": 50,
+        "attempted": 94,
+        "abstentions": {
+          "error": 0,
+          "unsupported": 11,
+          "partial": 14,
+          "notRequested": 0,
+          "missingEngine": 0,
+          "partialPackage": 24,
+          "coverageGap": 1
+        },
+        "labels": {
+          "malicious": 80,
+          "benign": 0,
+          "unknown": 14
+        },
+        "coverage": {
+          "complete": 44,
+          "labelled": 32,
+          "malicious": 32,
+          "benign": 0,
+          "rate": 0.46808510638297873,
+          "labelledRate": 0.4,
+          "maliciousRate": 0.4,
+          "benignRate": null
+        },
+        "precision": null,
+        "recall": 0.3125,
+        "falsePositiveRate": null,
+        "accuracy": null,
+        "endToEndDetectionFloor": 0.125
+      },
+      "verification": {
+        "valid": true,
+        "errors": []
+      }
+    },
+    {
+      "cohort": "controls",
+      "metrics": {
+        "tp": 0,
+        "fp": 4,
+        "tn": 12,
+        "fn": 0,
+        "unknown": 0,
+        "incomplete": 4,
+        "attempted": 20,
+        "abstentions": {
+          "error": 0,
+          "unsupported": 4,
+          "partial": 0,
+          "notRequested": 0,
+          "missingEngine": 0,
+          "partialPackage": 0,
+          "coverageGap": 0
+        },
+        "labels": {
+          "malicious": 0,
+          "benign": 20,
+          "unknown": 0
+        },
+        "coverage": {
+          "complete": 16,
+          "labelled": 16,
+          "malicious": 0,
+          "benign": 16,
+          "rate": 0.8,
+          "labelledRate": 0.8,
+          "maliciousRate": null,
+          "benignRate": 0.8
+        },
+        "precision": null,
+        "recall": null,
+        "falsePositiveRate": 0.25,
+        "accuracy": null,
+        "endToEndDetectionFloor": null
+      },
+      "verification": {
+        "valid": true,
+        "errors": []
+      }
+    }
+  ],
+  "guardedEvidence": "guarded/",
+  "guardedSuiteReturned": true,
+  "chainPassed": true
+}

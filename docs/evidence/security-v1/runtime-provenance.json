@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "sanitized-runtime-and-dependency-provenance",
+  "recordedAt": "2026-10-10T23:54:46.380Z",
+  "pathsRelativeTo": "publication-checkout",
+  "runtime": {
+    "node": "v25.6.1",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "kernelRelease": "27.2.0",
+    "v8": "14.1.146.11-node.19",
+    "openssl": "3.5.5"
+  },
+  "javascript": {
+    "package": {
+      "path": "package.json",
+      "sha256": "b6f8ad9318f458b7a73cbe313696d97c72209a925d328826a803eaa3b271fb0d"
+    },
+    "lock": {
+      "path": "pnpm-lock.yaml",
+      "sha256": "af52ff5be6fc47b347a4a74015b482291285f361ba52ba455bbcdc814f85813a"
+    },
+    "packageManager": "pnpm@10.33.0",
+    "ajv": {
+      "version": "8.20.0",
+      "packageMetadataSha256": "1f9033ee5a6515e7d76938b7072941862d1ed228a6879cc7fe10cdeb75107989",
+      "resolvedPackagePath": "node_modules/.pnpm/ajv@8.20.0/node_modules/ajv/package.json"
+    }
+  },
+  "cisco": {
+    "package": "cisco-ai-skill-scanner",
+    "version": "2.2.2",
+    "python": "3.14.2",
+    "sourceCommit": "ef5cfee8d15fe207e09d808ccb5be4b9ae6d321a",
+    "tagObject": "477117bcbef54ccd788f9b95d00e42540f4a8615",
+    "wheel": {
+      "path": "../../work/security-tools/cisco_ai_skill_scanner-2.2.2-cp311.cp312.cp313.cp314-none-macosx_13_0_arm64.whl",
+      "sha256": "ba6b9b5992fe51d2f041ac1d7edf0542abfe4d3b80641b9d9f7235ab7622fa67",
+      "filename": "cisco_ai_skill_scanner-2.2.2-cp311.cp312.cp313.cp314-none-macosx_13_0_arm64.whl",
+      "upstreamUrl": "https://files.pythonhosted.org/packages/6c/79/8420c278c2ee67786326060650a131b1a5c47f990203894a6704a0282131/cisco_ai_skill_scanner-2.2.2-cp311.cp312.cp313.cp314-none-macosx_13_0_arm64.whl"
+    },
+    "installedManifest": {
+      "path": "../../work/security-tools/cisco-installed-manifest.json",
+      "sha256": "664b2c2bfea551a50de8cce2f75a8fadf0c708caf3067a367ed8310cb6a7b391",
+      "compactJsonSha256": "01fd7f1262f5f84092f7d69b8ea419311e8baf901f241552998100d7d365f381",
+      "compactJsonAlgorithm": "SHA-256 of JSON.stringify(parsed manifest), preserving array order; no trailing newline",
+      "files": 221,
+      "verifiedAgainstCurrentInstallationAndWheel": 221,
+      "mismatches": [],
+      "excluded": "Installation-mutated dist-info/RECORD; Python bytecode cache files"
+    },
+    "dependencies": {
+      "path": "../../work/security-tools/requirements-installed.lock",
+      "sha256": "cb5974044ccbb7c309c8dd291828a78ad1957a7defd1541168c184671dd136e6",
+      "installedDistributions": 101,
+      "versionsMatchCurrentInstallation": true,
+      "transitiveArtifactHashesLocked": false
+    },
+    "sourceProvenance": {
+      "path": "../../work/security-tools/cisco-provenance.json",
+      "sha256": "2eb030786100bea60f85c0d1e937bc99a482e4ff77c28e922d191c1c5d9d7d53"
+    },
+    "adapter": {
+      "path": "packages/security-lab/src/cisco.ts",
+      "sha256": "2b44df6b42e80155e58002013b578f06c1765b83ccfcdf78528adfae3136a1be"
+    }
+  },
+  "progent": {
+    "reference": {
+      "repository": "https://github.com/sunblaze-ucb/progent",
+      "commit": "5be7b63fa96f70bc19b72fbcee81f1c0bcc1a565",
+      "source": "secagent/tool.py",
+      "sourceSha256": "59b2cd642a9c29f2459e919720fae935a5f6f99a2a5fa0c17f1ea95e9efbcd52",
+      "license": "MIT",
+      "implementation": "static-jsonschema-fallback-0-port-with-strict-input-boundary"
+    },
+    "localSource": {
+      "path": "work/security-tools/progent-reference/secagent/tool.py",
+      "sha256": "59b2cd642a9c29f2459e919720fae935a5f6f99a2a5fa0c17f1ea95e9efbcd52"
+    },
+    "port": {
+      "path": "packages/security-policy/src/progent.ts",
+      "sha256": "bb39d7c1b8db41eb8e4597472161eae33c15481de3004bb03f74501261f351ec"
+    },
+    "parityWitness": {
+      "path": "work/security-tools/progent-parity.json",
+      "sha256": "27ac6da0822efab8e15665065df5a834c55a5a38465f0b3b36afd622ae46091a",
+      "kind": "pinned-upstream-static-checker-parity",
+      "totals": {
+        "commonSubsetCases": 28,
+        "matchingVerdicts": 28,
+        "mismatches": 0,
+        "documentedHardeningDivergences": 1
+      }
+    },
+    "validatorVersions": {
+      "nodeAjv": "8.20.0",
+      "python": "3.14.2",
+      "pythonJsonschema": "4.23.0"
+    }
+  },
+  "limitations": [
+    "This is a local integrity/provenance observation, not a signed software attestation or a guarantee about scanner correctness.",
+    "The Python version lock records exact installed versions; transitive wheel/sdist artifacts are not all hash-locked.",
+    "Node and Python runtime binaries and operating-system libraries are identified by versions, not fully hashed.",
+    "Progent parity covers the documented static JSON Schema/fallback-0 subset and its stored cases, not the full research agent or a malware benchmark.",
+    "API model weights, provider infrastructure and fresh LLM decisions cannot be reproduced from these local hashes.",
+    "This metadata collection read package metadata and pinned implementation files; it made no model calls, ran no acquired skills and read no credential values."
+  ]
+}

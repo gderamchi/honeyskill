@@ -12,11 +12,11 @@ export async function startProtectedSession(
   options: { json?: boolean; nodePath?: string } = {},
 ): Promise<number> {
   if (options.json || !process.stdin.isTTY || !process.stdout.isTTY || !process.stderr.isTTY) {
-    throw Object.assign(new SkillGateError('TTY_REQUIRED', 'skillgate on requires an interactive terminal, without --json.'), { exitCode: 2 });
+    throw Object.assign(new SkillGateError('TTY_REQUIRED', 'honeyskill on requires an interactive terminal, without --json.'), { exitCode: 2 });
   }
   const projectRoot = await realpath(resolve(root));
   if ((await terminalStatus(projectRoot)).active) {
-    process.stdout.write('SkillGate is already active in this terminal. Type exit to leave the protected session.\n');
+    process.stdout.write('HoneySkill is already active in this terminal. Type exit to leave the protected session.\n');
     return 0;
   }
   await initProject(projectRoot);
@@ -26,13 +26,13 @@ export async function startProtectedSession(
     PATH: `${join(projectRoot, '.skillgate/bin')}${delimiter}${process.env.PATH ?? ''}`,
     SKILLGATE_PROJECT: projectRoot,
     SHELL: '/bin/bash',
-    PS1: '[SkillGate] $ ',
+    PS1: '[HoneySkill] $ ',
     HISTFILE: '/dev/null',
     HISTSIZE: '0',
   };
   // --norc/--noprofile disable files; clear inherited Bash hooks/functions as well.
   for (const key of Object.keys(env)) if (['BASH_ENV', 'ENV', 'PROMPT_COMMAND', 'BASHOPTS', 'SHELLOPTS'].includes(key) || key.startsWith('BASH_FUNC_')) delete env[key as keyof typeof env];
-  process.stderr.write(sanitizeTerminal(`SkillGate is active for ${projectRoot}. Install skills as usual. Type exit to return to your terminal.\n`));
+  process.stderr.write(sanitizeTerminal(`HoneySkill is active for ${projectRoot}. Install skills as usual. Type exit to return to your terminal.\n`));
   return new Promise((resolveExit, reject) => {
     let child: ReturnType<typeof spawn> | undefined;
     const interrupt = () => { child?.kill('SIGINT'); };

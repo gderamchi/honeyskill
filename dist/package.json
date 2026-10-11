@@ -1,9 +1,10 @@
 {
-  "name": "@gderamchi/skillgate",
-  "version": "0.5.0",
-  "description": "Financial-risk checks before agent skill installation. Local CLI prototype.",
+  "name": "@gderamchi/honeyskill",
+  "version": "0.6.0-dev.0",
+  "description": "Agent-skill inspection and financial-action mediation in an isolated laboratory.",
   "type": "module",
   "bin": {
+    "honeyskill": "cli.js",
     "skillgate": "cli.js"
   },
   "engines": {
@@ -11,9 +12,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gderamchi/skillgate.git"
+    "url": "https://github.com/gderamchi/honeyskill.git"
   },
-  "homepage": "https://github.com/gderamchi/skillgate",
+  "homepage": "https://github.com/gderamchi/honeyskill",
   "files": [
     "cli.js",
     "cli.js.map",
@@ -22,7 +23,10 @@
     "evaluation",
     "skillguard-lite",
     "lab-skills",
+    "public-demo",
+    "assets/honeyskill/logo.png",
     "README.md",
+    "README-SKILLGATE-HISTORY.md",
     "THIRD_PARTY_NOTICES.txt"
   ],
   "license": "UNLICENSED"

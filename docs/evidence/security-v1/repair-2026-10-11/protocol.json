@@ -1,0 +1,144 @@
+{
+  "kind": "preregistered-development-repair",
+  "startedAt": "2026-10-11T04:01:17.826Z",
+  "baseline": "live-2026-10-11T03-31-31-569Z",
+  "model": "gpt-6-luna",
+  "reasoning": "none",
+  "temperature": 0,
+  "retries": 0,
+  "repetitions": 1,
+  "threshold": "medium",
+  "semanticVersion": "security-semantic-2",
+  "limits": {
+    "batchBytes": 65536,
+    "contextBytes": 16384,
+    "fragmentBytes": 2048,
+    "batches": 128,
+    "timeoutMs": 45000,
+    "responseBytes": 131072,
+    "outputTokens": 4000
+  },
+  "promptSha256": "112cf5193a4777d98031fb3be4918fa3f4d5504a10b81b76468b88a626d60c14",
+  "runnerSha256": "9dc2fa8dce96b3b69d816540f788bd57f9a29c88541d4b7d60d96555cca0cc50",
+  "protocolSha256": "aa1c63237b7510884ef6b13fe200d095d4621306d58fbe44f537eb4565c2ae70",
+  "frozenFiles": [
+    {
+      "path": "packages/security-lab/src/benchmark.ts",
+      "sha256": "33b454deb446e22a8a2f8d99c93eefba17e9532a9c3e19c7144938b234d19690"
+    },
+    {
+      "path": "packages/security-lab/src/chain-proof.ts",
+      "sha256": "51d06eeb465a569a4e99e7a0afd026ce71dd499d337b480144bdaee8dcc4702d"
+    },
+    {
+      "path": "packages/security-lab/src/cisco.ts",
+      "sha256": "df316d645b63a54e649f555b2e929807e1cb5610c5f081411e6ac7feaf3d5bf9"
+    },
+    {
+      "path": "packages/security-lab/src/guarded-agent.ts",
+      "sha256": "f828fbbdd90555885bfd568320dc6e310f9ee16c77203fffad7f75bd4afc125e"
+    },
+    {
+      "path": "packages/security-lab/src/redaction.ts",
+      "sha256": "65da0eab66577f18c6f6d7df9ad8e37aed7d08b5f53ff59b60a933eb9097c2eb"
+    },
+    {
+      "path": "packages/security-lab/src/report.ts",
+      "sha256": "f45a079df9190275e3ffc0bc2021d7f56f1dbad50ed13f46c206b1404a9ad298"
+    },
+    {
+      "path": "packages/security-lab/src/review.ts",
+      "sha256": "36fa3ad3c945f7e4f56add9a46e045cce2832afd74604e8ced1509d85dd5202e"
+    },
+    {
+      "path": "packages/security-lab/src/semantic.ts",
+      "sha256": "9e8aae48dac9057ae838c56e6dd0ac2eaa0dbb95b1d4c917cc7f0117812af498"
+    },
+    {
+      "path": "packages/security-lab/src/text-inventory.ts",
+      "sha256": "45c7cb871a489f645a7cc567ce3b13a80029f4b34e28d0c9ab006ae33aa02c9c"
+    },
+    {
+      "path": "packages/security-lab/src/types.ts",
+      "sha256": "997a521a150388c6d2b0d918f443d5f468bbc7e90b5fb60b90bf1cada26aacea"
+    },
+    {
+      "path": "packages/security-policy/src/benchmark.ts",
+      "sha256": "24ec04e19447562159433ec316f277d42d0155129f3f3e7e5e0f1ee181801ff6"
+    },
+    {
+      "path": "packages/security-policy/src/index.ts",
+      "sha256": "2b6553c2ec2ec280a89f3084da9b04f44ec739965143c7d3cb65c9eb9aa2b20a"
+    },
+    {
+      "path": "packages/security-policy/src/progent.ts",
+      "sha256": "bb39d7c1b8db41eb8e4597472161eae33c15481de3004bb03f74501261f351ec"
+    },
+    {
+      "path": "packages/core/src/acquisition.ts",
+      "sha256": "637885fa5665c0f2eb41ea66437021bf0c9cad6e97e10bc4d5d0c972d2e11a2f"
+    },
+    {
+      "path": "packages/core/src/analysis.ts",
+      "sha256": "4ec3fcc041d6491c826385f8244e76083b14a2b661b0b70917af74198fe2d6f6"
+    },
+    {
+      "path": "packages/core/src/github-archive.ts",
+      "sha256": "44207cfba9f109c94c3d4015e66dd711fd5b7a0f78cc48e2e28dc9b9e57da731"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "08ed2d1426c6512cad29906e92dbd15a15d6f6efe0be1b033da4113f64ce0e5a"
+    },
+    {
+      "path": "packages/core/src/semantic.ts",
+      "sha256": "5b376b34eafe71154b465cea8cc968e021ac57ae3c631ecbb691203f5cc09883"
+    },
+    {
+      "path": "packages/core/src/storage.ts",
+      "sha256": "e2f8739e402c7d6b0af55cdd1fb68793b6ce932dc9eef937ee20c88022bad2be"
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "32936ab9aa3056ca0930453848167dd9bea2d95f38044fa1ff65d627e805681c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "b6f8ad9318f458b7a73cbe313696d97c72209a925d328826a803eaa3b271fb0d"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "af52ff5be6fc47b347a4a74015b482291285f361ba52ba455bbcdc814f85813a"
+    },
+    {
+      "path": "apps/cli/src/security.ts",
+      "sha256": "52bdc9d370d768f04cb0759e0cbee2540ee39cf283dd315c550847ca44f9a593"
+    },
+    {
+      "path": "packages/skillguard-lite/src/agent.ts",
+      "sha256": "922945f1b1a130e4df9e04782eb28758fbc19794761c0b5812dd3e932600f04c"
+    },
+    {
+      "path": "evaluation/security-v1/corpus/manifest.json",
+      "sha256": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445"
+    },
+    {
+      "path": "evaluation/security-v1/negative-corpus/manifest.json",
+      "sha256": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a"
+    },
+    {
+      "path": "work/security-repair-20261011/run.ts",
+      "sha256": "9dc2fa8dce96b3b69d816540f788bd57f9a29c88541d4b7d60d96555cca0cc50"
+    },
+    {
+      "path": "work/security-repair-20261011/protocol.md",
+      "sha256": "aa1c63237b7510884ef6b13fe200d095d4621306d58fbe44f537eb4565c2ae70"
+    },
+    {
+      "path": "work/security-repair-20261011/compare.py",
+      "sha256": "8a0c233955c16b410b77af87c0ef4612f85b2672afdf70068ba130c02201aee2"
+    }
+  ],
+  "plannedPackages": 114,
+  "plannedModelRequests": 367
+}

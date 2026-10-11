@@ -141,7 +141,7 @@ assert shutil.which('npx', path=shim_env['PATH']) == str(root/'.skillgate/bin/np
 wrapped_clean = source('pty-wrapper-clean')
 status, transcript = terminal([], full_command=['npx', 'skills', 'add', str(wrapped_clean)], cwd=root, environment=shim_env)
 assert status == 0, (status, transcript)
-assert 'SkillGate: analyzing the skill before activation.' in transcript
+assert 'HoneySkill: analyzing the skill before activation.' in transcript
 assert 'Installed automatically' in transcript and 'Your choice' not in transcript
 assert record('pty-wrapper-clean')['status'] == 'installed'
 
@@ -161,6 +161,6 @@ assert wrapper_record['operatorDecision']['destination'] == str(root/'.agents/sk
 assert not upstream_log.exists(), 'The upstream npx must never run for intercepted installations.'
 
 result = {'executedAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'cli': str(cli), 'temporaryRoot': str(root), 'checkCount': len(checks), 'checks': checks, 'status': 'passed', 'evidence': 'Actual PTY CLI and compiled PATH wrapper: automatic clean installation, add/update/approve cancellation and override, exact snapshot, Ctrl-C130, JSON without prompts, and npx skills add clean/cancel/override. Sentinel confirms no upstream installer ran. No real secrets, wallets, network calls or agent activation outside temporary roots.'}
-pty_output = Path(os.environ.get('SKILLGATE_PTY_OUTPUT', str(repo/'outputs/cli-only-pty-smoke.json')))
+pty_output = Path(os.environ.get('SKILLGATE_PTY_OUTPUT', str(repo/'outputs/honeyskill-cli-pty-smoke.json')))
 pty_output.write_text(json.dumps(result, indent=2, ensure_ascii=False))
 print(json.dumps({key: value for key, value in result.items() if key != 'checks'}, indent=2, ensure_ascii=False))

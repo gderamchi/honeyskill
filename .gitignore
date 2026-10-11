@@ -11,3 +11,9 @@ playwright-report/
 .env.*
 !.env.example
 .DS_Store
+
+# Research corpus remains local until redistribution review.
+/evaluation/security-v1/corpus/samples/
+/evaluation/security-v1/negative-corpus/samples/
+/evaluation/security-v1/negative-corpus/manifest.json
+/evaluation/security-v1/negative-corpus/case-records.json

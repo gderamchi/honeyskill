@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-11T00:02:35.945767+00:00",
+  "status": "passed",
+  "manifestSha256": "5f91e4f65af39def5a7b6ca64e9aef9e0067c739046277dc17fb4693c7e7675a",
+  "frozenOriginalManifestSha256": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+  "sampleCount": 20,
+  "labels": {
+    "benign": 20
+  },
+  "retainedFiles": 142,
+  "retainedBytes": 1566494,
+  "distinctPrimaryHashes": 20,
+  "sourceSkillFamilies": 18,
+  "completePreservedPackages": 20,
+  "executedFixtureFiles": 0,
+  "scope": "Integrity, source-label consistency and exact retained file accounting only. No detector accuracy or runtime-safety claim."
+}

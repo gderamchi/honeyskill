@@ -1,0 +1,277 @@
+{
+  "kind": "independent-offline-evidence-consistency-check",
+  "evidenceSha256": "71678bfce58c8afe8eb40b42b9e2b2279bde0fe339aa318baec23c1bccc0791a",
+  "passed": true,
+  "checksPassed": 63,
+  "checksTotal": 63,
+  "recomputedActionConfusion": {
+    "tp": 3,
+    "fp": 0,
+    "tn": 3,
+    "fn": 0
+  },
+  "recomputedEffects": {
+    "unguardedUnauthorized": 3,
+    "guardedUnauthorized": 0,
+    "unguardedExactPayments": 3,
+    "guardedExactPayments": 3
+  },
+  "checks": [
+    {
+      "check": "recorded_fork_identity_verified",
+      "passed": true
+    },
+    {
+      "check": "no_public_transactions",
+      "passed": true
+    },
+    {
+      "check": "no_model_calls",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/checkout-helper-payment/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/checkout-helper-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/checkout-helper-payment/label",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/checkout-helper-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/unguarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/checkout-helper-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/checkout-helper-payment/label",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/checkout-helper-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "checkout-helper/guarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/settlement-router-payment/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/settlement-router-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/settlement-router-payment/label",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/settlement-router-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/unguarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/guarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/guarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "settlement-router/guarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/invoice-assistant-payment/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/invoice-assistant-charge/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-payment/label",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-charge/receipt",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-charge/label",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/invoice-assistant-charge/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/unguarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/invoice-assistant-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/invoice-assistant-payment/label",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/invoice-assistant-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "invoice-assistant/guarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/id-settlement-connect-approval/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/settlement-connect-payment/dispatch_matches_decision",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/id-settlement-connect-approval/receipt",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/id-settlement-connect-approval/label",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/settlement-connect-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/settlement-connect-payment/label",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/settlement-connect-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/unguarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/settlement-connect-payment/receipt",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/settlement-connect-payment/label",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/settlement-connect-payment/exact_payload",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/sender_balance",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/nonce",
+      "passed": true
+    },
+    {
+      "check": "settlement-connect/guarded/effect_counters",
+      "passed": true
+    },
+    {
+      "check": "confusion_counts_recomputed_from_task",
+      "passed": true
+    },
+    {
+      "check": "effect_counts_recomputed_from_transactions",
+      "passed": true
+    },
+    {
+      "check": "all_36_reported_assertions_true",
+      "passed": true
+    },
+    {
+      "check": "microbenchmark_repetitions_and_calls",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Recomputes exported evidence consistency; it does not reconnect to the destroyed local fork.",
+    "Does not establish unseen-malware accuracy, LLM-generated attacks, public-chain deployment or production completeness."
+  ]
+}

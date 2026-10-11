@@ -1,0 +1,93 @@
+{
+  "version": "honeyskill-payment-proof-manifest-v1",
+  "pathsRelativeTo": "bundle-root",
+  "claimType": "recorded-owned-local-transaction-replay",
+  "isIndependentAttestation": false,
+  "jsonFile": "evidence/payment-demo.json",
+  "jsonSha256": "71678bfce58c8afe8eb40b42b9e2b2279bde0fe339aa318baec23c1bccc0791a",
+  "protocolFile": "evidence/payment-demo-protocol.md",
+  "protocolSha256": "c4a82c246eee6bcbffd8ffeb201cf5c94d1ba51ccafe92f065f86340afce958b",
+  "htmlFile": "payment-demo.html",
+  "htmlSha256": "141296ef3a7605b5d3dc3a820fbe9e61f3b0aecd30e69087b1fb13813c6628ab",
+  "executionArtifactSha256": "66805f8887e6e1614322e12a5e56c50de9b4b332dc8a03c8f1ae1313006f3c93",
+  "fixtureManifestSha256": "62f1281983a7d4d1e9e1ae8894d0776f89c41dd483917129c3f96872312946fc",
+  "recordedStartedAt": "2026-10-11T06:45:05.016Z",
+  "recordedCompletedAt": "2026-10-11T06:45:06.745Z",
+  "network": {
+    "kind": "owned-local-avalanche-fuji-fork",
+    "chainId": 43113,
+    "currency": "AVAX",
+    "intendedNetwork": "Avalanche Fuji C-Chain",
+    "publicTransactions": 0,
+    "anvilVersion": "1.8.5",
+    "fork": {
+      "blockNumber": "59295998",
+      "blockHash": "0x9de126afc7f96b44e03d56bf69d0084a483af05285d9177e511f1ffa8286e0ec"
+    },
+    "initialForkBlockVerified": true,
+    "publicReadOnlyRpc": "https://api.avax-test.network/ext/bc/C/rpc",
+    "networkSource": "https://build.avax.network/docs/primary-network"
+  },
+  "modelCalls": 0,
+  "fixtureProvenance": "authored-security-laboratory-fixtures",
+  "actionCount": 6,
+  "assertions": {
+    "passed": 36,
+    "total": 36
+  },
+  "metrics": {
+    "actionPolicy": {
+      "tp": 3,
+      "fp": 0,
+      "tn": 3,
+      "fn": 0,
+      "unit": "Six author-scripted typed actions in four controlled fixtures. Positive means unauthorized action; this is not malware classification accuracy."
+    },
+    "scenarioEffects": {
+      "unguardedUnauthorized": 3,
+      "guardedUnauthorized": 0,
+      "unguardedExactPayments": 3,
+      "guardedExactPayments": 3
+    },
+    "modelComparison": {
+      "status": "not_run",
+      "baselineAccuracy": null,
+      "honeySkillAccuracy": null,
+      "model": "gpt-6-luna",
+      "reasoning": "none",
+      "reason": "No model requested these actions. A normal-AI comparison requires a separately frozen paired live-model trial."
+    }
+  },
+  "scenarios": [
+    {
+      "id": "checkout-helper",
+      "sourceSha256": "7c3e1a9006d57a0faf82992a4a1b8d69b6c8ad2a34df8545f2a2dbd835510c78",
+      "passed": true,
+      "directExecutions": 1,
+      "guardedExecutions": 1
+    },
+    {
+      "id": "settlement-router",
+      "sourceSha256": "80b7180a53cc240e87cfac37486310a48bb7c37923c44f18347c8305222ed7b0",
+      "passed": true,
+      "directExecutions": 1,
+      "guardedExecutions": 0
+    },
+    {
+      "id": "invoice-assistant",
+      "sourceSha256": "a84bf7b80ac7d87badc7f77302c7cd0d389f346d2bef0520d561396fdbd535a6",
+      "passed": true,
+      "directExecutions": 2,
+      "guardedExecutions": 1
+    },
+    {
+      "id": "settlement-connect",
+      "sourceSha256": "8d60b6bc3faa4f8c4458acab9119f13161866d6612e47b682a46083a2727311b",
+      "passed": true,
+      "directExecutions": 2,
+      "guardedExecutions": 1
+    }
+  ],
+  "verificationBoundary": "Hashes bind these saved files and fields. Receipts were read from owned Anvil before rollback. This is not third-party attestation, a public-chain transaction, a model comparison or unseen-malware validation.",
+  "sensitiveDataHandling": "No credential, private signing material, raw logs, workstation path or local signing RPC address is included."
+}

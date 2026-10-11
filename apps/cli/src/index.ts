@@ -15,10 +15,12 @@ import { prepareCodexHook, processHook } from './codex-hook.js';
 import { startProtectedSession } from './session.js';
 import { labStatus, tryInstallation } from './lab.js';
 import { fullReportHtml, fullReportTerminal } from './full-report.js';
+import { registerSecurityCommands } from './security.js';
 
-const scope = 'Checks SkillGate installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.';
-const program=new Command().name('skillgate').description('Financial risk checks before installing agent skills.').version(packageJson.version);
+const scope = 'Checks HoneySkill installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.';
+const program=new Command().name('honeyskill').description('Inspect agent skills and mediate financial actions in an isolated laboratory.').version(packageJson.version);
 program.option('--project <directory>','Project root',process.cwd()).option('--json','JSON output only on stdout');
+registerSecurityCommands(program);
 program.configureOutput({writeErr:s=>process.stderr.write(sanitizeTerminal(s)),outputError:(s,write)=>write(sanitizeTerminal(s))});
 const root=()=>resolve(program.opts().project);
 const machine=()=>Boolean(program.opts().json);
@@ -26,7 +28,7 @@ const interactive=()=>!machine() && Boolean(process.stdin.isTTY && process.stdou
 function emit(data:unknown,text?:string){process.stdout.write(machine()||!text?JSON.stringify(data,null,2)+'\n':sanitizeTerminal(text)+'\n');}
 program.command('lab').description('Create/check an isolated test lab (no model calls).').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').action(async options=>{
   const status=await labStatus(options.lab);
-  emit(status,`Lab: ${status.root}\nModel: ${status.model}\nAnvil: ${status.anvil.available ? status.anvil.version : 'missing — install Foundry'}\nOpenAI key: ${status.apiKeyPresent ? 'available' : 'will be requested privately by try'}\nTry: skillgate try good\nThen: skillgate try trap\nOnly this lab can be activated. Each try uses paid API calls and disposable local funds.`);
+  emit(status,`Lab: ${status.root}\nModel: ${status.model}\nAnvil: ${status.anvil.available ? status.anvil.version : 'missing — install Foundry'}\nOpenAI key: ${status.apiKeyPresent ? 'available' : 'will be requested privately by try'}\nTry: honeyskill try good\nThen: honeyskill try trap\nOnly this lab can be activated. Each try uses paid API calls and disposable local funds.`);
   if(!status.anvil.available)process.exitCode=3;
 });
 program.command('try <source>').description('Try a skill in the lab: regex + LLM + execution + security report. Sources: good, trap, local folder, GitHub URL or owner/repo.').option('--lab <directory>','Dedicated lab directory (default: ./skillgate-lab)').option('--skill <name>','Select a skill from a multi-skill repository').action(async(source,options)=>{
@@ -38,7 +40,7 @@ async function configured(){
   try{return await loadConfig(root());}
   catch(e){
     if(!['ENOENT','NOT_INITIALIZED'].includes((e as NodeJS.ErrnoException).code??''))throw e;
-    if(!interactive()){const error=new Error('Configuration missing. Run skillgate init --agent codex --profile static.');Object.assign(error,{exitCode:3});throw error;}
+    if(!interactive()){const error=new Error('Configuration missing. Run honeyskill init --agent codex --profile static.');Object.assign(error,{exitCode:3});throw error;}
     process.stderr.write(scope+'\n');
     const answer=await question(`Configure Codex for this project (${root()}) with local static analysis? [Y/n] `);
     if(answer.trim() && !['o','oui','y','yes'].includes(answer.trim().toLowerCase()))throw Object.assign(new Error('Setup cancelled.'),{exitCode:130});
@@ -71,15 +73,15 @@ function installedEntry(){
 program.command('on').description('Open a protected terminal; leave with exit.').action(async()=>{
   process.exitCode=await startProtectedSession(root(),installedEntry(),{json:machine(),nodePath:process.execPath});
 });
-program.command('enable').description('Configure terminal checks; activate with eval "$(skillgate enable)".').option('--agent <agent>','Target agent','codex').option('--codex-hook','Add the complementary Codex hook (/hooks review required)').action(async options=>{
+program.command('enable').description('Configure terminal checks; activate with eval "$(honeyskill enable)".').option('--agent <agent>','Target agent','codex').option('--codex-hook','Add the complementary Codex hook (/hooks review required)').action(async options=>{
   if(options.agent!=='codex')throw new Error('Only the project Codex target is supported.');
   const cli=installedEntry();
   await initProject(root(),{});
   const terminal=await prepareTerminal(root(),cli,process.execPath);
   const hook=options.codexHook?await prepareCodexHook(root(),cli,process.execPath):undefined;
-  if(machine())emit({terminal,hook,activation:'eval "$(skillgate env)"',scope});
+  if(machine())emit({terminal,hook,activation:'eval "$(honeyskill env)"',scope});
   else{
-    process.stderr.write(sanitizeTerminal(`SkillGate configured for ${root()}. Apply these exports in this terminal with eval "$(skillgate enable)".\n${hook?'Codex hook configured: open /hooks in Codex to review and authorize it.\n':''}`));
+    process.stderr.write(sanitizeTerminal(`HoneySkill configured for ${root()}. Apply these exports in this terminal with eval "$(honeyskill enable)".\n${hook?'Codex hook configured: open /hooks in Codex to review and authorize it.\n':''}`));
     process.stdout.write(await envScript(root()));
   }
 });
@@ -99,7 +101,7 @@ program.command('hook',{hidden:true}).action(async()=>{
     const result=processHook(JSON.parse(Buffer.concat(chunks).toString('utf8')),root(),installedEntry(),process.execPath);
     if(result)process.stdout.write(JSON.stringify(result)+'\n');
   }catch{
-    process.stdout.write(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',permissionDecision:'deny',permissionDecisionReason:'SkillGate: invalid hook input; installation denied.'}})+'\n');
+    process.stdout.write(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',permissionDecision:'deny',permissionDecisionReason:'HoneySkill: invalid hook input; installation denied.'}})+'\n');
   }
 });
 program.command('init').option('--agent <agent>','Target','codex').option('--profile <profile>','static or hybrid (initial default: static)').option('--semantic-consent','Allow redacted content to be sent to OpenAI (paid API)').option('--model <model>','Explicitly selected model').option('--retention-days <days>','Retention of inactive reports in days (initial default: 30)').action(async(options)=>{
@@ -113,13 +115,13 @@ const command=program.command(`${name} <source>`).option('--skill <name>','Expli
 if(name==='add')command.alias('install');
 command.action(async(source,options)=>{
   const config=await configured();
-  if(config.profile==='full')throw new Error('Use skillgate try <source> --lab <directory> to run every required stage in this lab.');
+  if(config.profile==='full')throw new Error('Use honeyskill try <source> --lab <directory> to run every required stage in this lab.');
   const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;
   if(name==='scan'){const report=await scanSkill(root(),source,{skill:options.skill,provider});emit(report,reportText(report));if(report.decision!=='allow')process.exitCode=2;}
   else await finishInstallation(await addSkill(root(),source,{skill:options.skill,provider}));
 });}
-program.command('update <name>').action(async name=>{const config=await configured();if(config.profile==='full')throw new Error('Use skillgate try <source> --lab <directory> to rescan and update every required stage.');const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;await finishInstallation(await updateSkill(root(),name,{provider}));});
-program.command('list').action(async()=>{await configured();const records=await listInstalls(root());emit(records,records.length?records.map(r=>`${r.name} · ${r.status} · ${r.fingerprint.slice(0,12)} · ${r.scanId}`).join('\n'):'No skills installed by SkillGate.');});
+program.command('update <name>').action(async name=>{const config=await configured();if(config.profile==='full')throw new Error('Use honeyskill try <source> --lab <directory> to rescan and update every required stage.');const provider=config.profile==='hybrid'&&config.semanticConsent&&process.env.OPENAI_API_KEY?new OpenAIResponsesProvider(process.env.OPENAI_API_KEY):undefined;await finishInstallation(await updateSkill(root(),name,{provider}));});
+program.command('list').action(async()=>{await configured();const records=await listInstalls(root());emit(records,records.length?records.map(r=>`${r.name} · ${r.status} · ${r.fingerprint.slice(0,12)} · ${r.scanId}`).join('\n'):'No skills installed by HoneySkill.');});
 program.command('inspect <scan-id>').action(async id=>{const report=await readReport(root(),id);emit(report,report.profile==='full'?fullReportTerminal(report):reportText(report));});
 program.command('report <scan-id>').option('--format <format>','json or html','json').option('--output <file>','Output file').action(async(id,options)=>{
   if(!['json','html'].includes(options.format))throw new Error('Expected format: json or html.');

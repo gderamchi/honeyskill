@@ -3,8 +3,8 @@ import { realpathSync } from 'node:fs';
 import { atomicJson, exists, readJson } from '../../../packages/core/src/storage.js';
 import { parseInstallerArgv } from './terminal.js';
 
-const statusMessage = 'SkillGate: pre-install check';
-const previousStatusMessage = 'SkillGate : contrôle avant installation';
+const statusMessage = 'HoneySkill: pre-install check';
+const previousStatusMessages = ['SkillGate: pre-install check', 'SkillGate : contrôle avant installation'];
 const nativeInstaller = 'install-skill-from-github.py';
 type JsonObject = Record<string, unknown>;
 export type HookResult = { hookSpecificOutput: {
@@ -55,7 +55,7 @@ function relevant(command: string): boolean {
 const validAbsolute = (value: unknown): value is string => typeof value === 'string' && isAbsolute(value) && !/[\x00-\x1f\x7f]/.test(value);
 function canonical(path: string): string { try { return realpathSync(path); } catch { return resolve(path); } }
 function denied(reason: string): HookResult {
-  return { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: `SkillGate: ${reason} Use skillgate install <source> in the protected project.` } };
+  return { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: `HoneySkill: ${reason} Use honeyskill install <source> in the protected project.` } };
 }
 function nativeSource(args: string[], root: string): string {
   const options = new Map<string, string>();
@@ -119,7 +119,7 @@ export function processHook(input: unknown, root: string, cliPath: string, nodeP
     args.push('--', source);
     return { hookSpecificOutput: {
       hookEventName: 'PreToolUse', permissionDecision: 'allow', updatedInput: { command: commandLine(args) },
-      additionalContext: 'SkillGate replaces this installer with local analysis before activation in the project .agents/skills directory. A held package remains inactive; show the risks to the user and wait for an explicit choice before accepting an exception.',
+      additionalContext: 'HoneySkill replaces this installer with local analysis before activation in the project .agents/skills directory. A held package remains inactive; show the risks to the user and wait for an explicit choice before accepting an exception.',
     } };
   } catch (error) {
     return denied(error instanceof Error ? error.message : 'Cannot validate this installation.');
@@ -136,7 +136,7 @@ export async function prepareCodexHook(root: string, cliPath: string, nodePath: 
   if (!Array.isArray(previous)) throw new Error('Invalid PreToolUse; existing configuration was preserved.');
   const groups = previous.flatMap((group: unknown) => {
     if (!object(group) || !Array.isArray(group.hooks)) return [group];
-    const handlers = group.hooks.filter(handler => !object(handler) || (handler.statusMessage !== statusMessage && handler.statusMessage !== previousStatusMessage));
+    const handlers = group.hooks.filter(handler => !object(handler) || (![statusMessage, ...previousStatusMessages].some(label => handler.statusMessage === label)));
     return handlers.length === group.hooks.length ? [group] : handlers.length ? [{ ...group, hooks: handlers }] : [];
   });
   const command = commandLine([nodePath, cliPath, '--project', resolve(root), 'hook']);

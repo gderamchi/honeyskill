@@ -6,11 +6,20 @@ import { tmpdir } from 'node:os';
 import { join,resolve } from 'node:path';
 const entry=resolve('apps/cli/src/index.ts');
 function cli(root:string,args:string[]){return spawnSync(process.execPath,['--import','tsx',entry,'--project',root,...args],{encoding:'utf8',env:{...process.env,NO_COLOR:'1',OPENAI_API_KEY:''}});}
-test('CLI has the package version and install alias, without a web command',async()=>{
+test('HoneySkill CLI has the package version, legacy binary and install aliases, without a web command',async()=>{
   const manifest=JSON.parse(await readFile('package.json','utf8'));
   assert.equal(cli(process.cwd(),['--version']).stdout.trim(),manifest.version);
-  const help=cli(process.cwd(),['--help']);assert.equal(help.status,0);assert.match(help.stdout,/add\|install/);assert.doesNotMatch(help.stdout,/^\s+ui(?:\s|$)/m);
+  assert.equal(manifest.name,'@gderamchi/honeyskill');assert.deepEqual(manifest.bin,{honeyskill:'dist/cli.js',skillgate:'dist/cli.js'});
+  const help=cli(process.cwd(),['--help']);assert.equal(help.status,0);assert.match(help.stdout,/Usage: honeyskill/);assert.match(help.stdout,/add\|install/);assert.doesNotMatch(help.stdout,/^\s+ui(?:\s|$)/m);
   const removed=cli(process.cwd(),['ui']);assert.notEqual(removed.status,0);assert.match(removed.stderr,/unknown command 'ui'/);
+});
+test('payment demo is distinct from the legacy demo and refuses existing output before running a chain',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'honeyskill-cli-demo-'));
+  const help=cli(root,['payment-demo','--help']);assert.equal(help.status,0);assert.match(help.stdout,/--local/);assert.match(help.stdout,/No model\s+calls/);
+  assert.notEqual(cli(root,['payment-demo']).status,0,'The output directory is required.');
+  const sentinel=join(root,'report.json');await writeFile(sentinel,'preserve existing evidence');
+  const existing=cli(root,['payment-demo','--out',root,'--local','--json']);assert.notEqual(existing.status,0);assert.equal(JSON.parse(existing.stdout).code,'EEXIST');
+  assert.equal(await readFile(sentinel,'utf8'),'preserve existing evidence');
 });
 test('CLI config, JSON channel, scan/add/update/report/list/doctor/export and noninteractive exception',async()=>{
   const root=await mkdtemp(join(tmpdir(),'skillgate-cli-'));const source=join(root,'source');await mkdir(source);

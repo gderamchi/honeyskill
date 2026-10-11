@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "local-validation-summary",
+  "version": "0.6.0-dev.0",
+  "publishedReleaseChanged": false,
+  "application": {
+    "command": "node --import tsx --test tests/*.test.ts",
+    "passed": 251,
+    "skipped": 2,
+    "failed": 0,
+    "notes": "Two optional Cisco/local-chain tests skipped in the broad command; actual engine and chain exercised separately."
+  },
+  "preservedBehavioral": {
+    "command": "node --import tsx --test packages/skillguard-lite/tests/*.test.ts",
+    "passed": 74,
+    "skipped": 1,
+    "failed": 0,
+    "notes": "Optional historical live-Fuji test skipped. No paid historical benchmark rerun."
+  },
+  "typecheck": "passed",
+  "buildCli": "passed",
+  "localPack": "passed",
+  "offlineLegacyPackageSmoke": "passed",
+  "newPackagedSecuritySmoke": "passed",
+  "corpusIntegrity": {
+    "cases": 114,
+    "files": 616,
+    "passed": true
+  },
+  "recordVerifier": {
+    "external": true,
+    "controls": true
+  },
+  "liveModel": {
+    "status": "blocked",
+    "reason": "Authorized OpenAI key unavailable",
+    "requests": 0
+  },
+  "ci": "not_run",
+  "sourceFreeze": "0b40338c6dcee29e3e234f6c966f677b3e8e5d97510ea88e3a3fdb4af19ddcf2",
+  "historicalAttempts": "Earlier pilots, sandbox failures and first measurement preserved under private work/security-runs. Final full corpus rerun followed driver/report fixes; no detector thresholds or corpus labels were tuned."
+}

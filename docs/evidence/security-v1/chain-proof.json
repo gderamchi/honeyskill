@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "kind": "actual-owned-local-anvil-policy-proof",
+  "startedAt": "2026-10-11T00:03:12.601Z",
+  "completedAt": "2026-10-11T00:03:12.723Z",
+  "policyVersion": "skillgate-capabilities-v1",
+  "referenceImplementation": {
+    "repository": "https://github.com/sunblaze-ucb/progent",
+    "commit": "5be7b63fa96f70bc19b72fbcee81f1c0bcc1a565",
+    "source": "secagent/tool.py",
+    "sourceSha256": "59b2cd642a9c29f2459e919720fae935a5f6f99a2a5fa0c17f1ea95e9efbcd52",
+    "license": "MIT",
+    "implementation": "static-jsonschema-fallback-0-port-with-strict-input-boundary"
+  },
+  "network": {
+    "kind": "ephemeral-local-genesis-no-public-fork",
+    "chainId": 31337,
+    "anvilVersion": "1.8.5",
+    "clientVersion": "anvil/v1.8.5",
+    "initialBlockHash": "0xd5c75a242e3ebba8fb57c29e6e5cdbf88fc0112b4b1db0c6e35759cb993d6fa3",
+    "initialBaseFeePerGasWei": "1000000000"
+  },
+  "fixtureKind": "synthetic-proposed-tool-actions",
+  "policy": {
+    "version": "skillgate-capabilities-v1",
+    "id": "owned-chain-proof",
+    "chainId": 31337,
+    "wallet": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+    "expiresAtSeconds": 1791677592,
+    "maxCalls": 1,
+    "maxAttempts": 10,
+    "feeLimits": {
+      "gasLimit": "21000",
+      "maxFeePerGasWei": "3000000000",
+      "maxPriorityFeePerGasWei": "1000000000"
+    },
+    "maxTotalGasCostWei": "63000000000000",
+    "maxNativeCostWei": "1063000000000000",
+    "assetBudgets": [
+      {
+        "asset": "native",
+        "maxUnits": "1000000000000000"
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "exact-payment",
+        "type": "send",
+        "maxUses": 1,
+        "asset": "native",
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "amountUnits": "1000000000000000"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "wrong-recipient",
+      "threat": "recipient-substitution",
+      "expectedAllowed": false,
+      "action": {
+        "id": "wrong-recipient",
+        "capabilityId": "exact-payment",
+        "type": "send",
+        "chainId": 31337,
+        "sender": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+        "asset": "native",
+        "recipient": "0x3333333333333333333333333333333333333333",
+        "amountUnits": "1000000000000000",
+        "fees": {
+          "gasLimit": "21000",
+          "maxFeePerGasWei": "3000000000",
+          "maxPriorityFeePerGasWei": "1000000000"
+        }
+      },
+      "actualAllowed": false,
+      "effect": "blocked",
+      "executorCalls": 0,
+      "violations": [
+        {
+          "code": "PROGENT_POLICY",
+          "message": "Progent static policy checker denied the action: default-deny."
+        },
+        {
+          "code": "AUTHORIZATION_MISMATCH",
+          "message": "Recipient differs from the exact trusted authorization."
+        }
+      ],
+      "stateAfter": {
+        "senderBalanceWei": "1000000000000000000",
+        "recipientBalanceWei": "0",
+        "otherRecipientBalanceWei": "0",
+        "senderNonce": 0,
+        "blockNumber": "0"
+      }
+    },
+    {
+      "id": "wrong-amount",
+      "threat": "amount-inflation",
+      "expectedAllowed": false,
+      "action": {
+        "id": "wrong-amount",
+        "capabilityId": "exact-payment",
+        "type": "send",
+        "chainId": 31337,
+        "sender": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+        "asset": "native",
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "amountUnits": "1000000000000001",
+        "fees": {
+          "gasLimit": "21000",
+          "maxFeePerGasWei": "3000000000",
+          "maxPriorityFeePerGasWei": "1000000000"
+        }
+      },
+      "actualAllowed": false,
+      "effect": "blocked",
+      "executorCalls": 0,
+      "violations": [
+        {
+          "code": "PROGENT_POLICY",
+          "message": "Progent static policy checker denied the action: default-deny."
+        },
+        {
+          "code": "AUTHORIZATION_MISMATCH",
+          "message": "Amount differs from the exact trusted authorization."
+        },
+        {
+          "code": "NATIVE_BUDGET",
+          "message": "Value plus maximum gas cost exceeds the native budget."
+        },
+        {
+          "code": "ASSET_BUDGET",
+          "message": "Cumulative asset spend exceeds its explicit budget."
+        }
+      ],
+      "stateAfter": {
+        "senderBalanceWei": "1000000000000000000",
+        "recipientBalanceWei": "0",
+        "otherRecipientBalanceWei": "0",
+        "senderNonce": 0,
+        "blockNumber": "0"
+      }
+    },
+    {
+      "id": "high-fees",
+      "threat": "fee-inflation",
+      "expectedAllowed": false,
+      "action": {
+        "id": "high-fees",
+        "capabilityId": "exact-payment",
+        "type": "send",
+        "chainId": 31337,
+        "sender": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+        "asset": "native",
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "amountUnits": "1000000000000000",
+        "fees": {
+          "gasLimit": "21000",
+          "maxFeePerGasWei": "3000000001",
+          "maxPriorityFeePerGasWei": "1000000000"
+        }
+      },
+      "actualAllowed": false,
+      "effect": "blocked",
+      "executorCalls": 0,
+      "violations": [
+        {
+          "code": "FEE_LIMIT",
+          "message": "maxFeePerGasWei exceeds the trusted limit."
+        },
+        {
+          "code": "GAS_BUDGET",
+          "message": "Cumulative maximum gas cost exceeds budget."
+        },
+        {
+          "code": "NATIVE_BUDGET",
+          "message": "Value plus maximum gas cost exceeds the native budget."
+        }
+      ],
+      "stateAfter": {
+        "senderBalanceWei": "1000000000000000000",
+        "recipientBalanceWei": "0",
+        "otherRecipientBalanceWei": "0",
+        "senderNonce": 0,
+        "blockNumber": "0"
+      }
+    },
+    {
+      "id": "authorized-payment",
+      "threat": "legitimate-exact-payment",
+      "expectedAllowed": true,
+      "action": {
+        "id": "authorized-payment",
+        "capabilityId": "exact-payment",
+        "type": "send",
+        "chainId": 31337,
+        "sender": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+        "asset": "native",
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "amountUnits": "1000000000000000",
+        "fees": {
+          "gasLimit": "21000",
+          "maxFeePerGasWei": "3000000000",
+          "maxPriorityFeePerGasWei": "1000000000"
+        }
+      },
+      "actualAllowed": true,
+      "effect": "executed",
+      "executorCalls": 1,
+      "violations": [],
+      "stateAfter": {
+        "senderBalanceWei": "998958000000000000",
+        "recipientBalanceWei": "1000000000000000",
+        "otherRecipientBalanceWei": "0",
+        "senderNonce": 1,
+        "blockNumber": "1"
+      }
+    },
+    {
+      "id": "replay",
+      "threat": "duplicate-payment",
+      "expectedAllowed": false,
+      "action": {
+        "id": "authorized-payment",
+        "capabilityId": "exact-payment",
+        "type": "send",
+        "chainId": 31337,
+        "sender": "0x362e747CEB04a382bCaFe7E8195304954D6d8fcF",
+        "asset": "native",
+        "recipient": "0x2222222222222222222222222222222222222222",
+        "amountUnits": "1000000000000000",
+        "fees": {
+          "gasLimit": "21000",
+          "maxFeePerGasWei": "3000000000",
+          "maxPriorityFeePerGasWei": "1000000000"
+        }
+      },
+      "actualAllowed": false,
+      "effect": "blocked",
+      "executorCalls": 0,
+      "violations": [
+        {
+          "code": "REPLAY",
+          "message": "Action ID was already attempted in this session."
+        },
+        {
+          "code": "CALL_LIMIT",
+          "message": "Authorized call budget exhausted."
+        },
+        {
+          "code": "CAPABILITY_EXHAUSTED",
+          "message": "Capability use count exhausted."
+        },
+        {
+          "code": "GAS_BUDGET",
+          "message": "Cumulative maximum gas cost exceeds budget."
+        },
+        {
+          "code": "NATIVE_BUDGET",
+          "message": "Value plus maximum gas cost exceeds the native budget."
+        },
+        {
+          "code": "ASSET_BUDGET",
+          "message": "Cumulative asset spend exceeds its explicit budget."
+        }
+      ],
+      "stateAfter": {
+        "senderBalanceWei": "998958000000000000",
+        "recipientBalanceWei": "1000000000000000",
+        "otherRecipientBalanceWei": "0",
+        "senderNonce": 1,
+        "blockNumber": "1"
+      }
+    }
+  ],
+  "before": {
+    "senderBalanceWei": "1000000000000000000",
+    "recipientBalanceWei": "0",
+    "otherRecipientBalanceWei": "0",
+    "senderNonce": 0,
+    "blockNumber": "0"
+  },
+  "afterDenied": {
+    "senderBalanceWei": "1000000000000000000",
+    "recipientBalanceWei": "0",
+    "otherRecipientBalanceWei": "0",
+    "senderNonce": 0,
+    "blockNumber": "0"
+  },
+  "afterAuthorized": {
+    "senderBalanceWei": "998958000000000000",
+    "recipientBalanceWei": "1000000000000000",
+    "otherRecipientBalanceWei": "0",
+    "senderNonce": 1,
+    "blockNumber": "1"
+  },
+  "afterReplay": {
+    "senderBalanceWei": "998958000000000000",
+    "recipientBalanceWei": "1000000000000000",
+    "otherRecipientBalanceWei": "0",
+    "senderNonce": 1,
+    "blockNumber": "1"
+  },
+  "transaction": {
+    "hash": "0xabd0dacdd8ab33cbbc0b5691aed8ea3d1141934f827eb83dcca7692c7581a1b6",
+    "chainId": 31337,
+    "from": "0x362e747ceb04a382bcafe7e8195304954d6d8fcf",
+    "to": "0x2222222222222222222222222222222222222222",
+    "valueWei": "1000000000000000",
+    "gasLimit": "21000",
+    "maxFeePerGasWei": "3000000000",
+    "maxPriorityFeePerGasWei": "1000000000",
+    "input": "0x",
+    "nonce": 0
+  },
+  "receipt": {
+    "transactionHash": "0xabd0dacdd8ab33cbbc0b5691aed8ea3d1141934f827eb83dcca7692c7581a1b6",
+    "blockHash": "0xce792bdc641b4ed3f2247f22f0d69fa39c6ffb7525885243fd5b8b729790c90d",
+    "blockNumber": "1",
+    "status": "success",
+    "gasUsed": "21000",
+    "effectiveGasPriceWei": "2000000000",
+    "actualFeeWei": "42000000000000"
+  },
+  "assertions": {
+    "deniedCallsNeverDispatched": true,
+    "deniedCallsPreserveChainState": true,
+    "exactlyOneExecutorCall": true,
+    "exactRecipient": true,
+    "exactSender": true,
+    "exactValue": true,
+    "exactChain": true,
+    "exactFeeFields": true,
+    "emptyCalldata": true,
+    "receiptSucceeded": true,
+    "recipientReceivedExactAmount": true,
+    "unauthorizedRecipientUnchanged": true,
+    "senderPaidOnlyValueAndObservedFee": true,
+    "feeWithinReservedMaximum": true,
+    "exactlyOneMinedSenderTransaction": true,
+    "replayPreservesChainState": true
+  },
+  "passed": true,
+  "limitations": [
+    "Synthetic action-policy integration proof, not real-malware or LLM detection accuracy.",
+    "Only native transfers are executed. Approval, swap, HTTP and signing policy tests remain offline.",
+    "This is an owned ephemeral local genesis chain, not mainnet or a public transaction. No external RPC is used.",
+    "The fresh private key stays in memory and is never exported; no real wallet is used.",
+    "A saved local receipt is checkable evidence of this run, not independent third-party attestation."
+  ]
+}

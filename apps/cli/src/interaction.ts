@@ -35,7 +35,7 @@ export function reportText(report: ScanReport, installation?: InstallRecord): st
     `Report: ${report.id}`,
     `Fingerprint: ${report.fingerprint}`,
     !installation && report.decision !== 'allow'
-      ? `Held before activation. Inspect: skillgate inspect ${report.id}\nDecide later: skillgate approve ${report.id}`
+      ? `Held before activation. Inspect: honeyskill inspect ${report.id}\nDecide later: honeyskill approve ${report.id}`
       : '',
   ].filter(Boolean).join('\n');
 }

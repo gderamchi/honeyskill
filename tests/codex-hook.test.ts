@@ -64,7 +64,13 @@ test('Codex hook refresh replaces its previous display label without registering
   await prepareCodexHook(project, cli, process.execPath);
   const result = JSON.parse(await readFile(file, 'utf8'));
   assert.equal(result.hooks.PreToolUse.length, 1);
-  assert.equal(result.hooks.PreToolUse[0].hooks[0].statusMessage, 'SkillGate: pre-install check');
+  assert.equal(result.hooks.PreToolUse[0].hooks[0].statusMessage, 'HoneySkill: pre-install check');
+  await writeFile(file, JSON.stringify({ hooks: { PreToolUse: [{ matcher: '^Bash$', hooks: [{ type: 'command', command: 'previous-skillgate-hook', statusMessage: 'SkillGate: pre-install check' }] }] } }));
+  await prepareCodexHook(project, cli, process.execPath);
+  const english = JSON.parse(await readFile(file, 'utf8'));
+  assert.equal(english.hooks.PreToolUse.length, 1);
+  assert.equal(english.hooks.PreToolUse[0].hooks[0].statusMessage, 'HoneySkill: pre-install check');
+  assert.equal((await prepareCodexHook(project, cli, process.execPath)).changed, false);
 });
 
 test('ordinary commands and events stay unchanged', () => {

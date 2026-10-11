@@ -1,0 +1,52 @@
+{
+  "scope": "Local implementation validation; full-suite run followed by final targeted checks after batch-size and schema changes. No CI claim. Logs remain private; hashes support local retrieval.",
+  "application": {
+    "passed": 264,
+    "skipped": 2
+  },
+  "behavioral": {
+    "passed": 74,
+    "skipped": 1
+  },
+  "finalTargeted": {
+    "passed": 25,
+    "skipped": 0
+  },
+  "ciscoTargeted": {
+    "passed": 17,
+    "includesActualScanner": true
+  },
+  "checks": [
+    "typecheck",
+    "scratch runner typecheck",
+    "build:cli",
+    "pack:local",
+    "smoke:package"
+  ],
+  "logHashes": [
+    {
+      "name": "application-tests.log",
+      "sha256": "c76f1ebfe5481e89a8300f8a93c45ce01f9064b5926b354eeb9334ca2562e0a5"
+    },
+    {
+      "name": "behavioral-tests.log",
+      "sha256": "2c829daa0cbfa5b9dfcde9bf92fc5e8cfb6fa4d8c24641035108f32702ed875e"
+    },
+    {
+      "name": "final-targeted-tests.log",
+      "sha256": "ccde8ddc2fb4ca19493851f523cb31aace34b56535579ec0e8c7c79f7fd3c4d4"
+    },
+    {
+      "name": "build.log",
+      "sha256": "9f4d624d86426e6fbb6c8badc7bf45757f9c5253e4e4c5059aa1048b4ab93a42"
+    },
+    {
+      "name": "pack.log",
+      "sha256": "9d6f7bae5d1d4c9abb82312e85f3b14686d42250463179e82c6ade2ca76a762b"
+    },
+    {
+      "name": "package-smoke.log",
+      "sha256": "d40ed9d95ddaccf3fc9ce6169caf53d78029b8c01fa38fd7df93040644c1a280"
+    }
+  ]
+}

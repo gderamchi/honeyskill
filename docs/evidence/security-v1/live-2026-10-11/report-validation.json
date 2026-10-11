@@ -1,0 +1,42 @@
+{
+  "kind": "actual-headless-chromium-artifact-validation",
+  "passed": true,
+  "results": [
+    {
+      "file": "index.html",
+      "width": 320,
+      "overflow": false,
+      "details": 0,
+      "errors": [],
+      "externalRequests": 0,
+      "localLinksExist": true
+    },
+    {
+      "file": "cases.html",
+      "width": 320,
+      "overflow": false,
+      "details": 114,
+      "errors": [],
+      "externalRequests": 0,
+      "localLinksExist": true
+    },
+    {
+      "file": "index.html",
+      "width": 1280,
+      "overflow": false,
+      "details": 0,
+      "errors": [],
+      "externalRequests": 0,
+      "localLinksExist": true
+    },
+    {
+      "file": "cases.html",
+      "width": 1280,
+      "overflow": false,
+      "details": 114,
+      "errors": [],
+      "externalRequests": 0,
+      "localLinksExist": true
+    }
+  ]
+}

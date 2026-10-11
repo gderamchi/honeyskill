@@ -1,0 +1,1520 @@
+{
+  "scope": "All 48 incomplete malicious-labelled cases from the first live development run. This is a diagnostic audit, not an independent holdout.",
+  "baseline": "work/security-runs/live-2026-10-11T03-31-31-569Z/external/benchmark.json",
+  "baselineSha256": "3318ca1d9e3cacfd8da79e6c53b92d8b15f57b0c6a890105e6d6e2e567571239",
+  "corpusSha256": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+  "primaryExclusions": {
+    "partial": 13,
+    "unsupported": 10,
+    "partialPackage": 24,
+    "coverageGap": 1
+  },
+  "overlappingCauses": {
+    "partial-source-package": 36,
+    "cisco-partial": 11,
+    "cisco-strict-manifest-fallback": 5,
+    "native-extension-coverage": 8,
+    "cisco-secret-redaction-contract": 1,
+    "semantic-content-limit": 10,
+    "cisco-source-coordinate-contract": 5,
+    "semantic-evidence-contract": 1,
+    "outside-skill-root": 1
+  },
+  "cases": [
+    {
+      "id": "src002-asb04-002790",
+      "name": "notion-export",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "cisco-partial",
+        "cisco-strict-manifest-fallback"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Cisco reports one or more failed analyzers.",
+            "Unexpected fallback loading or model-assisted evaluation.",
+            "Coverage finding: SKILL_LOAD_FALLBACK_USED."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-005215",
+      "name": "database",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "native-extension-coverage",
+        "cisco-partial",
+        "cisco-secret-redaction-contract"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 2,
+      "uninspectedFilePaths": [
+        "SKILL.md.backup"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "SKILL.md.backup: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has unverifiable source evidence.",
+            "Finding 3 has unverifiable source evidence.",
+            "Finding 4 has unverifiable source evidence.",
+            "Finding 5 has unverifiable source evidence.",
+            "Finding 6 has unverifiable source evidence.",
+            "Finding 7 has unverifiable source evidence.",
+            "Finding 8 has unverifiable source evidence.",
+            "Finding 9 has unverifiable source evidence.",
+            "Finding 10 has unverifiable source evidence.",
+            "Finding 11 has unverifiable source evidence."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 10,
+        "semantic": 2
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-003205",
+      "name": "pptx",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "native-extension-coverage",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 56,
+      "uninspectedFilePaths": [
+        "ooxml/schemas/ecma/fouth-edition/opc-contentTypes.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-coreProperties.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-digSig.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-relationships.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-chart.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-chartDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-diagram.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-lockedCanvas.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-main.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-picture.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-spreadsheetDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-wordprocessingDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/pml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-additionalCharacteristics.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-bibliography.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-commonSimpleTypes.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlDataProperties.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlSchemaProperties.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesCustom.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesExtended.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesVariantTypes.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-math.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-relationshipReference.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/sml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-main.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-officeDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-presentationDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-spreadsheetDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-wordprocessingDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/wml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/xml.xsd",
+        "ooxml/schemas/mce/mc.xsd",
+        "ooxml/schemas/microsoft/wml-2010.xsd",
+        "ooxml/schemas/microsoft/wml-2012.xsd",
+        "ooxml/schemas/microsoft/wml-2018.xsd",
+        "ooxml/schemas/microsoft/wml-cex-2018.xsd",
+        "ooxml/schemas/microsoft/wml-cid-2016.xsd",
+        "ooxml/schemas/microsoft/wml-sdtdatahash-2020.xsd",
+        "ooxml/schemas/microsoft/wml-symex-2015.xsd"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "ooxml/schemas/ecma/fouth-edition/opc-contentTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-coreProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-digSig.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-relationships.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-chart.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-chartDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-diagram.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-lockedCanvas.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-main.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-picture.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-spreadsheetDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-wordprocessingDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/pml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-additionalCharacteristics.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-bibliography.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-commonSimpleTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlDataProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlSchemaProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesCustom.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesExtended.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesVariantTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-math.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-relationshipReference.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/sml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-main.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-officeDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-presentationDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-spreadsheetDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-wordprocessingDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/wml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/xml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/mce/mc.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2010.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2012.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2018.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-cex-2018.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-cid-2016.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-sdtdatahash-2020.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-symex-2015.xsd: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-002010",
+      "name": "test-strategy",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-strict-manifest-fallback"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Cisco reports one or more failed analyzers.",
+            "Unexpected fallback loading or model-assisted evaluation.",
+            "Coverage finding: SKILL_LOAD_FALLBACK_USED."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-002647",
+      "name": "e2e-validator",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-strict-manifest-fallback"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Cisco reports one or more failed analyzers.",
+            "Unexpected fallback loading or model-assisted evaluation.",
+            "Coverage finding: SKILL_LOAD_FALLBACK_USED."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-004548",
+      "name": "hacs",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-source-coordinate-contract",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has ambiguous source-line evidence.",
+            "Finding 3 has ambiguous source-line evidence.",
+            "Finding 4 has ambiguous source-line evidence.",
+            "Finding 5 has ambiguous source-line evidence.",
+            "Finding 6 has ambiguous source-line evidence."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 5,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-003376",
+      "name": "context7",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-000511",
+      "name": "pptx",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "native-extension-coverage",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 56,
+      "uninspectedFilePaths": [
+        "ooxml/schemas/ecma/fouth-edition/opc-contentTypes.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-coreProperties.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-digSig.xsd",
+        "ooxml/schemas/ecma/fouth-edition/opc-relationships.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-chart.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-chartDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-diagram.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-lockedCanvas.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-main.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-picture.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-spreadsheetDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/dml-wordprocessingDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/pml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-additionalCharacteristics.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-bibliography.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-commonSimpleTypes.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlDataProperties.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlSchemaProperties.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesCustom.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesExtended.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesVariantTypes.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-math.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/shared-relationshipReference.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/sml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-main.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-officeDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-presentationDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-spreadsheetDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/vml-wordprocessingDrawing.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/wml.xsd",
+        "ooxml/schemas/ISO-IEC29500-4_2016/xml.xsd",
+        "ooxml/schemas/mce/mc.xsd",
+        "ooxml/schemas/microsoft/wml-2010.xsd",
+        "ooxml/schemas/microsoft/wml-2012.xsd",
+        "ooxml/schemas/microsoft/wml-2018.xsd",
+        "ooxml/schemas/microsoft/wml-cex-2018.xsd",
+        "ooxml/schemas/microsoft/wml-cid-2016.xsd",
+        "ooxml/schemas/microsoft/wml-sdtdatahash-2020.xsd",
+        "ooxml/schemas/microsoft/wml-symex-2015.xsd"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "ooxml/schemas/ecma/fouth-edition/opc-contentTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-coreProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-digSig.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ecma/fouth-edition/opc-relationships.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-chart.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-chartDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-diagram.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-lockedCanvas.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-main.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-picture.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-spreadsheetDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/dml-wordprocessingDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/pml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-additionalCharacteristics.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-bibliography.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-commonSimpleTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlDataProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-customXmlSchemaProperties.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesCustom.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesExtended.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-documentPropertiesVariantTypes.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-math.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/shared-relationshipReference.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/sml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-main.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-officeDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-presentationDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-spreadsheetDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/vml-wordprocessingDrawing.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/wml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/ISO-IEC29500-4_2016/xml.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/mce/mc.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2010.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2012.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-2018.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-cex-2018.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-cid-2016.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-sdtdatahash-2020.xsd: Binary format or file extension is unsupported by static analysis.",
+            "ooxml/schemas/microsoft/wml-symex-2015.xsd: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 2,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-005375",
+      "name": "email",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "native-extension-coverage",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 14,
+      "uninspectedFilePaths": [
+        "scripts/gmail_manager.rb",
+        "scripts/lookup_contact_email.rb"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "scripts/gmail_manager.rb: Binary format or file extension is unsupported by static analysis.",
+            "scripts/lookup_contact_email.rb: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 2,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-000757",
+      "name": "setup-claude-skills-for-web",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-source-coordinate-contract"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has ambiguous source-line evidence."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-004252",
+      "name": "page",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-strict-manifest-fallback"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Cisco reports one or more failed analyzers.",
+            "Unexpected fallback loading or model-assisted evaluation.",
+            "Coverage finding: SKILL_LOAD_FALLBACK_USED."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 1,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-004922",
+      "name": "slack-bridge",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "native-extension-coverage"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 5,
+      "uninspectedFilePaths": [
+        ".gitignore"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            ".gitignore: Binary format or file extension is unsupported by static analysis."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 1,
+        "cisco": 7,
+        "semantic": 2
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-004098",
+      "name": "chrome-devtools",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "native-extension-coverage",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 29,
+      "uninspectedFilePaths": [
+        "scripts/.gitignore"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "scripts/.gitignore: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 1,
+        "cisco": 14,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src002-asb04-004620",
+      "name": "stealth-ops",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "cisco-partial",
+        "cisco-strict-manifest-fallback"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Cisco reports one or more failed analyzers.",
+            "Unexpected fallback loading or model-assisted evaluation.",
+            "Coverage finding: SKILL_LOAD_FALLBACK_USED."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author manual annotation and behavioral verification; source asserts in-the-wild provenance. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-002011",
+      "name": "arbitrum-dapp-skill",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "native-extension-coverage",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 13,
+      "uninspectedFilePaths": [
+        "docs/assets/arbitrum-horizontal-white.svg",
+        "docs/assets/arbitrum-logomark.svg"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "docs/assets/arbitrum-horizontal-white.svg: Binary format or file extension is unsupported by static analysis.",
+            "docs/assets/arbitrum-logomark.svg: Binary format or file extension is unsupported by static analysis."
+          ]
+        },
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 4,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-002949",
+      "name": "nervepay",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "semantic-evidence-contract"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 6,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "semantic": {
+          "status": "partial",
+          "errors": [
+            "One or more findings lacked exact file/line evidence; review is incomplete."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 2,
+        "cisco": 6,
+        "semantic": 2
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-004339",
+      "name": "polymarket-btc15m",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 7,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006555",
+      "name": "x402_payment_tron",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 5,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 2,
+        "cisco": 0,
+        "semantic": 1
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006438",
+      "name": "bird",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-001045",
+      "name": "bomb-dog-sniff",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 13,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 2,
+        "cisco": 17,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-002179",
+      "name": "skillguard",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 41,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 4,
+        "cisco": 25,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003082",
+      "name": "nano-banana-antigravity",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 5,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 4,
+        "semantic": 2
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-000952",
+      "name": "secure-sync",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 1,
+        "semantic": 2
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003022",
+      "name": "devinism",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 2,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-005884",
+      "name": "cron-writer",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006923",
+      "name": "dsiprouter",
+      "primaryExclusion": "unsupported",
+      "overlappingCauses": [
+        "partial-source-package",
+        "semantic-content-limit"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 6,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "semantic": {
+          "status": "unsupported",
+          "errors": [
+            "Semantic content limit reached; no API request was made."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006263",
+      "name": "excel",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003128",
+      "name": "govpredict-ai",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-001417",
+      "name": "antigravity-image",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 4,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 2,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003288",
+      "name": "better-polymarket",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003427",
+      "name": "moltiverse-among",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "cisco-partial",
+        "cisco-source-coordinate-contract"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 4,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has ambiguous source-line evidence."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 1,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006033",
+      "name": "linkedin",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-005298",
+      "name": "molt-security-auditor-v3",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 4,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 7,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-005622",
+      "name": "moltbook",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 4,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-000233",
+      "name": "totally-legit-skill",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 4,
+        "semantic": 3
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003303",
+      "name": "twitter-openclaw-2",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "native-extension-coverage"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 4,
+      "uninspectedFilePaths": [
+        "logo.svg"
+      ],
+      "stageErrors": {
+        "native": {
+          "status": "partial",
+          "errors": [
+            "logo.svg: Binary format or file extension is unsupported by static analysis."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-000893",
+      "name": "gmail-client-PM",
+      "primaryExclusion": "coverageGap",
+      "overlappingCauses": [
+        "outside-skill-root"
+      ],
+      "packageCompleteness": "complete-preserved-snapshot",
+      "files": 4,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-004884",
+      "name": "query-optimizer",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 8,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006358",
+      "name": "recruitment",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-002076",
+      "name": "reddit-trends",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "cisco-partial",
+        "cisco-source-coordinate-contract"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has ambiguous source-line evidence.",
+            "Finding 4 has ambiguous source-line evidence."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 5,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-004950",
+      "name": "openclaw-watchdog",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 5,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 3,
+        "cisco": 7,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003932",
+      "name": "wed",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-003548",
+      "name": "deep-research",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-006380",
+      "name": "wacli",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 2,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "src004-asb04-004116",
+      "name": "youtube-watcher",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-filtered",
+      "files": 3,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Study-author runtime verification and manual distinction between vulnerable and deliberately malicious skills; selected rows carry malicious/wild labels. Not independently re-executed by SkillGate.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "vendor-twitter-sum",
+      "name": "twitter-sum",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-text-only",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 2,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Snyk Labs incident demonstration repository directly links this exact pinned public artifact as a malicious skill.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "vendor-sundial-bybit",
+      "name": "bybit-trading",
+      "primaryExclusion": "partial",
+      "overlappingCauses": [
+        "partial-source-package",
+        "cisco-partial",
+        "cisco-source-coordinate-contract"
+      ],
+      "packageCompleteness": "partial-text-only",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {
+        "cisco": {
+          "status": "partial",
+          "errors": [
+            "Finding 2 has ambiguous source-line evidence.",
+            "Finding 4 has ambiguous source-line evidence."
+          ]
+        }
+      },
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 5,
+        "semantic": 4
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Venustech names this repository and skill path as a poisoned Bybit skill; OpenSourceMalware documents the related AuthTool cryptocurrency lure and credential-stealing campaign.",
+        "independentOfSkillGate": true
+      }
+    },
+    {
+      "id": "vendor-google-qx4",
+      "name": "google-qx4",
+      "primaryExclusion": "partialPackage",
+      "overlappingCauses": [
+        "partial-source-package"
+      ],
+      "packageCompleteness": "partial-text-only",
+      "files": 1,
+      "uninspectedFilePaths": [],
+      "stageErrors": {},
+      "existingAlerts": {
+        "native": 0,
+        "cisco": 0,
+        "semantic": 0
+      },
+      "groundTruth": {
+        "label": "malicious",
+        "basis": "Snyk documents the malicious Google impersonation skill and fake openclaw-core prerequisite.",
+        "independentOfSkillGate": true
+      }
+    }
+  ],
+  "decisions": [
+    "Never alter corpus, source labels, or package completeness.",
+    "Partial source snapshots remain incomplete even when every retained file is inspected.",
+    "Keep real Cisco strict-manifest loader failures incomplete; do not invent frontmatter or switch to lenient loading.",
+    "Validate Cisco secret redactions against exact source line and code-point offsets without emitting original secrets.",
+    "Reconstruct documented Cisco primary-body and Python-block coordinates and verify exact excerpts. Unresolved repeated pipeline coordinates remain incomplete.",
+    "Native extension coverage and semantic request size are assigned to the root agent.",
+    "Unsupported or incomplete is not a false negative; alerts may coexist with incomplete results."
+  ]
+}

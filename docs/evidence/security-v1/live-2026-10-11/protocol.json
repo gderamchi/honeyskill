@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "kind": "authorized-live-development-evaluation",
+  "startedAt": "2026-10-11T03:31:31.572Z",
+  "model": "gpt-6-luna",
+  "reasoning": "none",
+  "repetitions": 1,
+  "retries": 0,
+  "threshold": "medium",
+  "packageCohorts": [
+    {
+      "manifest": "evaluation/security-v1/corpus/manifest.json",
+      "cases": 94
+    },
+    {
+      "manifest": "evaluation/security-v1/negative-corpus/manifest.json",
+      "cases": 20
+    }
+  ],
+  "guardedSuite": "Six authored integration cases; separate from external package detection and from real-chain effects.",
+  "frozenHarness": [
+    {
+      "file": "work/security-live/run.ts",
+      "sha256": "4ffa9e47d3997e5358a2b2b0e326c824baff9cce4e469faa5be8aca8fa92ce74"
+    }
+  ],
+  "limits": [
+    "Development corpus; no blind holdout claim.",
+    "No acquired scripts, real wallets, public signed transactions or skill activation.",
+    "Incomplete or unsupported cases remain separate. No automatic retries or model substitution.",
+    "Guarded effects are simulated; actual native-chain proof is separate."
+  ]
+}

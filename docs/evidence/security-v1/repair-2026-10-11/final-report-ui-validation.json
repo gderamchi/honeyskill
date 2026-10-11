@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "harnessAttempts": [
+    {
+      "status": "completed-superseded",
+      "reason": "Initial three-page UI checks passed, then root corrected narrative regression name and added error/ablation details. These pages were retested after regeneration; source data were unchanged."
+    },
+    {
+      "status": "completed-final",
+      "reason": "This evidence records regenerated final HTML hashes, screenshots and explicit regression-name checks."
+    }
+  ],
+  "checkedAt": "2026-10-11T04:17:55.906Z",
+  "scope": "Actual Chromium read-only QA of all three final user-facing reports. No acquired code execution, paid API calls, product edits or rendered-content edits.",
+  "browser": {
+    "engine": "Chromium",
+    "playwrightVersion": "1.64.0"
+  },
+  "pages": {
+    "index": {
+      "file": "outputs/skillgate-repair-2026-10-11/index.html",
+      "sha256": "f196a4480e1d72af3ad30d7653458b56d50ceb7a7875a70227461f74fbb93055"
+    },
+    "cases": {
+      "file": "outputs/skillgate-repair-2026-10-11/cases.html",
+      "sha256": "b3f19947e73fb1f236acfee3f57b00932bd38e89c9b7eac3361558ce748681b1"
+    },
+    "diagnosis": {
+      "file": "outputs/skillgate-repair-2026-10-11/diagnosis.html",
+      "sha256": "533e27db22f7fd280f7ebac60e6b3a92a8ec5073f3d8ac3c037e61a3ec5e2c23"
+    }
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "height": 900
+    },
+    {
+      "width": 1280,
+      "height": 900
+    }
+  ],
+  "checks": [
+    {
+      "name": "index 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "index 320: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "index 320: every regressed positive name matches JSON",
+      "pass": true,
+      "details": {
+        "regressionIds": [
+          "src002-asb04-000086",
+          "src002-asb04-007263",
+          "src002-asb04-004314"
+        ]
+      }
+    },
+    {
+      "name": "index 320: every paired engine ablation matches comparison JSON",
+      "pass": true
+    },
+    {
+      "name": "index 320: original FN cards match JSON",
+      "pass": true
+    },
+    {
+      "name": "index 320: headline population cells match metrics JSON",
+      "pass": true
+    },
+    {
+      "name": "index 320: request/token cells match JSON",
+      "pass": true
+    },
+    {
+      "name": "index 320: metrics agree run-summary",
+      "pass": true
+    },
+    {
+      "name": "cases 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "cases 320: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "cases 320: all 114 cases in original order",
+      "pass": true
+    },
+    {
+      "name": "cases 320: every stage error is preserved in its case",
+      "pass": true
+    },
+    {
+      "name": "cases 320: every summary transition matches JSON",
+      "pass": true
+    },
+    {
+      "name": "cases 320: every engine row matches JSON",
+      "pass": true
+    },
+    {
+      "name": "cases open partial 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "diagnosis 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "diagnosis 320: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "diagnosis 320: every original 22 FN present",
+      "pass": true
+    },
+    {
+      "name": "diagnosis 320: every original 48 incomplete present",
+      "pass": true
+    },
+    {
+      "name": "diagnosis open finding 320: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "diagnosis 320: evidence relevance failure disclosed",
+      "pass": true
+    },
+    {
+      "name": "index 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "index 1280: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "index 1280: every regressed positive name matches JSON",
+      "pass": true,
+      "details": {
+        "regressionIds": [
+          "src002-asb04-000086",
+          "src002-asb04-007263",
+          "src002-asb04-004314"
+        ]
+      }
+    },
+    {
+      "name": "index 1280: every paired engine ablation matches comparison JSON",
+      "pass": true
+    },
+    {
+      "name": "index 1280: original FN cards match JSON",
+      "pass": true
+    },
+    {
+      "name": "index 1280: headline population cells match metrics JSON",
+      "pass": true
+    },
+    {
+      "name": "index 1280: request/token cells match JSON",
+      "pass": true
+    },
+    {
+      "name": "index 1280: metrics agree run-summary",
+      "pass": true
+    },
+    {
+      "name": "cases 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "cases 1280: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "cases 1280: all 114 cases in original order",
+      "pass": true
+    },
+    {
+      "name": "cases 1280: every stage error is preserved in its case",
+      "pass": true
+    },
+    {
+      "name": "cases 1280: every summary transition matches JSON",
+      "pass": true
+    },
+    {
+      "name": "cases 1280: every engine row matches JSON",
+      "pass": true
+    },
+    {
+      "name": "cases open partial 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "diagnosis 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "diagnosis 1280: unique anchors",
+      "pass": true
+    },
+    {
+      "name": "diagnosis 1280: every original 22 FN present",
+      "pass": true
+    },
+    {
+      "name": "diagnosis 1280: every original 48 incomplete present",
+      "pass": true
+    },
+    {
+      "name": "diagnosis open finding 1280: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "diagnosis 1280: evidence relevance failure disclosed",
+      "pass": true
+    },
+    {
+      "name": "relative files and anchors exist",
+      "pass": true,
+      "details": {
+        "relativeLinks": 89,
+        "externalLinksNotFetched": 39,
+        "missing": []
+      }
+    },
+    {
+      "name": "diagnosis-to-case navigation resolves target anchor",
+      "pass": true
+    },
+    {
+      "name": "index 320 with doubled body text: no document overflow",
+      "pass": true,
+      "details": {
+        "client": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "no outbound requests",
+      "pass": true,
+      "details": {
+        "attempts": 0
+      }
+    },
+    {
+      "name": "no browser console/page errors",
+      "pass": true,
+      "details": {
+        "count": 0
+      }
+    },
+    {
+      "name": "index: tested bytes unchanged",
+      "pass": true
+    },
+    {
+      "name": "cases: tested bytes unchanged",
+      "pass": true
+    },
+    {
+      "name": "diagnosis: tested bytes unchanged",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "screenshots": [
+    "final-report-ui/index-320.png",
+    "final-report-ui/cases-320.png",
+    "final-report-ui/cases-partial-320.png",
+    "final-report-ui/diagnosis-320.png",
+    "final-report-ui/index-1280.png",
+    "final-report-ui/cases-1280.png",
+    "final-report-ui/cases-partial-1280.png",
+    "final-report-ui/diagnosis-1280.png",
+    "final-report-ui/index-320-large-text.png"
+  ],
+  "passed": true,
+  "limits": [
+    "Checks verify report/data correspondence and navigation/layout, not independent truth of original malware labels.",
+    "External research/source links were inspected as links but deliberately not fetched.",
+    "Wide tables use local horizontal scrolling; no document-level overflow was detected.",
+    "Screenshots are viewport captures; all case entries and ledger values were checked through the actual DOM."
+  ],
+  "visualReview": {
+    "inspected": [
+      "final-report-ui/index-1280.png",
+      "final-report-ui/index-320.png",
+      "final-report-ui/cases-partial-1280.png",
+      "final-report-ui/diagnosis-320.png"
+    ],
+    "observations": [
+      "Overview numbers and caveat are readable at 1280px; navigation and cards wrap cleanly at 320px.",
+      "The opened Hooks Automation case exposes FN to incomplete and the rejected-ID stage error without implying success.",
+      "All 22 diagnosis disclosures remain readable at 320px; long skill names wrap rather than overflow.",
+      "Tables intentionally scroll inside their own containers; no global horizontal overflow was observed."
+    ],
+    "defects": []
+  }
+}

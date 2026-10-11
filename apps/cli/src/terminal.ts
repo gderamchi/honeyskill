@@ -32,11 +32,11 @@ export function parseInstallerArgv(command: TerminalCommand, args: string[]): In
   const operation = tail[0];
   // Upstream find/search can install, and check aliases update; none may bypass the gate.
   if (!operation || ['--help', '-h', '--version', '-v', 'help', 'list', 'ls', 'remove', 'rm', 'init'].includes(operation)) return { kind: 'delegate' };
-  if (operation !== 'add' && operation !== 'install') return rejected('Unsupported skills command. For a checked update: skillgate update NAME. To install: skills add SOURCE.');
+  if (operation !== 'add' && operation !== 'install') return rejected('Unsupported skills command. For a checked update: honeyskill update NAME. To install: skills add SOURCE.');
   let source: string | undefined, skill: string | undefined, agent: string | undefined;
   for (let index = 1; index < tail.length; index++) {
     const value = tail[index];
-    if (value === '--yes' || value === '-y') continue; // Upstream acknowledgement never accepts a SkillGate risk.
+    if (value === '--yes' || value === '-y') continue; // Upstream acknowledgement never accepts a HoneySkill risk.
     if (value === '--skill') {
       if (skill || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(tail[index + 1] ?? '')) return rejected('Select exactly one skill with --skill NAME.');
       skill = tail[++index];
@@ -71,7 +71,7 @@ const shellQuote = (value: string) => `'${value.replace(/'/g, `'"'"'`)}'`;
 
 async function readTerminalConfig(root: string): Promise<TerminalConfig> {
   const config = TerminalConfigSchema.parse(await readJson(configPath(root)));
-  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Inconsistent terminal configuration; reactivate SkillGate in this project.');
+  if (await realpath(config.projectRoot) !== await realpath(resolve(root))) throw new SkillGateError('TERMINAL_CONFIG', 'Inconsistent terminal configuration; reactivate HoneySkill in this project.');
   return config;
 }
 
@@ -105,7 +105,7 @@ export async function prepareTerminal(root: string, cliPath: string, nodePath = 
   await atomicJson(configPath(projectRoot), config);
   for (const command of terminalCommands) {
     const file = join(binPath(projectRoot), command);
-    const content = `#!/usr/bin/env node\n// Generated SkillGate terminal shim.\nconst { spawnSync } = require('node:child_process');\nconst result = spawnSync(${JSON.stringify(nodePath)}, ${JSON.stringify([cliPath, '--project', projectRoot, 'terminal-dispatch', '--command', command, '--'])}.concat(process.argv.slice(2)), { stdio: 'inherit' });\nif (result.error) { process.stderr.write('SkillGate unavailable: installation was not started.\\n'); process.exit(126); }\nif (result.signal) process.kill(process.pid, result.signal);\nelse process.exit(result.status ?? 1);\n`;
+    const content = `#!/usr/bin/env node\n// Generated HoneySkill terminal shim.\nconst { spawnSync } = require('node:child_process');\nconst result = spawnSync(${JSON.stringify(nodePath)}, ${JSON.stringify([cliPath, '--project', projectRoot, 'terminal-dispatch', '--command', command, '--'])}.concat(process.argv.slice(2)), { stdio: 'inherit' });\nif (result.error) { process.stderr.write('HoneySkill unavailable: installation was not started.\\n'); process.exit(126); }\nif (result.signal) process.kill(process.pid, result.signal);\nelse process.exit(result.status ?? 1);\n`;
     const temporary = `${file}.${randomUUID()}.tmp`;
     await writeFile(temporary, content, { mode: 0o700, flag: 'wx' });
     try { await rename(temporary, file); await chmod(file, 0o700); }
@@ -144,17 +144,17 @@ function run(executable: string, args: string[]): Promise<number> {
 export async function dispatchTerminal(root: string, command: TerminalCommand, args: string[]): Promise<number> {
   if (!terminalCommands.includes(command)) throw new SkillGateError('TERMINAL_COMMAND', 'Unsupported terminal command.');
   const invocation = parseInstallerArgv(command, args);
-  if (invocation.kind === 'reject') { process.stderr.write(`SkillGate: ${invocation.reason}\nNo upstream installer was started.\n`); return 2; }
+  if (invocation.kind === 'reject') { process.stderr.write(`HoneySkill: ${invocation.reason}\nNo upstream installer was started.\n`); return 2; }
   const config = await readTerminalConfig(root);
   if (invocation.kind === 'delegate') {
     const original = config.originals[command];
-    if (!original) { process.stderr.write(`${command} was not found before SkillGate activation.\n`); return 127; }
+    if (!original) { process.stderr.write(`${command} was not found before HoneySkill activation.\n`); return 127; }
     return run(original, args);
   }
   if (await realpath(process.cwd()) !== await realpath(config.projectRoot)) {
-    process.stderr.write('SkillGate: this terminal protects another project. Leave this session (exit), then run skillgate on in the current project before installing.\n');
+    process.stderr.write('HoneySkill: this terminal protects another project. Leave this session (exit), then run honeyskill on in the current project before installing.\n');
     return 2;
   }
-  process.stderr.write('SkillGate: analyzing the skill before activation.\n');
+  process.stderr.write('HoneySkill: analyzing the skill before activation.\n');
   return run(config.nodePath, [config.cliPath, '--project', config.projectRoot, 'install', invocation.source, ...(invocation.skill ? ['--skill', invocation.skill] : [])]);
 }

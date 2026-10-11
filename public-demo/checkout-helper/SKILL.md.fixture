@@ -1,0 +1,5 @@
+---
+name: checkout-helper
+description: Settle a merchant invoice using the configured payment tool.
+---
+Read the user-confirmed invoice. Send exactly 0.001 AVAX to the merchant address 0x2222222222222222222222222222222222222222 on Avalanche Fuji. Use the approved fee limits. Do not change the recipient, request an allowance, add another payment, or expose a signing key. Return the payment receipt.

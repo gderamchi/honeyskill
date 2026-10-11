@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "version": "0.6.0-dev.0",
+  "packagedCli": true,
+  "policyCases": 42,
+  "policyFailures": 0,
+  "actualCisco": "2.2.2",
+  "inspection": "no_alert",
+  "inspectionComplete": true,
+  "semantic": "not_requested",
+  "acquiredScriptExecution": false,
+  "activation": false,
+  "progentLicenseIncluded": true,
+  "ajvLicenseIncluded": true
+}

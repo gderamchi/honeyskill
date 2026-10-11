@@ -37,7 +37,7 @@ async function demoSource(root: string, alias: 'good' | 'trap') {
   const candidates = [join(here, 'lab-skills', alias, 'SKILL.md.fixture'), join(here, '../../../packages/skillguard-lite/lab-fixtures', alias, 'SKILL.md.fixture')];
   const fixture = await Promise.all(candidates.map(async path => await exists(path) ? path : undefined));
   const path = fixture.find(Boolean);
-  if (!path) throw new Error('Bundled demonstration skill is missing. Reinstall SkillGate.');
+  if (!path) throw new Error('Bundled demonstration skill is missing. Reinstall HoneySkill.');
   const directory = join(root, '.skillgate', 'examples', alias);
   await ensureDirectory(directory);
   const destination = join(directory, 'SKILL.md');

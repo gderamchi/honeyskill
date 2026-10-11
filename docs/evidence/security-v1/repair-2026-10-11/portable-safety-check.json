@@ -1,0 +1,11 @@
+{
+  "scope": "Pattern scan of portable text artifacts only; not a guarantee of exhaustive secret detection. No raw source corpus or workstation logs included.",
+  "textFilesChecked": 29,
+  "patterns": [
+    "workstation_path",
+    "api_key",
+    "private_key_pem",
+    "bearer_literal"
+  ],
+  "findings": []
+}

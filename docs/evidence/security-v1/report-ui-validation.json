@@ -1,0 +1,71 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "normal",
+      "width": 320,
+      "initial": 20,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    },
+    {
+      "name": "normal",
+      "width": 1280,
+      "initial": 20,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    },
+    {
+      "name": "stress",
+      "width": 320,
+      "initial": 20,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    },
+    {
+      "name": "stress",
+      "width": 1280,
+      "initial": 20,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    },
+    {
+      "name": "empty",
+      "width": 320,
+      "initial": 0,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    },
+    {
+      "name": "empty",
+      "width": 1280,
+      "initial": 0,
+      "search": true,
+      "filter": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "overflow": false,
+      "largeTextOverflow": false
+    }
+  ]
+}

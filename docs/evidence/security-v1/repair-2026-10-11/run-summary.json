@@ -1,0 +1,98 @@
+{
+  "status": "finished",
+  "completedAt": "2026-10-11T04:10:32.451Z",
+  "cohorts": [
+    {
+      "cohort": "external",
+      "metrics": {
+        "tp": 18,
+        "fp": 0,
+        "tn": 0,
+        "fn": 14,
+        "unknown": 13,
+        "incomplete": 49,
+        "attempted": 94,
+        "abstentions": {
+          "error": 0,
+          "unsupported": 0,
+          "partial": 16,
+          "notRequested": 0,
+          "missingEngine": 0,
+          "partialPackage": 32,
+          "coverageGap": 1
+        },
+        "labels": {
+          "malicious": 80,
+          "benign": 0,
+          "unknown": 14
+        },
+        "coverage": {
+          "complete": 45,
+          "labelled": 32,
+          "malicious": 32,
+          "benign": 0,
+          "rate": 0.4787234042553192,
+          "labelledRate": 0.4,
+          "maliciousRate": 0.4,
+          "benignRate": null
+        },
+        "precision": null,
+        "recall": 0.5625,
+        "falsePositiveRate": null,
+        "accuracy": null,
+        "endToEndDetectionFloor": 0.225
+      },
+      "verification": {
+        "valid": true,
+        "errors": []
+      }
+    },
+    {
+      "cohort": "controls",
+      "metrics": {
+        "tp": 0,
+        "fp": 7,
+        "tn": 12,
+        "fn": 0,
+        "unknown": 0,
+        "incomplete": 1,
+        "attempted": 20,
+        "abstentions": {
+          "error": 0,
+          "unsupported": 0,
+          "partial": 1,
+          "notRequested": 0,
+          "missingEngine": 0,
+          "partialPackage": 0,
+          "coverageGap": 0
+        },
+        "labels": {
+          "malicious": 0,
+          "benign": 20,
+          "unknown": 0
+        },
+        "coverage": {
+          "complete": 19,
+          "labelled": 19,
+          "malicious": 0,
+          "benign": 19,
+          "rate": 0.95,
+          "labelledRate": 0.95,
+          "maliciousRate": null,
+          "benignRate": 0.95
+        },
+        "precision": null,
+        "recall": null,
+        "falsePositiveRate": 0.3684210526315789,
+        "accuracy": null,
+        "endToEndDetectionFloor": null
+      },
+      "verification": {
+        "valid": true,
+        "errors": []
+      }
+    }
+  ],
+  "sourceChanges": [],
+  "note": "All scheduled cases attempted once. Incomplete cases remain excluded and retained; no runtime prevention experiment was repeated."
+}

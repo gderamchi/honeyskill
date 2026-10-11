@@ -1,0 +1,205 @@
+{
+  "before": {
+    "external": {
+      "tp": 10,
+      "fp": 0,
+      "tn": 0,
+      "fn": 22,
+      "unknown": 12,
+      "incomplete": 50,
+      "attempted": 94,
+      "abstentions": {
+        "error": 0,
+        "unsupported": 11,
+        "partial": 14,
+        "notRequested": 0,
+        "missingEngine": 0,
+        "partialPackage": 24,
+        "coverageGap": 1
+      },
+      "labels": {
+        "malicious": 80,
+        "benign": 0,
+        "unknown": 14
+      },
+      "coverage": {
+        "complete": 44,
+        "labelled": 32,
+        "malicious": 32,
+        "benign": 0,
+        "rate": 0.46808510638297873,
+        "labelledRate": 0.4,
+        "maliciousRate": 0.4,
+        "benignRate": null
+      },
+      "precision": null,
+      "recall": 0.3125,
+      "falsePositiveRate": null,
+      "accuracy": null,
+      "endToEndDetectionFloor": 0.125
+    },
+    "controls": {
+      "tp": 0,
+      "fp": 4,
+      "tn": 12,
+      "fn": 0,
+      "unknown": 0,
+      "incomplete": 4,
+      "attempted": 20,
+      "abstentions": {
+        "error": 0,
+        "unsupported": 4,
+        "partial": 0,
+        "notRequested": 0,
+        "missingEngine": 0,
+        "partialPackage": 0,
+        "coverageGap": 0
+      },
+      "labels": {
+        "malicious": 0,
+        "benign": 20,
+        "unknown": 0
+      },
+      "coverage": {
+        "complete": 16,
+        "labelled": 16,
+        "malicious": 0,
+        "benign": 16,
+        "rate": 0.8,
+        "labelledRate": 0.8,
+        "maliciousRate": null,
+        "benignRate": 0.8
+      },
+      "precision": null,
+      "recall": null,
+      "falsePositiveRate": 0.25,
+      "accuracy": null,
+      "endToEndDetectionFloor": null
+    }
+  },
+  "after": {
+    "external": {
+      "tp": 18,
+      "fp": 0,
+      "tn": 0,
+      "fn": 14,
+      "unknown": 13,
+      "incomplete": 49,
+      "attempted": 94,
+      "abstentions": {
+        "error": 0,
+        "unsupported": 0,
+        "partial": 16,
+        "notRequested": 0,
+        "missingEngine": 0,
+        "partialPackage": 32,
+        "coverageGap": 1
+      },
+      "labels": {
+        "malicious": 80,
+        "benign": 0,
+        "unknown": 14
+      },
+      "coverage": {
+        "complete": 45,
+        "labelled": 32,
+        "malicious": 32,
+        "benign": 0,
+        "rate": 0.4787234042553192,
+        "labelledRate": 0.4,
+        "maliciousRate": 0.4,
+        "benignRate": null
+      },
+      "precision": null,
+      "recall": 0.5625,
+      "falsePositiveRate": null,
+      "accuracy": null,
+      "endToEndDetectionFloor": 0.225
+    },
+    "controls": {
+      "tp": 0,
+      "fp": 7,
+      "tn": 12,
+      "fn": 0,
+      "unknown": 0,
+      "incomplete": 1,
+      "attempted": 20,
+      "abstentions": {
+        "error": 0,
+        "unsupported": 0,
+        "partial": 1,
+        "notRequested": 0,
+        "missingEngine": 0,
+        "partialPackage": 0,
+        "coverageGap": 0
+      },
+      "labels": {
+        "malicious": 0,
+        "benign": 20,
+        "unknown": 0
+      },
+      "coverage": {
+        "complete": 19,
+        "labelled": 19,
+        "malicious": 0,
+        "benign": 19,
+        "rate": 0.95,
+        "labelledRate": 0.95,
+        "maliciousRate": null,
+        "benignRate": 0.95
+      },
+      "precision": null,
+      "recall": null,
+      "falsePositiveRate": 0.3684210526315789,
+      "accuracy": null,
+      "endToEndDetectionFloor": null
+    }
+  },
+  "originalFalseNegatives": {
+    "originalFNCount": 22,
+    "afterClassifications": {
+      "FN": 12,
+      "TP": 9,
+      "incomplete": 1
+    },
+    "semanticFindings": 12,
+    "findingAssessments": {
+      "supported_conditional_code_mechanism": 2,
+      "speculative_association": 1,
+      "supported_conditional_authority_claim": 3,
+      "supported_code_mechanism": 1,
+      "irrelevant_but_valid_source_id": 1,
+      "supported_dataflow_unauthorizedness_unproven": 2,
+      "scope_misinterpretation": 1,
+      "plausible_architectural_risk_with_missing_contract": 1
+    },
+    "lostEvaluability": 1,
+    "newAlertsNotEquivalentToConfirmedMalware": true
+  },
+  "originalIncompletePositives": {
+    "INCOMPLETE:partial": 13,
+    "TP": 2,
+    "INCOMPLETE:partialPackage": 32,
+    "INCOMPLETE:coverageGap": 1
+  },
+  "semanticWork": {
+    "before": {
+      "responses": 99,
+      "requests": 99,
+      "usage": {
+        "inputTokens": 758436,
+        "outputTokens": 5414,
+        "totalTokens": 763850
+      }
+    },
+    "after": {
+      "responses": 367,
+      "requests": 367,
+      "usage": {
+        "inputTokens": 8285720,
+        "outputTokens": 24047,
+        "totalTokens": 8309767
+      }
+    }
+  }
+}

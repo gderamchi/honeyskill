@@ -17,9 +17,10 @@ for name in ['npx', 'pnpm', 'skills']:
     path = original_bin/name
     path.write_text(f'#!/bin/sh\nprintf "upstream executed" >> {shlex.quote(str(upstream_log))}\nexit 99\n')
     path.chmod(0o700)
-skillgate = original_bin/'skillgate'
-skillgate.write_text(f'#!/bin/sh\nexec {shlex.quote(node)} {shlex.quote(str(cli))} "$@"\n')
-skillgate.chmod(0o700)
+for name in ['honeyskill', 'skillgate']:
+    command_path = original_bin/name
+    command_path.write_text(f'#!/bin/sh\nexec {shlex.quote(node)} {shlex.quote(str(cli))} "$@"\n')
+    command_path.chmod(0o700)
 env = {**os.environ, 'PATH': str(original_bin)+os.pathsep+os.environ['PATH'], 'NO_COLOR': '1', 'OPENAI_API_KEY': '', 'BASH_ENV': str(startup), 'ENV': str(startup), 'PROMPT_COMMAND': f'. {shlex.quote(str(startup))}', 'HISTFILE': str(history)}
 
 
@@ -47,7 +48,7 @@ master_closed = False
 content = b''
 cursor = 0
 checks = []
-prompt = b'[SkillGate] '
+prompt = b'[HoneySkill] '
 
 
 def read_until(marker, timeout=20):
@@ -105,12 +106,12 @@ def cleanup_session():
 
 try:
     opened = read_until(prompt)
-    assert 'SkillGate is active for' in opened
+    assert 'HoneySkill is active for' in opened
     checks.append('on opens an interactive protected Bash without eval')
-    status = command('skillgate doctor --json')
+    status = command('honeyskill doctor --json')
     assert '"active": true' in status, status
     checks.append('doctor confirms the terminal is active')
-    nested = command('skillgate on')
+    nested = command('honeyskill on')
     assert 'already active' in nested, nested
     checks.append('on does not nest a second shell while already active')
     history_output = command('printf "history=%s\\n" "$HISTFILE"')
@@ -154,7 +155,7 @@ content = b''
 cursor = 0
 try:
     reopened = read_until(prompt)
-    assert 'SkillGate is active for' in reopened, reopened
+    assert 'HoneySkill is active for' in reopened, reopened
     assert '"active": true' in command('skillgate doctor --json')
     assert exit_session() == 0
     checks.append('on reopens via the same project path alias after exit')
@@ -165,6 +166,6 @@ assert not upstream_log.exists(), 'Upstream installer must never execute.'
 assert not startup_log.exists(), 'Inherited shell startup code must never execute.'
 assert not history.exists(), 'Parent history destination must remain untouched.'
 result = {'schemaVersion': 1, 'executedAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'status': 'passed', 'cli': str(cli), 'temporaryRoot': str(root), 'checkCount': len(checks), 'checks': checks, 'transcript': first_transcript+'\nReopened session:\n'+content.decode(errors='replace'), 'upstreamInstallerExecuted': False, 'inheritedStartupExecuted': False, 'parentHistoryWritten': False, 'shell': '/bin/bash --noprofile --norc -i', 'realFunds': False, 'paidProviderCalls': 0}
-output = Path(os.environ.get('SKILLGATE_SESSION_OUTPUT', str(repo/'outputs/session-pty-smoke.json')))
+output = Path(os.environ.get('SKILLGATE_SESSION_OUTPUT', str(repo/'outputs/honeyskill-session-pty-smoke.json')))
 output.write_text(json.dumps(result, indent=2, ensure_ascii=False))
 print(json.dumps({key: value for key, value in result.items() if key != 'transcript'}, indent=2, ensure_ascii=False))

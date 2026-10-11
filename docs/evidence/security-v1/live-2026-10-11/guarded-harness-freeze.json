@@ -1,0 +1,5 @@
+{
+  "file": "work/security-live/guarded.ts",
+  "sha256": "3024d31f777ae827a15019cb7af3574f6e66e0a0f9981d593e2ac0008c149d5c",
+  "note": "Frozen before the first guarded-model call; separate integration experiment."
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "corpus-acquisition-integrity",
+  "status": "passed",
+  "manifestSha256": "89d6647ee49fbf81d33e67a4fe0720df2abf34d44020e4121cb99432af641445",
+  "summary": {
+    "sampleCount": 94,
+    "labels": {
+      "malicious": 80,
+      "unknown": 14
+    },
+    "families": 81,
+    "retainedFiles": 474
+  },
+  "retainedFileBytes": 4958972,
+  "freshPinnedResearchDownloadsMatchRetainedSources": true,
+  "providerCalls": 0,
+  "payloadExecutions": 0,
+  "skillInstallations": 0,
+  "publications": 0,
+  "limitations": [
+    "External source labels were not reproduced with SkillGate.",
+    "Unknown upstream controls excluded from confusion matrices.",
+    "No claim of unseen cases or independent campaigns."
+  ]
+}

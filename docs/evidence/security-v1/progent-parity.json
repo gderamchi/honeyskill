@@ -1,0 +1,1527 @@
+{
+  "schemaVersion": 1,
+  "kind": "pinned-upstream-static-checker-parity",
+  "reference": {
+    "repository": "https://github.com/sunblaze-ucb/progent",
+    "commit": "5be7b63fa96f70bc19b72fbcee81f1c0bcc1a565",
+    "source": "secagent/tool.py",
+    "sourceSha256": "59b2cd642a9c29f2459e919720fae935a5f6f99a2a5fa0c17f1ea95e9efbcd52",
+    "license": "MIT",
+    "implementation": "static-jsonschema-fallback-0-port-with-strict-input-boundary"
+  },
+  "validatorVersions": {
+    "pythonJsonschema": "4.23.0",
+    "ajv": "8.20.0"
+  },
+  "cases": [
+    {
+      "id": "empty-policy-denies",
+      "policy": {},
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "unknown-tool-denies",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "shell",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "empty-rules-deny",
+      "policy": {
+        "send": []
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "unconditional-allow",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "unconditional-forbid",
+      "policy": {
+        "send": [
+          [
+            1,
+            1,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "enum-matches",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "enum": [
+                  "alice"
+                ]
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "enum-mismatch",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "enum": [
+                  "bob"
+                ]
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "lower-numeric-priority-wins",
+      "policy": {
+        "send": [
+          [
+            5,
+            1,
+            {},
+            0
+          ],
+          [
+            1,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "forbid-wins-priority-tie",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {},
+            0
+          ],
+          [
+            1,
+            1,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "failed-forbid-continues",
+      "policy": {
+        "send": [
+          [
+            1,
+            1,
+            {
+              "recipient": {
+                "const": "bob"
+              }
+            },
+            0
+          ],
+          [
+            2,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "failed-allow-continues",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "const": "bob"
+              }
+            },
+            0
+          ],
+          [
+            2,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "priority-100-failed-allow-denies",
+      "policy": {
+        "send": [
+          [
+            100,
+            0,
+            {
+              "recipient": {
+                "const": "bob"
+              }
+            },
+            0
+          ],
+          [
+            101,
+            0,
+            {},
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "priority-100-matching-allow",
+      "policy": {
+        "send": [
+          [
+            100,
+            0,
+            {
+              "recipient": {
+                "const": "alice"
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "conjunction-all-conditions-required",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "const": "alice"
+              },
+              "amount": {
+                "maximum": 9
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "integer-boundary-included",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 10
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "exclusive-boundary-excluded",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "type": "integer",
+                "exclusiveMaximum": 10
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "not-blocked-member",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "not": {
+                  "enum": [
+                    "bob",
+                    "eve"
+                  ]
+                }
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "anyof-match",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "anyOf": [
+                  {
+                    "const": "bob"
+                  },
+                  {
+                    "const": "alice"
+                  }
+                ]
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "allof-match",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "allOf": [
+                  {
+                    "minimum": 5
+                  },
+                  {
+                    "maximum": 15
+                  }
+                ]
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "oneof-overlap-rejected",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "oneOf": [
+                  {
+                    "minimum": 5
+                  },
+                  {
+                    "maximum": 15
+                  }
+                ]
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "conditional-then",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "if": {
+                  "minimum": 5
+                },
+                "then": {
+                  "maximum": 10
+                },
+                "else": {
+                  "maximum": 2
+                }
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "array-item-constraint",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "tags": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "payment",
+                    "memo"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 2
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "array-item-mismatch",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "tags": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "memo"
+                  ]
+                }
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "portable-regex-match",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "type": "string",
+                "pattern": "^alice$"
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "portable-regex-mismatch",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "type": "string",
+                "pattern": "^bob$"
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    },
+    {
+      "id": "string-length",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "recipient": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 5
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "multiple-of",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "type": "integer",
+                "multipleOf": 5
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": true,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": true,
+      "skillgateAllowed": true
+    },
+    {
+      "id": "schema-type-mismatch",
+      "policy": {
+        "send": [
+          [
+            1,
+            0,
+            {
+              "amount": {
+                "type": "string"
+              }
+            },
+            0
+          ]
+        ]
+      },
+      "tool": "send",
+      "args": {
+        "recipient": "alice",
+        "amount": 10,
+        "tags": [
+          "payment"
+        ]
+      },
+      "expected": false,
+      "toolSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipient",
+          "amount",
+          "tags"
+        ],
+        "additionalProperties": false
+      },
+      "upstreamAllowed": false,
+      "skillgateAllowed": false
+    }
+  ],
+  "strictBoundaryDivergence": {
+    "id": "missing-argument-boundary",
+    "policy": {
+      "send": [
+        [
+          1,
+          0,
+          {
+            "recipient": {
+              "const": "alice"
+            }
+          },
+          0
+        ]
+      ]
+    },
+    "tool": "send",
+    "args": {},
+    "upstreamAllowed": true,
+    "skillgateAllowed": false,
+    "reason": "Missing required argument rejected before policy matching."
+  },
+  "totals": {
+    "commonSubsetCases": 28,
+    "matchingVerdicts": 28,
+    "mismatches": 0,
+    "documentedHardeningDivergences": 1
+  },
+  "limitations": [
+    "Static JSON Schema and fallback=0 subset only.",
+    "Not a reproduction of the paper agent benchmark or its attack success rate.",
+    "No provider, acquired skill or real tool was executed."
+  ]
+}
