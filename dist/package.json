@@ -1,6 +1,6 @@
 {
   "name": "@gderamchi/honeyskill",
-  "version": "0.6.0-dev.0",
+  "version": "0.6.0-dev.1",
   "description": "Agent-skill inspection and financial-action mediation in an isolated laboratory.",
   "type": "module",
   "bin": {

@@ -1,0 +1,13 @@
+{
+  "command": "npx -y gderamchi/honeyskill#v0.6.0-dev.1 setup",
+  "status": "passed",
+  "freshNpmCache": true,
+  "isolatedHome": true,
+  "globalInstallationRequired": false,
+  "persistentHookConfigured": true,
+  "runtimePinned": true,
+  "cliSha256": "734ff8429402cf94e7530fe08ee3cec99e706983aeff4d0f77cd293071b35c83",
+  "requiresInitialHumanHookTrust": true,
+  "credentialsProvided": false,
+  "paidModelCalls": 0
+}

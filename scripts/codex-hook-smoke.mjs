@@ -45,8 +45,13 @@ try {
   }
   await writeFile(path.join(fakeBin, 'npx'), `#!/bin/sh\nprintf '%s\\n' 'FAKE upstream installer was executed' >> ${quote(sentinel)}\nexit 0\n`, { mode: 0o700 });
   await chmod(path.join(fakeBin, 'npx'), 0o700);
-  const setup = execFileSync(process.execPath, [cli, '--project', project, 'enable', '--codex-hook', '--json'], { encoding: 'utf8' });
+  const globalCli = path.join(temporary, 'global-cli.js');
+  await writeFile(globalCli, await readFile(cli));
+  const setup = execFileSync(process.execPath, [globalCli, '--project', project, 'setup', '--json'], { encoding: 'utf8' });
   evidence.setup = JSON.parse(setup);
+  evidence.setupCalls = 1;
+  await rm(globalCli);
+  evidence.globalCliRemovedBeforeSessions = true;
   evidence.hooksConfig = JSON.parse(await readFile(path.join(project, '.codex/hooks.json'), 'utf8'));
   await writeFile(path.join(isolatedCodex, 'config.toml'), `[projects.${JSON.stringify(project)}]\ntrust_level = "trusted"\n`);
   const commands = ['portfolio-summary', 'portfolio-summary-trap'].map(name => `npx skills add ${quote(path.join(temporary, 'sources', name))} --agent codex -y`);
@@ -64,9 +69,9 @@ try {
       const outputs = (input.input ?? []).filter(item => item.type === 'function_call_output').map(item => ({ callId: item.call_id, output: String(item.output).slice(0, 20000) }));
       requests.push({ method: request.method, path: request.url, model: input.model, authentication: 'none', toolNames: input.tools.map(tool => tool.name).filter(Boolean), outputs });
       turn++;
-      assert.ok(turn <= 3, 'Unexpected extra model request');
-      const item = turn <= commands.length
-        ? { type: 'function_call', id: `fc_${turn}`, call_id: `call_${turn}`, name: 'exec_command', arguments: JSON.stringify({ cmd: commands[turn - 1], workdir: project, login: false, yield_time_ms: 1000, max_output_tokens: 6000 }), status: 'completed' }
+      assert.ok(turn <= 6, 'Unexpected extra model request');
+      const item = turn % 2 === 1
+        ? { type: 'function_call', id: `fc_${turn}`, call_id: `call_${turn}`, name: 'exec_command', arguments: JSON.stringify({ cmd: commands[Math.min(Math.floor((turn - 1) / 2), 1)], workdir: project, login: false, yield_time_ms: 1000, max_output_tokens: 6000 }), status: 'completed' }
         : { type: 'message', id: 'msg_done', role: 'assistant', status: 'completed', content: [{ type: 'output_text', text: 'MOCK provider finished the prescribed local test.', annotations: [] }] };
       const result = { id: `resp_${turn}`, object: 'response', created_at: Math.floor(Date.now() / 1000), status: 'completed', model: input.model, output: [item], usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2 } };
       response.writeHead(200, { 'Content-Type': 'text/event-stream' });
@@ -87,22 +92,32 @@ try {
   const args = ['exec', '--ephemeral', '--ignore-rules', '--skip-git-repo-check', '--dangerously-bypass-hook-trust', '-C', project, '--sandbox', 'danger-full-access', '--json', '--color', 'never', '-m', 'mock-honeyskill',
     '-c', 'features.hooks=true', '-c', `projects.${JSON.stringify(project)}.trust_level="trusted"`, '-c', 'model_provider="mock"',
     '-c', `model_providers.mock={name="Local deterministic mock",base_url="${baseUrl}",wire_api="responses",requires_openai_auth=false}`,
-    'Run the two prescribed local skill installation commands. These are isolated synthetic fixtures and the provider is a deterministic local mock.'];
+    'Run the prescribed local skill installation command. This is an isolated synthetic fixture and the provider is a deterministic local mock.'];
   evidence.codexArguments = args;
-  const child = spawn('codex', args, {
-    cwd: project, stdio: ['ignore', 'pipe', 'pipe'],
-    env: { PATH: `${fakeBin}${path.delimiter}${process.env.PATH}`, HOME: isolatedHome, CODEX_HOME: isolatedCodex, ZDOTDIR: isolatedHome, NO_COLOR: '1' },
-  });
-  child.stdout.on('data', chunk => { log += chunk; });
-  child.stderr.on('data', chunk => { log += chunk; });
-  const timeout = setTimeout(() => { failure = new Error('Codex mock smoke timed out after 40 seconds'); child.kill('SIGTERM'); }, 40000);
-  const result = await new Promise((resolve, reject) => { child.once('error', reject); child.once('close', (code, signal) => resolve({ code, signal })); });
-  clearTimeout(timeout);
-  evidence.codexExit = result;
+  evidence.sessions = [];
+  for (let session = 0; session < 3; session++) {
+    if (session === 2) await writeFile(evidence.setup.runtime, 'process.exit(0); // Deliberate integrity failure.');
+    const child = spawn('codex', args, {
+      cwd: project, stdio: ['ignore', 'pipe', 'pipe'],
+      env: { PATH: `${fakeBin}${path.delimiter}${process.env.PATH}`, HOME: isolatedHome, CODEX_HOME: isolatedCodex, ZDOTDIR: isolatedHome, NO_COLOR: '1' },
+    });
+    let sessionLog = '';
+    child.stdout.on('data', chunk => { sessionLog += chunk; });
+    child.stderr.on('data', chunk => { sessionLog += chunk; });
+    const timeout = setTimeout(() => { failure = new Error('Codex mock smoke timed out after 40 seconds'); child.kill('SIGTERM'); }, 40000);
+    const result = await new Promise((resolve, reject) => { child.once('error', reject); child.once('close', (code, signal) => resolve({ code, signal })); });
+    clearTimeout(timeout);
+    log += sessionLog;
+    evidence.sessions.push({ session: session + 1, ...result, runtimeTampered: session === 2 });
+    if (failure) throw failure;
+    assert.equal(result.code, 0, 'Each independent Codex session must complete');
+    if (session === 2) {
+      assert.match(sessionLog, /HoneySkill is unavailable or its runtime changed/);
+      assert.ok(!sessionLog.split('\n').some(line => { try { const e = JSON.parse(line); return e.type === 'item.completed' && e.item?.type === 'command_execution'; } catch { return false; } }), 'Tampered runtime must deny before shell execution');
+    }
+  }
   evidence.mockRequests = requests;
-  if (failure) throw failure;
-  assert.equal(result.code, 0, 'Codex process must complete');
-  assert.equal(requests.length, 3, 'Two actual shell-tool calls and final mock completion');
+  assert.equal(requests.length, 6, 'One tool request and one final mock completion in each independent session');
   const toolExecutions = log.split('\n').flatMap(line => {
     try {
       const event = JSON.parse(line);
@@ -114,7 +129,7 @@ try {
   assert.equal(toolExecutions.length, 2);
   assert.deepEqual(toolExecutions.map(item => item.exitCode), [0, 2]);
   for (const execution of toolExecutions) {
-    assert.ok(execution.command.includes(cli) && execution.command.includes("'install'"), 'Codex must execute the rewritten HoneySkill command');
+    assert.ok(execution.command.includes(evidence.setup.runtime) && execution.command.includes("'install'"), 'Codex must execute the rewritten HoneySkill command');
     assert.ok(!execution.command.includes('npx skills add'), 'Original installer invocation must be replaced');
   }
   const upstreamRan = await readFile(sentinel, 'utf8').then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });
@@ -148,5 +163,5 @@ try {
   await writeFile(path.join(output, 'codex-hook-smoke.json'), JSON.stringify(evidence, null, 2) + '\n');
   await writeFile(path.join(output, 'codex-hook-smoke.log'), log);
 }
-console.log(JSON.stringify({ status: evidence.status, codexVersion: evidence.codexVersion, provider: evidence.provider, upstreamInstallerExecuted: evidence.upstreamInstallerExecuted, activeSkills: evidence.activeSkills, error: failure?.message }, null, 2));
+console.log(JSON.stringify({ status: evidence.status, codexVersion: evidence.codexVersion, provider: evidence.provider, setupCalls: evidence.setupCalls, sessions: evidence.sessions, upstreamInstallerExecuted: evidence.upstreamInstallerExecuted, activeSkills: evidence.activeSkills, error: failure?.message }, null, 2));
 if (failure) process.exitCode = 1;

@@ -12,6 +12,8 @@ test('HoneySkill CLI has the package version, legacy binary and install aliases,
   assert.equal(manifest.name,'@gderamchi/honeyskill');assert.deepEqual(manifest.bin,{honeyskill:'dist/cli.js',skillgate:'dist/cli.js'});
   const help=cli(process.cwd(),['--help']);assert.equal(help.status,0);assert.match(help.stdout,/Usage: honeyskill/);assert.match(help.stdout,/add\|install/);assert.doesNotMatch(help.stdout,/^\s+ui(?:\s|$)/m);
   const removed=cli(process.cwd(),['ui']);assert.notEqual(removed.status,0);assert.match(removed.stderr,/unknown command 'ui'/);
+  assert.match(help.stdout,/enable\|setup/);
+  const setupHelp=cli(process.cwd(),['setup','--help']);assert.equal(setupHelp.status,0);assert.match(setupHelp.stdout,/persistent Codex/);assert.match(setupHelp.stdout,/--profile/);
 });
 test('payment demo is distinct from the legacy demo and refuses existing output before running a chain',async()=>{
   const root=await mkdtemp(join(tmpdir(),'honeyskill-cli-demo-'));

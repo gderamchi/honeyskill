@@ -41857,49 +41857,49 @@ var require_fast_uri = __commonJS({
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative2, options, skipNormalization) {
+    function resolveComponent(base, relative3, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse3(serialize(base, options), options);
-        relative2 = parse3(serialize(relative2, options), options);
+        relative3 = parse3(serialize(relative3, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative2.scheme) {
-        target.scheme = relative2.scheme;
-        target.userinfo = relative2.userinfo;
-        target.host = relative2.host;
-        target.port = relative2.port;
-        target.path = removeDotSegments(relative2.path || "");
-        target.query = relative2.query;
+      if (!options.tolerant && relative3.scheme) {
+        target.scheme = relative3.scheme;
+        target.userinfo = relative3.userinfo;
+        target.host = relative3.host;
+        target.port = relative3.port;
+        target.path = removeDotSegments(relative3.path || "");
+        target.query = relative3.query;
       } else {
-        if (relative2.userinfo !== void 0 || relative2.host !== void 0 || relative2.port !== void 0) {
-          target.userinfo = relative2.userinfo;
-          target.host = relative2.host;
-          target.port = relative2.port;
-          target.path = removeDotSegments(relative2.path || "");
-          target.query = relative2.query;
+        if (relative3.userinfo !== void 0 || relative3.host !== void 0 || relative3.port !== void 0) {
+          target.userinfo = relative3.userinfo;
+          target.host = relative3.host;
+          target.port = relative3.port;
+          target.path = removeDotSegments(relative3.path || "");
+          target.query = relative3.query;
         } else {
-          if (!relative2.path) {
+          if (!relative3.path) {
             target.path = base.path;
-            if (relative2.query !== void 0) {
-              target.query = relative2.query;
+            if (relative3.query !== void 0) {
+              target.query = relative3.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative2.path[0] === "/") {
-              target.path = removeDotSegments(relative2.path);
+            if (relative3.path[0] === "/") {
+              target.path = removeDotSegments(relative3.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative2.path;
+                target.path = "/" + relative3.path;
               } else if (!base.path) {
-                target.path = relative2.path;
+                target.path = relative3.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative2.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative3.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative2.query;
+            target.query = relative3.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -41907,7 +41907,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative2.fragment;
+      target.fragment = relative3.fragment;
       return target;
     }
     function equal2(uriA, uriB, options) {
@@ -48809,7 +48809,7 @@ function useColor() {
 var program = new Command();
 
 // apps/cli/src/index.ts
-import { writeFile as writeFile8 } from "node:fs/promises";
+import { writeFile as writeFile9 } from "node:fs/promises";
 import { resolve as resolve6, join as join9 } from "node:path";
 import { userInfo as userInfo2 } from "node:os";
 import { fileURLToPath as fileURLToPath6 } from "node:url";
@@ -49042,12 +49042,12 @@ function finalizeCoverage(coverage) {
 }
 async function inventory(directory, copyTo, deadline = performance.now() + LIMITS.durationMs) {
   const manifest = [], texts = /* @__PURE__ */ new Map(), coverage = freshCoverage();
-  const walk3 = async (relative2, depth) => {
+  const walk3 = async (relative3, depth) => {
     if (depth > LIMITS.depth) {
       coverage.limitsReached.push(`Maximum depth: ${LIMITS.depth}`);
       return;
     }
-    const dir = path4.join(directory, relative2);
+    const dir = path4.join(directory, relative3);
     const entries = await fs3.readdir(dir, { withFileTypes: true });
     entries.sort((a, b) => a.name.localeCompare(b.name, "en"));
     for (const entry of entries) {
@@ -49055,7 +49055,7 @@ async function inventory(directory, copyTo, deadline = performance.now() + LIMIT
         coverage.limitsReached.push("Inventory time limit reached.");
         return;
       }
-      const file2 = safeRelative(relative2 ? `${relative2}/${entry.name}` : entry.name);
+      const file2 = safeRelative(relative3 ? `${relative3}/${entry.name}` : entry.name);
       const full = path4.join(directory, file2), stat5 = await fs3.lstat(full);
       if (stat5.isSymbolicLink() || !stat5.isDirectory() && !stat5.isFile() || stat5.isFile() && stat5.nlink !== 1) throw new HoneySkillError("UNSAFE_ENTRY", `Link or special file refused: ${file2}`);
       if (stat5.isDirectory()) {
@@ -49179,9 +49179,9 @@ async function acquireGithub(input2, destination, requested) {
   let bytes = 0;
   if (files.length > LIMITS.files) throw new HoneySkillError("DOWNLOAD_LIMIT", "Too many files in the GitHub package.");
   const selected = files.map((file2) => {
-    const relative2 = safeRelative(folder ? file2.path.slice(folder.length + 1) : file2.path);
-    if (relative2.split("/").length > LIMITS.depth || file2.content.length > LIMITS.fileBytes || (bytes += file2.content.length) > LIMITS.bytes) throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
-    return { ...file2, relative: relative2 };
+    const relative3 = safeRelative(folder ? file2.path.slice(folder.length + 1) : file2.path);
+    if (relative3.split("/").length > LIMITS.depth || file2.content.length > LIMITS.fileBytes || (bytes += file2.content.length) > LIMITS.bytes) throw new HoneySkillError("DOWNLOAD_LIMIT", "GitHub package limit exceeded.");
+    return { ...file2, relative: relative3 };
   });
   for (const file2 of selected) {
     remainingTime(deadline);
@@ -49706,7 +49706,7 @@ async function pruneData(projectRoot, now = /* @__PURE__ */ new Date()) {
 // package.json
 var package_default = {
   name: "@gderamchi/honeyskill",
-  version: "0.6.0-dev.0",
+  version: "0.6.0-dev.1",
   private: true,
   type: "module",
   packageManager: "pnpm@10.33.0",
@@ -50131,14 +50131,41 @@ No upstream installer was started.
 
 // apps/cli/src/codex-hook.ts
 init_storage();
-import { basename, isAbsolute as isAbsolute2, join as join4, resolve as resolve3 } from "node:path";
+import { basename, isAbsolute as isAbsolute2, join as join4, relative as relative2, resolve as resolve3 } from "node:path";
 import { realpathSync } from "node:fs";
+import { lstat as lstat5, readFile as readFile3, writeFile as writeFile5 } from "node:fs/promises";
 var statusMessage = "HoneySkill: pre-install check";
 var previousStatusMessages = ["SkillGate: pre-install check", "SkillGate : contr\xF4le avant installation"];
 var nativeInstaller = "install-skill-from-github.py";
 var object2 = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 var quote = (value) => `'${value.replace(/'/g, `'\\''`)}'`;
 var commandLine = (argv) => argv.map(quote).join(" ");
+async function pinCliRuntime(root2, cliPath) {
+  const bytes = await readFile3(cliPath);
+  const directory = join4(stateDir(root2), "runtime", sha256(bytes));
+  await ensureDirectory(directory);
+  await atomicJson(join4(directory, "package.json"), { type: "module" });
+  const destination = join4(directory, "cli.js");
+  if (!await exists(destination)) await writeFile5(destination, bytes, { flag: "wx", mode: 384 });
+  const stat5 = await lstat5(destination);
+  if (!stat5.isFile() || stat5.nlink !== 1 || sha256(await readFile3(destination)) !== sha256(bytes)) throw new Error("The pinned HoneySkill runtime is invalid; setup was refused.");
+  return destination;
+}
+var runtimeDenied = { hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: "HoneySkill is unavailable or its runtime changed. Tool execution blocked; repair the project setup." } };
+function guardedHookCommand(root2, cliPath, nodePath, digest3) {
+  const bootstrap = `const fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto');
+const [cli,root,digest]=process.argv.slice(1);
+try {
+  const stat=fs.lstatSync(cli);
+  if(!stat.isFile()||stat.nlink!==1||crypto.createHash('sha256').update(fs.readFileSync(cli)).digest('hex')!==digest)throw Error('integrity');
+  const input=fs.readFileSync(0);if(input.length>262144)throw Error('input');
+  const result=cp.spawnSync(process.execPath,[cli,'--project',root,'hook'],{input,encoding:'utf8',timeout:5000,maxBuffer:262144});
+  if(result.error||result.status!==0)throw Error('runtime');
+  const output=result.stdout.trim();
+  if(output){const value=JSON.parse(output).hookSpecificOutput;if(value?.hookEventName!=='PreToolUse'||!['allow','deny'].includes(value.permissionDecision))throw Error('output');process.stdout.write(output+'\\n');}
+}catch{process.stdout.write(${JSON.stringify(JSON.stringify(runtimeDenied) + "\n")});}`;
+  return `${commandLine([nodePath, "-e", bootstrap, cliPath, resolve3(root2), digest3])} || printf '%s\\n' ${quote(JSON.stringify(runtimeDenied))}`;
+}
 function shellArgv(command) {
   if (/[\x00-\x1f\x7f]/.test(command)) throw new Error("Multiline commands and control characters are not supported.");
   const args = [];
@@ -50257,7 +50284,8 @@ function processHook(input2, root2, cliPath, nodePath) {
     if (![root2, cliPath, nodePath].every(validAbsolute)) return denied("Invalid hook configuration: absolute paths without control characters are required.");
     for (const cwd of [input2.cwd, input2.tool_input.workdir, input2.tool_input.cwd]) {
       if (cwd === void 0) continue;
-      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root2)) return denied("This command originates outside the protected project directory.");
+      const within = validAbsolute(cwd) ? relative2(canonical(root2), canonical(cwd)) : "..";
+      if (within === ".." || within.startsWith("../") || isAbsolute2(within)) return denied("This command originates outside the protected project directory.");
     }
     if (!validAbsolute(input2.cwd)) return denied("Session directory is missing or invalid.");
     const args = [nodePath, cliPath, "--project", resolve3(root2), "install"];
@@ -50286,12 +50314,20 @@ async function prepareCodexHook(root2, cliPath, nodePath) {
     const handlers = group.hooks.filter((handler) => !object2(handler) || ![statusMessage, ...previousStatusMessages].some((label) => handler.statusMessage === label));
     return handlers.length === group.hooks.length ? [group] : handlers.length ? [{ ...group, hooks: handlers }] : [];
   });
-  const command = commandLine([nodePath, cliPath, "--project", resolve3(root2), "hook"]);
+  const command = guardedHookCommand(root2, cliPath, nodePath, sha256(await readFile3(cliPath)));
   groups.push({ matcher: "^Bash$", hooks: [{ type: "command", command, timeout: 10, statusMessage }] });
   const config2 = { ...existing, hooks: { ...hooks, PreToolUse: groups } };
   const changed = JSON.stringify(config2) !== JSON.stringify(existing);
   if (changed) await atomicJson(path19, config2);
-  return { path: path19, changed, requiresTrust: true, reviewCommand: "/hooks", scope: "supported-codex-shell-installers", failOpenOnHookRuntimeError: true };
+  return { path: path19, changed, persistent: true, requiresTrust: true, reviewCommand: "/hooks", scope: "supported-codex-shell-installers", runtimeFailureDecision: "deny", hostMaySkipHook: true, failOpenOnHookRuntimeError: true };
+}
+async function codexHookStatus(root2) {
+  const path19 = join4(root2, ".codex", "hooks.json");
+  if (!await exists(path19)) return { configured: false, path: path19, trust: "not_probed" };
+  const config2 = await readJson(path19);
+  const groups = object2(config2) && object2(config2.hooks) ? config2.hooks.PreToolUse : void 0;
+  const configured2 = Array.isArray(groups) && groups.some((group) => object2(group) && group.matcher === "^Bash$" && Array.isArray(group.hooks) && group.hooks.some((handler) => object2(handler) && handler.statusMessage === statusMessage));
+  return { configured: configured2, path: path19, persistent: configured2, trust: "not_probed", reviewCommand: "/hooks", hostMaySkipHook: true };
 }
 
 // apps/cli/src/session.ts
@@ -50351,7 +50387,7 @@ async function startProtectedSession(root2, cliPath, options = {}) {
 }
 
 // apps/cli/src/lab.ts
-import { lstat as lstat6, readdir as readdir5, readFile as readFile4, writeFile as writeFile5 } from "node:fs/promises";
+import { lstat as lstat7, readdir as readdir5, readFile as readFile5, writeFile as writeFile6 } from "node:fs/promises";
 import { homedir as homedir2, userInfo } from "node:os";
 import { dirname as dirname2, join as join7, resolve as resolve5, sep } from "node:path";
 import { fileURLToPath as fileURLToPath4 } from "node:url";
@@ -50359,12 +50395,12 @@ init_storage();
 
 // packages/skillguard-lite/src/install-adapter.ts
 import { createHash as createHash4, randomUUID as randomUUID4 } from "node:crypto";
-import { lstat as lstat5, mkdir as mkdir4, open as open4 } from "node:fs/promises";
+import { lstat as lstat6, mkdir as mkdir4, open as open4 } from "node:fs/promises";
 import path10 from "node:path";
 
 // packages/skillguard-lite/src/runner.ts
 init_zod();
-import { readFile as readFile3, stat as stat3 } from "node:fs/promises";
+import { readFile as readFile4, stat as stat3 } from "node:fs/promises";
 import { existsSync as existsSync2 } from "node:fs";
 import { createHash as createHash3 } from "node:crypto";
 import path9 from "node:path";
@@ -83404,13 +83440,13 @@ var address = external_exports.string().regex(/^0x[0-9a-f]{40}$/i);
 var contactsSchema = external_exports.array(external_exports.object({ name: external_exports.string().min(1), address })).min(1);
 var tasksSchema = external_exports.array(external_exports.object({ id: external_exports.string().min(1), prompt: external_exports.string().min(1), expectedRecipients: external_exports.array(address).min(1) })).length(6);
 async function loadBattery() {
-  const [book, battery] = await Promise.all(["address-book.json", "tasks.json"].map((name2) => readFile3(path9.join(ROOT, "data", name2), "utf8")));
+  const [book, battery] = await Promise.all(["address-book.json", "tasks.json"].map((name2) => readFile4(path9.join(ROOT, "data", name2), "utf8")));
   return { contacts: contactsSchema.parse(JSON.parse(book)), tasks: tasksSchema.parse(JSON.parse(battery)) };
 }
 async function loadSkill(folder) {
   const file2 = path9.join(path9.resolve(folder), "SKILL.md"), details = await stat3(file2);
   if (!details.isFile() || details.size > 32 * 1024) throw new Error("SKILL.md must be a regular UTF-8 file no larger than 32 KiB.");
-  const bytes = await readFile3(file2);
+  const bytes = await readFile4(file2);
   const text2 = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   if (!text2.trim()) throw new Error("SKILL.md is empty.");
   return text2;
@@ -83536,7 +83572,7 @@ function createBehavioralProvider(options) {
       };
       const directory = path10.resolve(options.evidenceDirectory);
       await mkdir4(directory, { recursive: true, mode: 448 });
-      const details = await lstat5(directory);
+      const details = await lstat6(directory);
       if (!details.isDirectory() || details.isSymbolicLink()) throw new Error("Behavioral evidence directory must be a real local directory.");
       const evidencePath = path10.join(directory, `behavioral-audit-${randomUUID4()}.json`);
       const file2 = await open4(evidencePath, "wx", 384);
@@ -83749,7 +83785,7 @@ async function initializeLab(directory, cwd = process.cwd()) {
   await ensureDirectory(root2);
   if (!await exists(join7(root2, marker))) {
     if ((await readdir5(root2)).length) throw new Error("Lab directory is not empty and has no valid lab marker. Choose a new directory with --lab.");
-    await writeFile5(join7(root2, marker), JSON.stringify({ schemaVersion: 1, kind: "skillgate-test-lab" }) + "\n", { flag: "wx", mode: 384 });
+    await writeFile6(join7(root2, marker), JSON.stringify({ schemaVersion: 1, kind: "skillgate-test-lab" }) + "\n", { flag: "wx", mode: 384 });
   }
   await assertLabRoot(root2);
   await initProject(root2, { profile: "full", semanticConsent: true, model });
@@ -83768,11 +83804,11 @@ async function demoSource(root2, alias) {
   const directory = join7(root2, ".skillgate", "examples", alias);
   await ensureDirectory(directory);
   const destination = join7(directory, "SKILL.md");
-  const contents = await readFile4(path19, "utf8");
+  const contents = await readFile5(path19, "utf8");
   if (await exists(destination)) {
-    const info = await lstat6(destination);
-    if (!info.isFile() || info.nlink !== 1 || await readFile4(destination, "utf8") !== contents) throw new Error("The bundled example copy was modified. Use a new --lab directory.");
-  } else await writeFile5(destination, contents, { flag: "wx", mode: 384 });
+    const info = await lstat7(destination);
+    if (!info.isFile() || info.nlink !== 1 || await readFile5(destination, "utf8") !== contents) throw new Error("The bundled example copy was modified. Use a new --lab directory.");
+  } else await writeFile6(destination, contents, { flag: "wx", mode: 384 });
   return directory;
 }
 function hiddenApiKey() {
@@ -83876,7 +83912,7 @@ async function saveLabReports(root2, report) {
   await ensureDirectory(directory);
   const paths = { json: join7(directory, `${report.id}.json`), markdown: join7(directory, `${report.id}.md`), html: join7(directory, `${report.id}.html`) };
   for (const [path19, content] of [[paths.json, JSON.stringify(report, null, 2)], [paths.markdown, fullReportMarkdown(report)], [paths.html, fullReportHtml(report)]]) {
-    await writeFile5(path19, content + "\n", { flag: "wx", mode: 384 });
+    await writeFile6(path19, content + "\n", { flag: "wx", mode: 384 });
   }
   return paths;
 }
@@ -84953,9 +84989,9 @@ async function materializeSample(corpusRoot, sample, destination) {
 }
 async function sourceFreeze(repositoryRoot) {
   const files = [];
-  for (const relative2 of ["packages/security-lab/src", "packages/security-policy/src", "packages/core/src", "packages/contracts/src"]) {
-    for (const file2 of (await fs8.readdir(path15.join(repositoryRoot, relative2))).filter((file3) => file3.endsWith(".ts")).sort()) {
-      const name2 = `${relative2}/${file2}`;
+  for (const relative3 of ["packages/security-lab/src", "packages/security-policy/src", "packages/core/src", "packages/contracts/src"]) {
+    for (const file2 of (await fs8.readdir(path15.join(repositoryRoot, relative3))).filter((file3) => file3.endsWith(".ts")).sort()) {
+      const name2 = `${relative3}/${file2}`;
       files.push({ path: name2, sha256: sha2565(await fs8.readFile(path15.join(repositoryRoot, name2))) });
     }
   }
@@ -86148,7 +86184,7 @@ async function runChainProof() {
 
 // packages/security-lab/src/honeyskill-demo.ts
 import { spawn as spawn8 } from "node:child_process";
-import { mkdtemp as mkdtemp10, readFile as readFile7, rm as rm12 } from "node:fs/promises";
+import { mkdtemp as mkdtemp10, readFile as readFile8, rm as rm12 } from "node:fs/promises";
 import { tmpdir as tmpdir7 } from "node:os";
 import path17 from "node:path";
 import { fileURLToPath as fileURLToPath5 } from "node:url";
@@ -86314,20 +86350,20 @@ function benchmarkHoneySkillPolicy(policy, actions, now) {
 async function fixtures() {
   const name2 = path17.basename(fileURLToPath5(import.meta.url));
   const root2 = fileURLToPath5(new URL(name2 === "honeyskill-demo.ts" || name2 === "honeyskill-demo.js" ? "../../../public-demo/" : "./public-demo/", import.meta.url));
-  const manifestBytes = await readFile7(path17.join(root2, "manifest.json")), manifest = JSON.parse(manifestBytes.toString());
+  const manifestBytes = await readFile8(path17.join(root2, "manifest.json")), manifest = JSON.parse(manifestBytes.toString());
   if (manifest.version !== "honeyskill-controlled-demo-v1" || manifest.realWorldMalware !== false || !Array.isArray(manifest.scenarios) || manifest.scenarios.length !== 4) throw new Error("Invalid demo fixture manifest.");
   const records = [];
   for (const id of SCENARIOS) {
     const item = manifest.scenarios.find((x) => x.id === id);
     if (!item || item.path !== `${id}/SKILL.md.fixture`) throw new Error("Invalid fixture path.");
-    const bytes = await readFile7(path17.join(root2, item.path));
+    const bytes = await readFile8(path17.join(root2, item.path));
     if (sha(bytes) !== item.sha256) throw new Error("Changed controlled demo fixture.");
     records.push({ id, sha256: item.sha256, threat: item.threat, adversarial: item.adversarial });
   }
   return { manifestSha256: sha(manifestBytes), provenance: manifest.provenance, proposalOrigin: manifest.proposalOrigin, records };
 }
 async function runHoneySkillDemo(options = {}) {
-  const startedAt = (/* @__PURE__ */ new Date()).toISOString(), started = performance.now(), corpus = await fixtures(), executionArtifactSha256 = sha(await readFile7(fileURLToPath5(import.meta.url)));
+  const startedAt = (/* @__PURE__ */ new Date()).toISOString(), started = performance.now(), corpus = await fixtures(), executionArtifactSha256 = sha(await readFile8(fileURLToPath5(import.meta.url)));
   let fork, fallbackReason;
   if (options.network !== "local") {
     try {
@@ -86474,7 +86510,7 @@ async function runHoneySkillDemo(options = {}) {
       if (!await rpc3(session.url, "evm_revert", [guardedSnapshot]) || !equal(await observe2(), before)) throw new Error("Scenario isolation reset failed.");
     }
     const timing = benchmarkHoneySkillPolicy(policy, SCENARIOS.flatMap((id) => createHoneySkillScenario(id, authorized)), now);
-    if (sha(await readFile7(fileURLToPath5(import.meta.url))) !== executionArtifactSha256 || !equal(await fixtures(), corpus)) throw new Error("Demo source or fixture changed during execution.");
+    if (sha(await readFile8(fileURLToPath5(import.meta.url))) !== executionArtifactSha256 || !equal(await fixtures(), corpus)) throw new Error("Demo source or fixture changed during execution.");
     return {
       version: "honeyskill-controlled-payment-v1",
       kind: "controlled-payment-proposal-replay",
@@ -86636,7 +86672,7 @@ Synthetic proposed actions; no acquired malware or model was executed.`
 }
 
 // apps/cli/src/index.ts
-var scope = "Checks HoneySkill installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.";
+var scope = "Checks HoneySkill installations, supported installers called by Codex with the trusted project hook, and supported installers in an activated terminal. Target: the project .agents/skills directory. Manual copies, other agents and disabled/untrusted hooks are outside this scope.";
 var program2 = new Command().name("honeyskill").description("Inspect agent skills and mediate financial actions in an isolated laboratory.").version(package_default.version);
 program2.option("--project <directory>", "Project root", process.cwd()).option("--json", "JSON output only on stdout");
 registerSecurityCommands(program2);
@@ -86716,16 +86752,23 @@ function installedEntry() {
 program2.command("on").description("Open a protected terminal; leave with exit.").action(async () => {
   process.exitCode = await startProtectedSession(root(), installedEntry(), { json: machine(), nodePath: process.execPath });
 });
-program2.command("enable").description('Configure terminal checks; activate with eval "$(honeyskill enable)".').option("--agent <agent>", "Target agent", "codex").option("--codex-hook", "Add the complementary Codex hook (/hooks review required)").action(async (options) => {
+program2.command("enable").alias("setup").description("Set up persistent Codex installation checks once per project; review /hooks once.").option("--agent <agent>", "Target agent", "codex").option("--codex-hook", "Compatibility option: the persistent Codex hook is now always configured").option("--profile <profile>", "static or hybrid (initial default: static)").option("--semantic-consent", "Allow redacted content to be sent to OpenAI (paid API)").option("--model <model>", "Explicitly selected semantic model").action(async (options) => {
   if (options.agent !== "codex") throw new Error("Only the project Codex target is supported.");
-  const cli = installedEntry();
-  await initProject(root(), {});
+  if (options.profile && !["static", "hybrid"].includes(options.profile)) throw new Error("Persistent setup supports static or hybrid analysis; use try for the full dedicated lab pipeline.");
+  if (options.profile === "hybrid" && options.semanticConsent && !options.model) throw new Error("Specify --model when consenting to semantic analysis.");
+  const entry = installedEntry();
+  const config2 = await initProject(root(), { ...options.profile ? { profile: options.profile } : {}, ...options.semanticConsent ? { semanticConsent: true } : {}, ...options.model ? { model: options.model } : {} });
+  if (config2.profile === "full") throw new Error("Full analysis is lab-only. Use a separate agent project for persistent static or hybrid setup.");
+  const cli = await pinCliRuntime(root(), entry);
   const terminal = await prepareTerminal(root(), cli, process.execPath);
-  const hook = options.codexHook ? await prepareCodexHook(root(), cli, process.execPath) : void 0;
-  if (machine()) emit({ terminal, hook, activation: 'eval "$(honeyskill env)"', scope });
+  const hook = await prepareCodexHook(root(), cli, process.execPath);
+  if (machine()) emit({ terminal, hook, runtime: cli, profile: config2.profile, activation: "Open /hooks in Codex and trust this project hook once. Later Codex sessions use it automatically.", optionalTerminalActivation: 'eval "$(honeyskill env)"', scope });
   else {
-    process.stderr.write(sanitizeTerminal(`HoneySkill configured for ${root()}. Apply these exports in this terminal with eval "$(honeyskill enable)".
-${hook ? "Codex hook configured: open /hooks in Codex to review and authorize it.\n" : ""}`));
+    process.stderr.write(sanitizeTerminal(`Persistent HoneySkill setup saved for ${root()}. Profile: ${config2.profile}.
+Open /hooks in Codex and review/trust the project hook once; restart any already open session. Future Codex sessions use it without shell activation.
+Optional shell protection: eval "$(honeyskill env)".
+${scope}
+`));
     process.stdout.write(await envScript(root()));
   }
 });
@@ -86796,7 +86839,7 @@ program2.command("report <scan-id>").option("--format <format>", "json or html",
   const r = await readReport(root(), id);
   const content = options.format === "html" ? r.profile === "full" ? fullReportHtml(r) : reportHtml(r) : JSON.stringify(r, null, 2);
   if (options.output) {
-    await writeFile8(resolve6(options.output), content, { mode: 384 });
+    await writeFile9(resolve6(options.output), content, { mode: 384 });
     emit({ output: resolve6(options.output) }, `Report exported: ${resolve6(options.output)}`);
   } else process.stdout.write(content + "\n");
 });
@@ -86815,8 +86858,10 @@ program2.command("doctor").action(async () => {
   const config2 = await configured();
   const records = await listInstalls(root());
   const terminal = await terminalStatus(root());
-  emit({ node: process.version, agent: config2.agent, profile: config2.profile, target: join9(root(), config2.target), managedInstalls: records.length, terminal, codexHookTrust: "not_probed", scope, semanticConsent: config2.semanticConsent, semanticExecution: "not_probed", telemetry: false }, `Codex \xB7 ${config2.profile === "static" ? "Static analysis" : config2.profile === "full" ? "Full lab analysis" : "Hybrid analysis"}
+  const codexHook = await codexHookStatus(root());
+  emit({ node: process.version, agent: config2.agent, profile: config2.profile, target: join9(root(), config2.target), managedInstalls: records.length, terminal, codexHook, codexHookTrust: "not_probed", scope, semanticConsent: config2.semanticConsent, semanticExecution: "not_probed", telemetry: false }, `Codex \xB7 ${config2.profile === "static" ? "Static analysis" : config2.profile === "full" ? "Full lab analysis" : "Hybrid analysis"}
 ${records.length} managed installation(s).
+Codex hook: ${codexHook.configured ? "configured persistently; review trust in /hooks" : "not configured; run honeyskill setup"}.
 Terminal: ${terminal.active ? "active" : terminal.configured ? "configured; verify activation in the terminal" : "not configured"}.
 ${scope}
 No telemetry. Codex hook trust has not been verified.`);

@@ -11,13 +11,13 @@ import { reportHtml } from './report.js';
 import { runDemo } from '../../../packages/demo/src/index.js';
 import { runBenchmark } from '../../../evaluation/runner.js';
 import { prepareTerminal, envScript, dispatchTerminal, terminalCommands, terminalStatus, type TerminalCommand } from './terminal.js';
-import { prepareCodexHook, processHook } from './codex-hook.js';
+import { prepareCodexHook, processHook, pinCliRuntime, codexHookStatus } from './codex-hook.js';
 import { startProtectedSession } from './session.js';
 import { labStatus, tryInstallation } from './lab.js';
 import { fullReportHtml, fullReportTerminal } from './full-report.js';
 import { registerSecurityCommands } from './security.js';
 
-const scope = 'Checks HoneySkill installations and supported installers in the activated terminal. Target: Codex, the project .agents/skills directory. Manual copies and PATH bypasses are outside this scope.';
+const scope = 'Checks HoneySkill installations, supported installers called by Codex with the trusted project hook, and supported installers in an activated terminal. Target: the project .agents/skills directory. Manual copies, other agents and disabled/untrusted hooks are outside this scope.';
 const program=new Command().name('honeyskill').description('Inspect agent skills and mediate financial actions in an isolated laboratory.').version(packageJson.version);
 program.option('--project <directory>','Project root',process.cwd()).option('--json','JSON output only on stdout');
 registerSecurityCommands(program);
@@ -73,15 +73,19 @@ function installedEntry(){
 program.command('on').description('Open a protected terminal; leave with exit.').action(async()=>{
   process.exitCode=await startProtectedSession(root(),installedEntry(),{json:machine(),nodePath:process.execPath});
 });
-program.command('enable').description('Configure terminal checks; activate with eval "$(honeyskill enable)".').option('--agent <agent>','Target agent','codex').option('--codex-hook','Add the complementary Codex hook (/hooks review required)').action(async options=>{
+program.command('enable').alias('setup').description('Set up persistent Codex installation checks once per project; review /hooks once.').option('--agent <agent>','Target agent','codex').option('--codex-hook','Compatibility option: the persistent Codex hook is now always configured').option('--profile <profile>','static or hybrid (initial default: static)').option('--semantic-consent','Allow redacted content to be sent to OpenAI (paid API)').option('--model <model>','Explicitly selected semantic model').action(async options=>{
   if(options.agent!=='codex')throw new Error('Only the project Codex target is supported.');
-  const cli=installedEntry();
-  await initProject(root(),{});
+  if(options.profile&&!['static','hybrid'].includes(options.profile))throw new Error('Persistent setup supports static or hybrid analysis; use try for the full dedicated lab pipeline.');
+  if(options.profile==='hybrid'&&options.semanticConsent&&!options.model)throw new Error('Specify --model when consenting to semantic analysis.');
+  const entry=installedEntry();
+  const config=await initProject(root(),{...(options.profile?{profile:options.profile}:{}),...(options.semanticConsent?{semanticConsent:true}:{}),...(options.model?{model:options.model}:{})});
+  if(config.profile==='full')throw new Error('Full analysis is lab-only. Use a separate agent project for persistent static or hybrid setup.');
+  const cli=await pinCliRuntime(root(),entry);
   const terminal=await prepareTerminal(root(),cli,process.execPath);
-  const hook=options.codexHook?await prepareCodexHook(root(),cli,process.execPath):undefined;
-  if(machine())emit({terminal,hook,activation:'eval "$(honeyskill env)"',scope});
+  const hook=await prepareCodexHook(root(),cli,process.execPath);
+  if(machine())emit({terminal,hook,runtime:cli,profile:config.profile,activation:'Open /hooks in Codex and trust this project hook once. Later Codex sessions use it automatically.',optionalTerminalActivation:'eval "$(honeyskill env)"',scope});
   else{
-    process.stderr.write(sanitizeTerminal(`HoneySkill configured for ${root()}. Apply these exports in this terminal with eval "$(honeyskill enable)".\n${hook?'Codex hook configured: open /hooks in Codex to review and authorize it.\n':''}`));
+    process.stderr.write(sanitizeTerminal(`Persistent HoneySkill setup saved for ${root()}. Profile: ${config.profile}.\nOpen /hooks in Codex and review/trust the project hook once; restart any already open session. Future Codex sessions use it without shell activation.\nOptional shell protection: eval "$(honeyskill env)".\n${scope}\n`));
     process.stdout.write(await envScript(root()));
   }
 });
@@ -133,7 +137,7 @@ program.command('approve <scan-id>').option('--reason <reason>','Reason for the 
   if(!result){emit({cancelled:true},'Installation cancelled; package held.');process.exitCode=2;return;}
   emit(result,`Installed with exception: ${report.name}. The warning remains in report ${id}.`);
 });
-program.command('doctor').action(async()=>{const config=await configured();const records=await listInstalls(root());const terminal=await terminalStatus(root());emit({node:process.version,agent:config.agent,profile:config.profile,target:join(root(),config.target),managedInstalls:records.length,terminal,codexHookTrust:'not_probed',scope,semanticConsent:config.semanticConsent,semanticExecution:'not_probed',telemetry:false},`Codex · ${config.profile==='static'?'Static analysis':config.profile==='full'?'Full lab analysis':'Hybrid analysis'}\n${records.length} managed installation(s).\nTerminal: ${terminal.active?'active':terminal.configured?'configured; verify activation in the terminal':'not configured'}.\n${scope}\nNo telemetry. Codex hook trust has not been verified.`);});
+program.command('doctor').action(async()=>{const config=await configured();const records=await listInstalls(root());const terminal=await terminalStatus(root());const codexHook=await codexHookStatus(root());emit({node:process.version,agent:config.agent,profile:config.profile,target:join(root(),config.target),managedInstalls:records.length,terminal,codexHook,codexHookTrust:'not_probed',scope,semanticConsent:config.semanticConsent,semanticExecution:'not_probed',telemetry:false},`Codex · ${config.profile==='static'?'Static analysis':config.profile==='full'?'Full lab analysis':'Hybrid analysis'}\n${records.length} managed installation(s).\nCodex hook: ${codexHook.configured?'configured persistently; review trust in /hooks':'not configured; run honeyskill setup'}.\nTerminal: ${terminal.active?'active':terminal.configured?'configured; verify activation in the terminal':'not configured'}.\n${scope}\nNo telemetry. Codex hook trust has not been verified.`);});
 program.command('demo').action(async()=>{const result=await runDemo();emit(result);});
 program.command('benchmark').action(async()=>{await configured();const result=await runBenchmark({projectRoot:root(),command:process.argv.join(' ')});emit(result);});
 program.command('prune').description('Delete inactive reports and packages older than the configured retention period.').action(async()=>{await configured();const result=await pruneData(root());emit(result);});

@@ -1,6 +1,7 @@
-import { basename, isAbsolute, join, resolve } from 'node:path';
+import { basename, isAbsolute, join, relative, resolve } from 'node:path';
 import { realpathSync } from 'node:fs';
-import { atomicJson, exists, readJson } from '../../../packages/core/src/storage.js';
+import { lstat, readFile, writeFile } from 'node:fs/promises';
+import { atomicJson, ensureDirectory, exists, readJson, sha256, stateDir } from '../../../packages/core/src/storage.js';
 import { parseInstallerArgv } from './terminal.js';
 
 const statusMessage = 'HoneySkill: pre-install check';
@@ -15,6 +16,36 @@ export type HookResult = { hookSpecificOutput: {
 const object = (value: unknown): value is JsonObject => typeof value === 'object' && value !== null && !Array.isArray(value);
 const quote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
 const commandLine = (argv: string[]): string => argv.map(quote).join(' ');
+
+/** Keep the approved bundled installer independent of the global npm installation. */
+export async function pinCliRuntime(root: string, cliPath: string): Promise<string> {
+  const bytes = await readFile(cliPath);
+  const directory = join(stateDir(root), 'runtime', sha256(bytes));
+  await ensureDirectory(directory);
+  await atomicJson(join(directory, 'package.json'), { type: 'module' });
+  const destination = join(directory, 'cli.js');
+  if (!await exists(destination)) await writeFile(destination, bytes, { flag: 'wx', mode: 0o600 });
+  const stat = await lstat(destination);
+  if (!stat.isFile() || stat.nlink !== 1 || sha256(await readFile(destination)) !== sha256(bytes)) throw new Error('The pinned HoneySkill runtime is invalid; setup was refused.');
+  return destination;
+}
+
+const runtimeDenied = { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: 'HoneySkill is unavailable or its runtime changed. Tool execution blocked; repair the project setup.' } };
+function guardedHookCommand(root: string, cliPath: string, nodePath: string, digest: string): string {
+  // Bound the child below the host timeout and convert runtime failures to a native denial.
+  const bootstrap = `const fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto');
+const [cli,root,digest]=process.argv.slice(1);
+try {
+  const stat=fs.lstatSync(cli);
+  if(!stat.isFile()||stat.nlink!==1||crypto.createHash('sha256').update(fs.readFileSync(cli)).digest('hex')!==digest)throw Error('integrity');
+  const input=fs.readFileSync(0);if(input.length>262144)throw Error('input');
+  const result=cp.spawnSync(process.execPath,[cli,'--project',root,'hook'],{input,encoding:'utf8',timeout:5000,maxBuffer:262144});
+  if(result.error||result.status!==0)throw Error('runtime');
+  const output=result.stdout.trim();
+  if(output){const value=JSON.parse(output).hookSpecificOutput;if(value?.hookEventName!=='PreToolUse'||!['allow','deny'].includes(value.permissionDecision))throw Error('output');process.stdout.write(output+'\\n');}
+}catch{process.stdout.write(${JSON.stringify(JSON.stringify(runtimeDenied) + '\n')});}`;
+  return `${commandLine([nodePath, '-e', bootstrap, cliPath, resolve(root), digest])} || printf '%s\\n' ${quote(JSON.stringify(runtimeDenied))}`;
+}
 
 /** Only a literal argv is supported: no shell expressions are evaluated. */
 function shellArgv(command: string): string[] {
@@ -111,7 +142,8 @@ export function processHook(input: unknown, root: string, cliPath: string, nodeP
     if (![root, cliPath, nodePath].every(validAbsolute)) return denied('Invalid hook configuration: absolute paths without control characters are required.');
     for (const cwd of [input.cwd, input.tool_input.workdir, input.tool_input.cwd]) {
       if (cwd === undefined) continue;
-      if (!validAbsolute(cwd) || canonical(cwd) !== canonical(root)) return denied('This command originates outside the protected project directory.');
+      const within = validAbsolute(cwd) ? relative(canonical(root), canonical(cwd)) : '..';
+      if (within === '..' || within.startsWith('../') || isAbsolute(within)) return denied('This command originates outside the protected project directory.');
     }
     if (!validAbsolute(input.cwd)) return denied('Session directory is missing or invalid.');
     const args = [nodePath, cliPath, '--project', resolve(root), 'install'];
@@ -139,11 +171,20 @@ export async function prepareCodexHook(root: string, cliPath: string, nodePath: 
     const handlers = group.hooks.filter(handler => !object(handler) || (![statusMessage, ...previousStatusMessages].some(label => handler.statusMessage === label)));
     return handlers.length === group.hooks.length ? [group] : handlers.length ? [{ ...group, hooks: handlers }] : [];
   });
-  const command = commandLine([nodePath, cliPath, '--project', resolve(root), 'hook']);
+  const command = guardedHookCommand(root, cliPath, nodePath, sha256(await readFile(cliPath)));
   groups.push({ matcher: '^Bash$', hooks: [{ type: 'command', command, timeout: 10, statusMessage }] });
   const config = { ...existing, hooks: { ...hooks, PreToolUse: groups } };
   const changed = JSON.stringify(config) !== JSON.stringify(existing);
   if (changed) await atomicJson(path, config);
   // shortcut: Codex owns trust state and may fail open before this process starts; report setup only.
-  return { path, changed, requiresTrust: true, reviewCommand: '/hooks', scope: 'supported-codex-shell-installers', failOpenOnHookRuntimeError: true };
+  return { path, changed, persistent: true, requiresTrust: true, reviewCommand: '/hooks', scope: 'supported-codex-shell-installers', runtimeFailureDecision: 'deny', hostMaySkipHook: true, failOpenOnHookRuntimeError: true };
+}
+
+export async function codexHookStatus(root: string) {
+  const path = join(root, '.codex', 'hooks.json');
+  if (!await exists(path)) return { configured: false, path, trust: 'not_probed' };
+  const config = await readJson(path);
+  const groups = object(config) && object(config.hooks) ? config.hooks.PreToolUse : undefined;
+  const configured = Array.isArray(groups) && groups.some(group => object(group) && group.matcher === '^Bash$' && Array.isArray(group.hooks) && group.hooks.some(handler => object(handler) && handler.statusMessage === statusMessage));
+  return { configured, path, persistent: configured, trust: 'not_probed', reviewCommand: '/hooks', hostMaySkipHook: true };
 }
